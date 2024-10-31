@@ -291,8 +291,12 @@ export default defineConfig({
               link: '/guide/index'
             },
             {
+              text: '路由设计',
+              link: '/guide/route'
+            },
+            {
               text: '通信协议',
-              link: '/guide/cli'
+              link: '/guide/protocol'
             },
             {
               text: '网关服务器',
