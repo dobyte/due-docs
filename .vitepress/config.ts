@@ -6,6 +6,7 @@ import {
   groupIconVitePlugin,
 } from 'vitepress-plugin-group-icons'
 import { buildEnd } from './buildEnd.config'
+import mermaid from 'mermaid'
 
 const ogDescription = 'Next Generation Frontend Tooling'
 const ogImage = 'https://vite.dev/og-image.jpg'
