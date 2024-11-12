@@ -1,12 +1,8 @@
 import type { DefaultTheme } from 'vitepress'
-import { defineConfig } from 'vitepress'
 import { transformerTwoslash } from '@shikijs/vitepress-twoslash'
-import {
-  groupIconMdPlugin,
-  groupIconVitePlugin,
-} from 'vitepress-plugin-group-icons'
+import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons'
 import { buildEnd } from './buildEnd.config'
-import mermaid from 'mermaid'
+import { withMermaid } from 'vitepress-plugin-mermaid'
 
 const ogDescription = 'Next Generation Frontend Tooling'
 const ogImage = 'https://vite.dev/og-image.jpg'
@@ -27,6 +23,7 @@ const deployType = (() => {
       return 'release'
   }
 })()
+
 const additionalTitle = ((): string => {
   switch (deployType) {
     case 'main':
@@ -37,6 +34,7 @@ const additionalTitle = ((): string => {
       return ''
   }
 })()
+
 const versionLinks = ((): DefaultTheme.NavItemWithLink[] => {
   const oldVersions: DefaultTheme.NavItemWithLink[] = [
     {
@@ -68,10 +66,20 @@ const versionLinks = ((): DefaultTheme.NavItemWithLink[] => {
   }
 })()
 
-export default defineConfig({
+export default withMermaid({
   title: 'due 官方中文文档',
   description: '一站式分布式游戏服务器解决方案',
   lang: 'zh-CN',
+
+  // your existing vitepress config...
+  // optionally, you can pass MermaidConfig
+  mermaid: {
+    // refer https://mermaid.js.org/config/setup/modules/mermaidAPI.html#mermaidapi-configuration-defaults for options
+  },
+  // optionally set additional config for plugin itself with MermaidPluginConfig
+  mermaidPlugin: {
+    class: "mermaid my-class", // set additional css classes for parent container 
+  },
 
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
@@ -300,8 +308,12 @@ export default defineConfig({
               link: '/guide/protocol'
             },
             {
+              text: '启动配置',
+              link: '/guide/etc'
+            },
+            {
               text: '网关服务器',
-              link: '/guide/using-plugins'
+              link: '/guide/gate'
             },
             {
               text: '节点服务器',
