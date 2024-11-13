@@ -329,7 +329,7 @@ export default withMermaid({
             },
             {
               text: '测试客户端',
-              link: '/guide/build'
+              link: '/guide/client'
             },
             {
               text: '单线程模型',
