@@ -317,15 +317,15 @@ export default withMermaid({
             },
             {
               text: '节点服务器',
-              link: '/guide/dep-pre-bundling'
+              link: '/guide/node'
             },
             {
               text: '网格服务器',
-              link: '/guide/assets'
+              link: '/guide/mesh'
             },
             {
-              text: 'HTTP服务器',
-              link: '/guide/assets'
+              text: 'Web服务器',
+              link: '/guide/web'
             },
             {
               text: '测试客户端',

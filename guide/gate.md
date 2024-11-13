@@ -1,6 +1,6 @@
 # 网关服务器 {#gate}
 
-## 介绍 {#gate-introduction}
+## 基础介绍 {#gate-introduction}
 
 网关服务器作为所有客户端的入口，通常具备以下功能：
 
@@ -9,9 +9,9 @@
 - 转发客户端消息到目标节点服务器
 - 下发后端服务器消息到指定客户端 
 
-[due](https://github.com/dobyte/due)的网关服务器采用模块化的架构思路，开发者可以根据自身的业务情况任意搭配模块化组件。
+在[due](https://github.com/dobyte/due)框架中，网关服（gate）采用模块化的架构思路，开发者可以根据自身的业务情况任意搭配模块化组件。
 
-## 示例 {#gate-example}
+## 示例代码 {#gate-example}
 
 ```go
 package main
@@ -46,7 +46,7 @@ func main() {
 }
 ```
 
-## 启动 {#gate-start}
+## 启动服务 {#gate-start}
 
 ```shell
 $ go run main.go
@@ -72,7 +72,7 @@ $ go run main.go
 └──────────────────────────────────────────────────────┘
 ```
 
-## 配置 {#gate-etc}
+## 启动配置 {#gate-etc}
 
 这里仅展示网关服务器配置参数，如需了解更多模块的参数配置，请查看[启动配置](/guide/etc)
 
