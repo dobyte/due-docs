@@ -4,6 +4,10 @@
 
 在[due](https://github.com/dobyte/due)框架中，Web服务器是基于[fiber](https://github.com/gofiber/fiber)框架的二次封装。在继承[fiber](https://github.com/gofiber/fiber)框架的所有优点的同时，还提供了符合[due](https://github.com/dobyte/due)框架的调用接口，为游戏开发中的Web场景提供完善的解决方案。
 
+## 跨域支持 {#web-cors}
+
+框架原生支持跨域，你只需要在启动配置里设置[跨域配置](#启动配置-web-etc)即可开启跨域
+
 ## Swagger支持 {#web-swagger}
 
 为了为广大开发者提供较好的开发体验，Web服务器已原生支持了Swagger的组件。使用方法也非常简单，只需要通过配置项开启即可打开swagger访问支持。
@@ -13,6 +17,10 @@
 ```bash
 $ go install github.com/swaggo/swag/cmd/swag@latest
 ```
+
+## 全局中间件 {#web-middleware}
+
+你可以在创建Web服务器的时候使用[http.WithMiddlewares()](https://github.com/dobyte/due/blob/main/component/http/options.go)来设置全局中间件。中间件支持[http.Handler](https://github.com/dobyte/due/blob/main/component/http/router.go)和[fiber.Handler](https://github.com/gofiber/fiber/blob/main/app.go)两种类型的中间件
 
 ## 示例代码 {#web-example}
 
@@ -134,24 +142,42 @@ $ go run main.go
 ```toml
 # http服务器配置
 [http]
-  # 服务器名称
-  name = "http"
-  # 服务器监听地址，默认为:8080
-  addr = ":8080"
-  # 秘钥文件
-  keyFile = ""
-  # 证书文件
-  certFile = ""
-  # swagger配置
-  [http.swagger]
-    # 是否启用文档
-    enable = true
-    # API文档标题
-    title = "API文档"
-    # URL访问基础路径
-    basePath = "/swagger"
-    # swagger文件路径
-    filePath = "./docs/swagger.json"
+    # 服务器名称
+    name = "http"
+    # 服务器监听地址，默认为:8080
+    addr = ":8080"
+    # 秘钥文件
+    keyFile = ""
+    # 证书文件
+    certFile = ""
+    # 跨域配置
+    [http.cors]
+        # 是否启用跨域
+        enable = true
+        # 允许跨域的请求源。默认为[]，即为允许所有请求源
+        allowOrigins = []
+        # 允许跨域的请求方法。默认为["GET", "POST", "HEAD", "PUT", "DELETE", "PATCH"]
+        allowMethods = []
+        # 允许跨域的请求头部。默认为[]，即为允许所有请求头部
+        allowHeaders = []
+        # 当允许所有源时，根据CORS规范不允许携带凭据。默认为false
+        allowCredentials = false
+        # 允许暴露给客户端的头部。默认为[]，即为允许暴露所有头部
+        exposeHeaders = []
+        # 浏览器缓存预检请求结果的时间。默认为0
+        maxAge = 0
+        # 是否允许来自私有网络的请求。设置为true时，响应头Access-Control-Allow-Private-Network会被设置为true。默认为false
+        allowPrivateNetwork = false
+    # swagger配置
+    [http.swagger]
+        # 是否启用文档
+        enable = true
+        # API文档标题
+        title = "API文档"
+        # URL访问基础路径
+        basePath = "/swagger"
+        # swagger文件路径
+        filePath = "./docs/swagger.json"
 ```
 
 ## 更多文档 {#web-more}

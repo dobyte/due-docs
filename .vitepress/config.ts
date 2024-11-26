@@ -308,6 +308,10 @@ export default withMermaid({
               link: '/guide/protocol'
             },
             {
+              text: '滚动更新',
+              link: '/guide/rolling-update'
+            },
+            {
               text: '启动配置',
               link: '/guide/etc'
             },
@@ -341,15 +345,15 @@ export default withMermaid({
             },
             {
               text: 'Actor模型',
-              link: '/guide/static-deploy'
+              link: '/guide/actor'
             },
             {
               text: '运行模式',
-              link: '/guide/env-and-mode'
+              link: '/guide/mode'
             },
             {
               text: '错误处理',
-              link: '/guide/env-and-mode'
+              link: '/guide/error'
             },
             {
               text: '注册中心',

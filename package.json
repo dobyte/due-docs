@@ -1,10 +1,10 @@
 {
-	"name": "vite-docs-cn",
+	"name": "due-docs-cn",
 	"version": "1.0.0",
-	"description": "Vite.js documentation Chinese translation.",
-	"repository": "https://github.com/vitejs/docs-cn",
+	"description": "due official documentation.",
+	"repository": "https://github.com/dobyte/due-docs",
 	"type": "module",
-	"author": "Evan You",
+	"author": "fuxiao",
 	"private": true,
 	"license": "CC BY-NC-SA 4.0",
 	"devDependencies": {
