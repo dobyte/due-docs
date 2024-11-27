@@ -24,6 +24,8 @@ $ go install github.com/swaggo/swag/cmd/swag@latest
 
 ## 示例代码 {#web-example}
 
+以下完整示例详见：[web](https://github.com/dobyte/due-examples/tree/master/cluster/web)
+
 ```go
 package main
 
@@ -45,16 +47,16 @@ func main() {
 	container := due.NewContainer()
 	// 创建HTTP组件
 	component := http.NewServer()
-	// 初始化监听
-	initListen(component.Proxy())
+	// 初始化应用
+	initApp(component.Proxy())
 	// 添加网格组件
 	container.Add(component)
 	// 启动容器
 	container.Serve()
 }
 
-// 初始化监听
-func initListen(proxy *http.Proxy) {
+// 初始化应用
+func initApp(proxy *http.Proxy) {
 	// 路由器
 	router := proxy.Router()
 	// 注册路由
@@ -137,9 +139,18 @@ $ go run main.go
 
 ## 启动配置 {#web-etc}
 
-这里仅展示Web服务器（web）配置参数，如需了解更多模块的参数配置，请查看[启动配置](/guide/etc)
+这里仅展示Web服务器（Http）相关配置参数，如需了解更多模块的参数配置，请查看[启动配置](/guide/etc)
 
 ```toml
+# 进程号
+pid = "./run/web.pid"
+# 开发模式。支持模式：debug、test、release（设置优先级：配置文件 < 环境变量 < 运行参数 < mode.SetMode()）
+mode = "debug"
+# 统一时区设置。项目中的时间获取请使用xtime.Now()
+timezone = "Local"
+# 容器关闭最大等待时间。支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为0
+shutdownMaxWaitTime = "0s"
+
 # http服务器配置
 [http]
     # 服务器名称
@@ -178,8 +189,32 @@ $ go run main.go
         basePath = "/swagger"
         # swagger文件路径
         filePath = "./docs/swagger.json"
+
+[log]
+    # 日志输出文件
+    file = "./log/due.log"
+    # 日志输出级别，可选：debug | info | warn | error | fatal | panic
+    level = "debug"
+    # 日志输出格式，可选：text | json
+    format = "text"
+    # 是否输出到终端
+    stdout = true
+    # 时间格式，标准库时间格式
+    timeFormat = "2006/01/02 15:04:05.000000"
+    # 堆栈的最低输出级别，可选：debug | info | warn | error | fatal | panic
+    stackLevel = "error"
+    # 文件最大留存时间，d:天、h:时、m:分、s:秒
+    fileMaxAge = "7d"
+    # 文件最大尺寸限制，单位（MB）
+    fileMaxSize = 100
+    # 文件切割方式
+    fileCutRule = "day"
+    # 是否启用调用文件全路径
+    callerFullPath = true
+    # 是否启用分级存储
+    classifiedStorage = false
 ```
 
 ## 更多文档 {#web-more}
 
-[due](https://github.com/dobyte/due)框架的Web服务器严格遵循[fiber](https://github.com/gofiber/fiber)框架的开发规范，如需了解更多的开发问题请移步[fiber开发文档](https://github.com/gofiber/fiber)
+[due](https://github.com/dobyte/due) 框架的Web服务器严格遵循[fiber](https://github.com/gofiber/fiber)框架的开发规范，如需了解更多的开发问题请移步[fiber开发文档](https://github.com/gofiber/fiber)
