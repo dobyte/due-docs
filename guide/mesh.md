@@ -2,7 +2,7 @@
 
 ## 基础介绍 {#mesh-introduction}
 
-网格服（Mesh）其实就是我们日常口中所说的微服务（Micro Service），主要用于构建一些无状态的业务逻辑开发。开发者可用于游戏服务器集群的中台开发，为集群中的其他服务提供数据业务支撑。
+网格服（mesh）其实就是我们日常口中所说的微服务（Micro Service），主要用于构建一些无状态的业务逻辑开发。开发者可用于游戏服务器集群的中台开发，为集群中的其他服务提供数据业务支撑。
 
 [due](https://github.com/dobyte/due) 框架目前已实现了 [GRPC](https://grpc.io/) 和 [RPCX](https://rpcx.io/) 两款主流RPC框架的接入。所有的开发方式和接入方式都保持了原有RPC框架的高度一致性，这样在保证用户开发习惯的同时可以极大地保证项目的稳定性。
 
@@ -164,7 +164,7 @@ log.Infof("invoke rpc func replay: %v", reply)
 cli, _ := client.NewClient(ctx.NewMeshClient)
 ```
 
-如果你的调用方压根不在节点服（Node）、网格服（Mesh）、Web服（Http）中，你也可以通过直接构建传输器来实现调用
+如果你的调用方压根不在节点服（node）、网格服（mesh）、Web服（http）中，你也可以通过直接构建传输器来实现调用
 
 ```go
 // 创建服务发现
@@ -339,7 +339,7 @@ log.Infof("invoke rpc func replay: %v", reply)
 cli, _ := client.NewClient(ctx.NewMeshClient)
 ```
 
-如果你的调用方压根不在节点服（Node）、网格服（Mesh）、Web服（Http）中，你也可以通过直接构建传输器来实现调用
+如果你的调用方压根不在节点服（node）、网格服（mesh）、Web服（http）中，你也可以通过直接构建传输器来实现调用
 
 ```go
 // 创建服务发现
@@ -410,7 +410,7 @@ $ go run rpcx.go
 
 ## 启动配置
 
-这里仅展示网格服（Mesh）相关配置参数，如需了解更多模块的参数配置，请查看[启动配置](/guide/etc)
+这里仅展示网格服（mesh）相关配置参数，如需了解更多模块的参数配置，请查看[启动配置](/guide/etc)
 
 ```toml
 # 进程号

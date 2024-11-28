@@ -6,65 +6,12 @@ import { withMermaid } from 'vitepress-plugin-mermaid'
 
 const ogDescription = 'Next Generation Frontend Tooling'
 const ogImage = 'https://vite.dev/og-image.jpg'
-const ogTitle = 'Vite'
-const ogUrl = 'https://vite.dev'
+const ogTitle = 'due'
+const ogUrl = 'https://due.org.cn'
 
 // netlify envs
 const deployURL = process.env.DEPLOY_PRIME_URL || ''
 const commitRef = process.env.COMMIT_REF?.slice(0, 8) || 'dev'
-
-const deployType = (() => {
-  switch (deployURL) {
-    case 'https://main--vite-docs-main.netlify.app':
-      return 'main'
-    case '':
-      return 'local'
-    default:
-      return 'release'
-  }
-})()
-
-const additionalTitle = ((): string => {
-  switch (deployType) {
-    case 'main':
-      return ' (main branch)'
-    case 'local':
-      return ' (local)'
-    case 'release':
-      return ''
-  }
-})()
-
-const versionLinks = ((): DefaultTheme.NavItemWithLink[] => {
-  const oldVersions: DefaultTheme.NavItemWithLink[] = [
-    {
-      text: 'Vite 4 Docs',
-      link: 'https://v4.vite.dev',
-    },
-    {
-      text: 'Vite 3 Docs',
-      link: 'https://v3.vite.dev',
-    },
-    {
-      text: 'Vite 2 Docs',
-      link: 'https://v2.vite.dev',
-    },
-  ]
-
-  switch (deployType) {
-    case 'main':
-    case 'local':
-      return [
-        {
-          text: 'Vite 5 Docs (release)',
-          link: 'https://vite.dev',
-        },
-        ...oldVersions,
-      ]
-    case 'release':
-      return oldVersions
-  }
-})()
 
 export default withMermaid({
   title: 'due 官方中文文档',
@@ -134,7 +81,7 @@ export default withMermaid({
 
   locales: {
     root: { label: '简体中文' },
-    en: { label: 'English', link: 'https://vite.dev' },
+    en: { label: 'English', link: 'https://due.org.cn' },
   },
 
   themeConfig: {
@@ -271,16 +218,8 @@ export default withMermaid({
         text: 'Version',
         items: [
           {
-            text: 'Vite v4 文档（英文）',
-            link: 'https://v4.vite.dev'
-          },
-          {
-            text: 'Vite v3 文档（英文）',
-            link: 'https://v3.vite.dev'
-          },
-          {
-            text: 'Vite v2 文档（英文）',
-            link: 'https://v2.vite.dev'
+            text: 'due v2 文档（中文）',
+            link: 'https://v2.due.kipper.cn'
           },
         ]
       }
@@ -361,7 +300,7 @@ export default withMermaid({
             },
             {
               text: '配置中心',
-              link: '/guide/ssr'
+              link: '/guide/config'
             },
             {
               text: '网络模块',
@@ -394,52 +333,6 @@ export default withMermaid({
             {
               text: '完整项目',
               link: '/changes/',
-            },
-          ],
-        },
-        {
-          text: 'API',
-          items: [
-            {
-              text: '插件 API',
-              link: '/guide/api-plugin'
-            },
-            {
-              text: 'HMR API',
-              link: '/guide/api-hmr',
-            },
-            {
-              text: 'JavaScript API',
-              link: '/guide/api-javascript',
-            },
-            {
-              text: '配置参考',
-              link: '/config/',
-            },
-          ],
-        },
-        {
-          text: '环境 API',
-          items: [
-            {
-              text: '介绍',
-              link: '/guide/api-environment',
-            },
-            {
-              text: '环境实例',
-              link: '/guide/api-environment-instances',
-            },
-            {
-              text: '插件',
-              link: '/guide/api-environment-plugins',
-            },
-            {
-              text: '框架',
-              link: '/guide/api-environment-frameworks',
-            },
-            {
-              text: '运行时',
-              link: '/guide/api-environment-runtimes',
             },
           ],
         },
