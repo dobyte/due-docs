@@ -276,11 +276,11 @@ export default withMermaid({
             },
             {
               text: '单线程模型',
-              link: '/guide/static-deploy'
+              link: '/guide/single-thread'
             },
             {
               text: '多协程模型',
-              link: '/guide/static-deploy'
+              link: '/guide/multiple-coroutines'
             },
             {
               text: 'Actor模型',
@@ -296,7 +296,7 @@ export default withMermaid({
             },
             {
               text: '注册中心',
-              link: '/guide/env-and-mode'
+              link: '/guide/registry'
             },
             {
               text: '配置中心',
@@ -304,15 +304,15 @@ export default withMermaid({
             },
             {
               text: '网络模块',
-              link: '/guide/comparisons'
+              link: '/guide/network'
             },
             {
               text: '传输模块',
-              link: '/guide/troubleshooting'
+              link: '/guide/transport'
             },
             {
               text: '日志模块',
-              link: '/guide/backend-integration'
+              link: '/guide/log'
             },
             {
               text: '缓存模块',
@@ -320,11 +320,11 @@ export default withMermaid({
             },
             {
               text: '加密模块',
-              link: '/guide/philosophy',
+              link: '/guide/crypto',
             },
             {
               text: '事件总线',
-              link: '/guide/migration'
+              link: '/guide/eventbus'
             },
             {
               text: '分布式锁',
