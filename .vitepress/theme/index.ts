@@ -1,29 +1,15 @@
+import './styles/index.css'
 import { h } from 'vue'
-import type { Theme } from 'vitepress'
-import DefaultTheme from 'vitepress/theme'
-import TwoslashFloatingVue from '@shikijs/vitepress-twoslash/client'
-import '@shikijs/vitepress-twoslash/style.css'
-import './styles/vars.css'
-import './styles/landing.css'
-import AsideSponsors from './components/AsideSponsors.vue'
-import SvgImage from './components/SvgImage.vue'
-import WwAds from './components/WwAds.vue'
-import ReleaseTag from './components/ReleaseTag.vue'
-import './custom.css'
-import 'virtual:group-icons.css'
+import { VPTheme } from '@vue/theme'
+// import Banner from './components/Banner.vue'
+import NavBarTitle from './components/NavBarTitle.vue'
 
-export default {
-  extends: DefaultTheme,
-  Layout() {
-    return h(DefaultTheme.Layout, null, {
-      'aside-outline-after': () => h(WwAds),
-      'aside-ads-before': () => h(AsideSponsors),
+export default Object.assign({}, VPTheme, {
+  Layout: () => {
+    // @ts-ignore
+    return h(VPTheme.Layout, null, {
+      // banner: () => h(Banner),
+      'navbar-title': () => h(NavBarTitle)
     })
-  },
-  enhanceApp({ app }) {
-    app.component('SvgImage', SvgImage)
-    app.component('ReleaseTag', ReleaseTag)
-    app.use(TwoslashFloatingVue)
-  },
-} satisfies Theme
-
+  }
+})
