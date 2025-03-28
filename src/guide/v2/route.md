@@ -20,7 +20,7 @@ AddRouteHandler(route int32, stateful bool, handler RouteHandler, middlewares ..
 
 ## 无状态路由分发 {#route-stateless-dispatch}
 
-![无状态路由分发](../public/images/route-stateless-dispatch.png)
+![无状态路由分发](../../public/images/route-stateless-dispatch.png)
 
 
 - 随机（random）：默认策略，网关（Gate）在接收到无状态路由消息后会在已注册该路由号的节点（Node）中随机选择一个节点（Node）进行消息转发。
@@ -29,7 +29,7 @@ AddRouteHandler(route int32, stateful bool, handler RouteHandler, middlewares ..
 
 ## 有状态路由定向转发 {#route-stateful-forward}
 
-![有状态路由定向转发](../public/images/route-stateful-forward.png)
+![有状态路由定向转发](../../public/images/route-stateful-forward.png)
 
 有状态路由要实现定向转发须满足以下两个条件：
 

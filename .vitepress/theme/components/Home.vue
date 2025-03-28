@@ -14,7 +14,7 @@ onMounted(load)
       旨在为高性能分布式游戏服务器开发提供完善、高效、标准化的解决方案
     </p>
     <p class="actions">
-      <a class="get-started" href="/guide/quick-start">
+      <a class="get-started" href="/guide/v2/quick-start">
         快速开始
         <svg
           class="icon"

@@ -6,7 +6,7 @@
 
 ## 网关服更新 {#rolling-update-gate-update}
 
-![网关服更新](../public/images/rolling-update-gate-update.png)
+![网关服更新](../../public/images/rolling-update-gate-update.png)
 
 其实，在 [due](https://github.com/dobyte/due) 框架中网关服（Gate）仅做路由消息转发，也不提供任何业务逻辑开发的接口。因此，网关服（Gate）的更新完全是多此一举的存在。但是，为了某些特殊场景下的更新，框架底层也提供了较为完善的滚动更新方案来进行更新维护。下面详细讲叙一下框架是如何对网关服（Gate）进行滚动更新的：
 
@@ -21,7 +21,7 @@
 
 ## 节点服更新 {#rolling-update-node-update}
 
-![节点服更新](../public/images/rolling-update-node-update.png)
+![节点服更新](../../public/images/rolling-update-node-update.png)
 
 鉴于节点服（Node）多用于有状态服务的开发，节点服（Node）需要在保证用户体验和数据安全的前提下进行更新维护。为此，框架底层也提供了较为完善的滚动更新方案来进行更新维护。下面详细讲叙一下框架是如何对节点服（Node）进行滚动更新的：
 

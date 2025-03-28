@@ -7,13 +7,9 @@ import { withMermaid } from 'vitepress-plugin-mermaid'
 
 const nav: ThemeConfig['nav'] = [
   { text: '文档', link: '/guide/', activeMatch: '/guide/' },
-  { text: '部署', link: '/config/', activeMatch: '/config/' },
   {
     text: '相关项目',
     items: [
-      { text: 'Team', link: '/team' },
-      { text: 'Blog', link: '/blog' },
-      { text: 'Releases', link: '/releases' },
       {
         items: [
           {
@@ -36,86 +32,94 @@ const nav: ThemeConfig['nav'] = [
     text: '版本',
     items: [
       {
+        text: 'due v1 文档（中文）',
+        link: 'https://dobyte.github.io/v1'
+      },
+      {
         text: 'due v2 文档（中文）',
-        link: 'https://due.github.com/v2'
+        link: 'https://dobyte.github.io/v2'
       }
     ]
   }
 ]
 
 export const sidebar: ThemeConfig['sidebar'] = {
-  '/guide/': [
+  '/guide/v2': [
     {
-      text: '快如入门',
+      text: '快速入门',
       items: [
         {
           text: '框架介绍',
-          link: '/guide/index'
+          link: '/guide/v2/index'
         },
         {
           text: '快速开始',
-          link: '/guide/quick-start'
+          link: '/guide/v2/quick-start'
         },
+        {
+          text: '设计理念',
+          link: '/guide/v2/quick-start'
+        }
       ]
     },
     {
       text: '功能开发',
       items: [
         {
-          text: '通信协议',
-          link: '/guide/protocol'
+          text: '路由设计',
+          link: '/guide/v2/route'
         },
         {
-          text: '路由设计',
-          link: '/guide/route'
+          text: '通信协议',
+          link: '/guide/v2/protocol'
         },
         {
           text: '启动配置',
-          link: '/guide/etc'
+          link: '/guide/v2/etc'
         },
         {
           text: '网关服务器',
-          link: '/guide/gate'
+          link: '/guide/v2/gate',
         },
         {
           text: '节点服务器',
-          link: '/guide/node'
+          link: '/guide/v2/node'
         },
         {
           text: '网格服务器',
-          link: '/guide/mesh'
+          link: '/guide/v2/mesh'
         },
         {
           text: 'Web服务器',
-          link: '/guide/web'
+          link: '/guide/v2/web'
         },
         {
           text: '测试客户端',
-          link: '/guide/client'
+          link: '/guide/v2/client'
         },
         {
           text: '单线程模型',
-          link: '/guide/single-thread'
+          link: '/guide/v2/single-thread'
         },
         {
           text: '多协程模型',
-          link: '/guide/multiple-coroutines'
+          link: '/guide/v2/multiple-goroutines'
         },
         {
           text: 'Actor模型',
-          link: '/guide/actor'
+          link: '/guide/v2/actor'
         },
         {
           text: '运行模式',
-          link: '/guide/mode'
+          link: '/guide/v2/mode'
         },
         {
           text: '错误处理',
-          link: '/guide/error'
+          link: '/guide/v2/error'
         },
         {
           text: '滚动更新',
-          link: '/guide/rolling-update'
+          link: '/guide/v2/rolling-update'
         },
       ]
     },
@@ -124,39 +128,39 @@ export const sidebar: ThemeConfig['sidebar'] = {
       items: [
         {
           text: '注册中心',
-          link: '/guide/registry'
+          link: '/guide/v2/registry'
         },
         {
           text: '配置中心',
-          link: '/guide/config'
+          link: '/guide/v2/config'
         },
         {
           text: '网络模块',
-          link: '/guide/network'
+          link: '/guide/v2/network'
         },
         {
           text: '传输模块',
-          link: '/guide/transport'
+          link: '/guide/v2/transport'
         },
         {
           text: '日志模块',
-          link: '/guide/log'
+          link: '/guide/v2/log'
         },
         {
           text: '缓存模块',
-          link: '/guide/performance',
+          link: '/guide/v2/performance',
         },
         {
           text: '加密模块',
-          link: '/guide/crypto',
+          link: '/guide/v2/crypto',
         },
         {
           text: '事件总线',
-          link: '/guide/eventbus'
+          link: '/guide/v2/eventbus'
         },
         {
           text: '分布式锁',
-          link: '/changes/',
+          link: '/guide/v2/lock',
         },
       ]
     },

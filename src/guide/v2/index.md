@@ -6,7 +6,7 @@ due是一款基于Go语言开发的高性能分布式游戏服务器框架。其
 
 ## 架构 {#architecture}
 
-![架构图](../public/images/architecture.jpg)
+![架构图](../../public/images/architecture.jpg)
 
 * Gate：网关服。主要用于客户端连接管理，接收并转发客户端消息到后端Node节点服。同时接收来自Node节点服和Mesh网格服的推送消息并转发至对应的客户端。
 * Node：节点服。主要用于接收和处理经过Gate网关服转发过来的客户端消息，并将处理后的结果通过Gate网关服转发至对应的客户端。同时Node节点服也可以通过注册RPC调用函数来扩展Node节点服的额外能力。
