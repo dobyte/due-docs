@@ -1,0 +1,13 @@
+[mysql.default]
+	# dsn连接信息
+	dsn = "root:123456@tcp(127.0.0.1:3306)/due_default?charset=utf8mb4&parseTime=True&loc=Local"
+	# 日志级别; silent | error | warn | info
+	logLevel = "info"
+	# 最大空闲连接数，默认为50
+	maxIdleConns = 50
+	# 最大打开连接数，默认为50
+	maxOpenConns = 50
+	# 慢查询阈值，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认2s
+	slowThreshold = "2s"
+	# 连接最大生命周期，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认1h
+	connMaxLifetime = "1h"

@@ -1,0 +1,3 @@
+[mongo.default]
+    # 连接串
+    dsn = "mongodb://root:12345678@127.0.0.1:27017"

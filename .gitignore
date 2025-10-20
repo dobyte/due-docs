@@ -1,0 +1,16 @@
+node_modules
+.idea
+package-lock.json
+yarn.lock
+.vuepress/dist
+docs/.vuepress/dist/*
+jupiter-website.tar.gz
+yarn.lock
+
+# log file
+*.log
+*.log_lock
+*.log_symlink
+
+# project run dir
+*run/
