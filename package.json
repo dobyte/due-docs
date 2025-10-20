@@ -22,14 +22,13 @@
     "@vuepress/plugin-nprogress": "^1.2.0",
     "@vuepress/plugin-pwa": "^1.2.0",
     "moment": "^2.24.0",
-    "vuepress": "^1.8.0"
+    "vuepress": "^1.9.10"
   },
   "devDependencies": {
     "@vuepress/cli": "^2.0.0-rc.2",
     "vue-loader": "^17.4.2",
     "vue-template-compiler": "^2.7.16",
-    "vuepress-plugin-mermaidjs": "^2.0.0-beta.2",
-    "webpack": "^5.102.1",
-    "webpack-dev-server": "^5.2.2"
+    "webpack": "^4.47.0",
+    "webpack-dev-server": "^4.15.2"
   }
 }
