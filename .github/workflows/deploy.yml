@@ -45,3 +45,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: pages 
           folder: ./docs/.vuepress/dist
+          clean: true
