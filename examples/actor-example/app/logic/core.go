@@ -13,9 +13,7 @@ import (
 	"github.com/dobyte/due/v2/utils/xconv"
 )
 
-const (
-	defaultPassword = "123456"
-)
+const defaultPassword = "123456"
 
 const roomActor = "room"
 
