@@ -43,8 +43,8 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          repository-name: ${{ env.DEPLOY_REPOSITORY }}
-          branch: pages 
+          repository-name: dobyte/dobyte.github.io
+          branch: master 
           folder: ./docs/.vuepress/dist
           clean: true
           force: true
