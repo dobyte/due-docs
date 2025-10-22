@@ -44,7 +44,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository-name: ${{ env.DEPLOY_REPOSITORY }}
-          branch: master 
+          branch: pages 
           folder: ./docs/.vuepress/dist
           clean: true
           force: true
