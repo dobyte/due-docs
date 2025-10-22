@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>2.9 启动配置 | due</title>
+    <meta name="generator" content="VuePress 1.9.10">
+    <link rel="icon" href="/icon.png">
+    <script type="text/javascript">var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?c77f15742ac7b6883fb18421ee33a702";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+      </script>
+    <meta name="description" content="due - 基于Go语言开发的高性能分布式游戏服务器框架">
+    <meta name="theme-color" content="#3c8772">
+    <meta property="og:url" content="https://dobyte.github.io">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="due">
+    <meta property="og:description" content="due - 基于Go语言开发的高性能分布式游戏服务器框架">
+    
+    <link rel="preload" href="/assets/css/0.styles.31d8943e.css" as="style"><link rel="preload" href="/assets/js/app.7b71a228.js" as="script"><link rel="preload" href="/assets/js/2.1e091c12.js" as="script"><link rel="preload" href="/assets/js/1.c3aad045.js" as="script"><link rel="preload" href="/assets/js/39.d19d0156.js" as="script"><link rel="prefetch" href="/assets/js/10.05d23feb.js"><link rel="prefetch" href="/assets/js/11.2b2174a5.js"><link rel="prefetch" href="/assets/js/12.02c5bd10.js"><link rel="prefetch" href="/assets/js/13.1db9fe30.js"><link rel="prefetch" href="/assets/js/14.496353c3.js"><link rel="prefetch" href="/assets/js/15.c0cae689.js"><link rel="prefetch" href="/assets/js/16.0ca01be8.js"><link rel="prefetch" href="/assets/js/17.7237f0fa.js"><link rel="prefetch" href="/assets/js/18.9ecfa5ea.js"><link rel="prefetch" href="/assets/js/19.cd276be8.js"><link rel="prefetch" href="/assets/js/20.54497862.js"><link rel="prefetch" href="/assets/js/21.461b3edc.js"><link rel="prefetch" href="/assets/js/22.fab9346a.js"><link rel="prefetch" href="/assets/js/23.c4c7be05.js"><link rel="prefetch" href="/assets/js/24.9782dd57.js"><link rel="prefetch" href="/assets/js/25.2ec6e6e6.js"><link rel="prefetch" href="/assets/js/26.8a0b25b2.js"><link rel="prefetch" href="/assets/js/27.f5e2951f.js"><link rel="prefetch" href="/assets/js/28.0515e483.js"><link rel="prefetch" href="/assets/js/29.0f75d6b5.js"><link rel="prefetch" href="/assets/js/3.4d11c0b3.js"><link rel="prefetch" href="/assets/js/30.34a2143e.js"><link rel="prefetch" href="/assets/js/31.a628396b.js"><link rel="prefetch" href="/assets/js/32.fdf65fbb.js"><link rel="prefetch" href="/assets/js/33.80a2b72d.js"><link rel="prefetch" href="/assets/js/34.66d13802.js"><link rel="prefetch" href="/assets/js/35.2e54b644.js"><link rel="prefetch" href="/assets/js/36.afb968bd.js"><link rel="prefetch" href="/assets/js/37.c1f9c158.js"><link rel="prefetch" href="/assets/js/38.0d9ed9a1.js"><link rel="prefetch" href="/assets/js/4.71971305.js"><link rel="prefetch" href="/assets/js/40.62d613b6.js"><link rel="prefetch" href="/assets/js/41.5b06e6d2.js"><link rel="prefetch" href="/assets/js/42.f10ad698.js"><link rel="prefetch" href="/assets/js/43.9e3ca04e.js"><link rel="prefetch" href="/assets/js/44.2a547e68.js"><link rel="prefetch" href="/assets/js/45.7015a0d6.js"><link rel="prefetch" href="/assets/js/46.c4629fe6.js"><link rel="prefetch" href="/assets/js/47.d402651a.js"><link rel="prefetch" href="/assets/js/48.15151f5b.js"><link rel="prefetch" href="/assets/js/49.90393567.js"><link rel="prefetch" href="/assets/js/5.4eff1e0c.js"><link rel="prefetch" href="/assets/js/50.fb1063cb.js"><link rel="prefetch" href="/assets/js/51.763802a5.js"><link rel="prefetch" href="/assets/js/52.2c33af8b.js"><link rel="prefetch" href="/assets/js/53.ba8ba68e.js"><link rel="prefetch" href="/assets/js/54.fc05a940.js"><link rel="prefetch" href="/assets/js/55.9e7868a4.js"><link rel="prefetch" href="/assets/js/56.327b54f5.js"><link rel="prefetch" href="/assets/js/6.08dab3dc.js"><link rel="prefetch" href="/assets/js/7.bcd4b6ae.js"><link rel="prefetch" href="/assets/js/vendors~docsearch.8ff0dd7b.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.31d8943e.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">due</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/" class="nav-link">
+  首页
+</a></div><div class="nav-item"><a href="/guide/v2/" class="nav-link router-link-active">
+  文档
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="相关项目" class="dropdown-title"><span class="title">相关项目</span> <span class="arrow down"></span></button> <button type="button" aria-label="相关项目" class="mobile-dropdown-title"><span class="title">相关项目</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://github.com/dobyte/due-chat" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  聊天室
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://github.com/dobyte/due-doudizhu-desc" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  斗地主
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div><div class="nav-item"><a href="/join/" class="nav-link">
+  加入我们
+</a></div><div class="nav-item"><a href="https://github.com/dobyte/due" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  GitHub
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a href="https://github.com/dobyte/due-docs" target="_blank" rel="noopener noreferrer" class="repo-link">
+    查看文档源码
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/" class="nav-link">
+  首页
+</a></div><div class="nav-item"><a href="/guide/v2/" class="nav-link router-link-active">
+  文档
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="相关项目" class="dropdown-title"><span class="title">相关项目</span> <span class="arrow down"></span></button> <button type="button" aria-label="相关项目" class="mobile-dropdown-title"><span class="title">相关项目</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://github.com/dobyte/due-chat" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  聊天室
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://github.com/dobyte/due-doudizhu-desc" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  斗地主
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div><div class="nav-item"><a href="/join/" class="nav-link">
+  加入我们
+</a></div><div class="nav-item"><a href="https://github.com/dobyte/due" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  GitHub
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a href="https://github.com/dobyte/due-docs" target="_blank" rel="noopener noreferrer" class="repo-link">
+    查看文档源码
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>第1章 简介</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/guide/v2/1.1.quick-start.html" class="sidebar-link">1.1 快速开始</a></li><li><a href="/guide/v2/1.2.examples.html" class="sidebar-link">1.2 项目示例</a></li><li><a href="/guide/v2/1.3.contribute.html" class="sidebar-link">1.3 协作贡献</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>第2章 框架设计</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/guide/v2/2.1.architecture.html" class="sidebar-link">2.1 架构设计</a></li><li><a href="/guide/v2/2.2.protocol.html" class="sidebar-link">2.2 协议设计</a></li><li><a href="/guide/v2/2.3.route.html" class="sidebar-link">2.3 路由设计</a></li><li><a href="/guide/v2/2.4.bind-gate.html" class="sidebar-link">2.4 绑定网关</a></li><li><a href="/guide/v2/2.5.bind-node.html" class="sidebar-link">2.5 绑定节点</a></li><li><a href="/guide/v2/2.6.single-thread.html" class="sidebar-link">2.6 单线程模型</a></li><li><a href="/guide/v2/2.7.multiple-coroutines.html" class="sidebar-link">2.7 多协程模型</a></li><li><a href="/guide/v2/2.8.actor.html" class="sidebar-link">2.8 Actor模型</a></li><li><a href="/guide/v2/2.9.etc.html" aria-current="page" class="active sidebar-link">2.9 启动配置</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/guide/v2/2.9.etc.html#_2-9-1-基础介绍" class="sidebar-link">2.9.1 基础介绍</a></li><li class="sidebar-sub-header"><a href="/guide/v2/2.9.etc.html#_2-9-2-指定目录" class="sidebar-link">2.9.2 指定目录</a></li><li class="sidebar-sub-header"><a href="/guide/v2/2.9.etc.html#_2-9-3-支持格式" class="sidebar-link">2.9.3 支持格式</a></li><li class="sidebar-sub-header"><a href="/guide/v2/2.9.etc.html#_2-9-4-读写规则" class="sidebar-link">2.9.4 读写规则</a></li><li class="sidebar-sub-header"><a href="/guide/v2/2.9.etc.html#_2-9-5-相关接口" class="sidebar-link">2.9.5 相关接口</a></li><li class="sidebar-sub-header"><a href="/guide/v2/2.9.etc.html#_2-9-6-示例代码" class="sidebar-link">2.9.6 示例代码</a></li><li class="sidebar-sub-header"><a href="/guide/v2/2.9.etc.html#_2-9-7-全部配置" class="sidebar-link">2.9.7 全部配置</a></li></ul></li><li><a href="/guide/v2/2.10.mode.html" class="sidebar-link">2.10 运行模式</a></li><li><a href="/guide/v2/2.11.error.html" class="sidebar-link">2.11 错误处理</a></li><li><a href="/guide/v2/2.12.rolling-update.html" class="sidebar-link">2.12 滚动更新</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>第3章 集群服务</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/guide/v2/3.1.gate.html" class="sidebar-link">3.1 网关服务器</a></li><li><a href="/guide/v2/3.2.node.html" class="sidebar-link">3.2 节点服务器</a></li><li><a href="/guide/v2/3.3.mesh.html" class="sidebar-link">3.3 网格服务器</a></li><li><a href="/guide/v2/3.4.web.html" class="sidebar-link">3.4 Web服务器</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>第4章 核心模块</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/guide/v2/4.1.registry.html" class="sidebar-link">4.1 注册中心</a></li><li><a href="/guide/v2/4.2.config.html" class="sidebar-link">4.2 配置中心</a></li><li><a href="/guide/v2/4.3.network.html" class="sidebar-link">4.3 网络模块</a></li><li><a href="/guide/v2/4.4.transport.html" class="sidebar-link">4.4 传输模块</a></li><li><a href="/guide/v2/4.5.log.html" class="sidebar-link">4.5 日志模块</a></li><li><a href="/guide/v2/4.6.cache.html" class="sidebar-link">4.6 缓存模块</a></li><li><a href="/guide/v2/4.7.crypto.html" class="sidebar-link">4.7 加密模块</a></li><li><a href="/guide/v2/4.8.eventbus.html" class="sidebar-link">4.8 事件总线</a></li><li><a href="/guide/v2/4.9.lock.html" class="sidebar-link">4.9 分布式锁</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>第5章 三方组件</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/guide/v2/5.1.gorm.html" class="sidebar-link">5.1 GORM</a></li><li><a href="/guide/v2/5.2.redis.html" class="sidebar-link">5.2 Redis</a></li><li><a href="/guide/v2/5.3.mongo.html" class="sidebar-link">5.3 Mongo</a></li><li><a href="/guide/v2/5.4.jwt.html" class="sidebar-link">5.4 JWT</a></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="_2-9-启动配置"><a href="#_2-9-启动配置" class="header-anchor">#</a> 2.9 启动配置</h1> <h2 id="_2-9-1-基础介绍"><a href="#_2-9-1-基础介绍" class="header-anchor">#</a> 2.9.1 基础介绍</h2> <p>启动配置（etc）主要用于引导程序启动的配置，默认启动配置文件为./etc/etc.toml。当然你也可以在配置目录添加自己额外的业务配置并进行读取（不推荐）。启动配置支持热更，但服务器组件一旦启动后，即便启动配置发生了变更，服务器组件也不再进行动态更新。</p> <h2 id="_2-9-2-指定目录"><a href="#_2-9-2-指定目录" class="header-anchor">#</a> 2.9.2 指定目录</h2> <p>你可以通过以下方式来指定启动配置读取目录：</p> <ol><li>通过环境变量指定，例如： DUE_ETC=/run/etc</li> <li>通过启动参数指定，例如： --etc=./etc</li></ol> <p>目录指定优先级：环境变量 &lt; 运行参数</p> <blockquote><p>注：无论你如何指定启动配置目录，etc.[toml|yaml|yml|json|xml]作为框架集群唯一的启动文件，一定不能修改，修改后会导致配置不生效或不可预期的后果。</p></blockquote> <h2 id="_2-9-3-支持格式"><a href="#_2-9-3-支持格式" class="header-anchor">#</a> 2.9.3 支持格式</h2> <p>启动配置默认支持 <a href="https://toml.io/" target="_blank" rel="noopener noreferrer">toml<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>、<a href="https://yaml.org/" target="_blank" rel="noopener noreferrer">yaml<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>、<a href="https://www.json.org/" target="_blank" rel="noopener noreferrer">json<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>、<a href="https://developer.mozilla.org/zh-CN/docs/Web/XML/XML_introduction" target="_blank" rel="noopener noreferrer">xml<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> 等多种文件格式。你可以根据自身喜好自由选择文件格式。</p> <blockquote><p>注：yaml格式的配置支持.yaml和.yml两种后缀名</p></blockquote> <h2 id="_2-9-4-读写规则"><a href="#_2-9-4-读写规则" class="header-anchor">#</a> 2.9.4 读写规则</h2> <p>框架中的配置文件均是以 <strong>文件名[.参数名1[.参数名2...[.参数名n]]]</strong> 的方式进行读写的。</p> <blockquote><p>注：例如a.b.c.d.toml这样的配置文件同样也是被支持的。读写时你只需要将a.b.c.d看成一个完整的文件名即可。</p></blockquote> <h2 id="_2-9-5-相关接口"><a href="#_2-9-5-相关接口" class="header-anchor">#</a> 2.9.5 相关接口</h2> <ol><li>使用场景</li></ol> <p>启动配置（etc）不仅可以作为引导程序启动的配置存在，也可以通过以下接口读取在配置目录中添加的额外配置文件参数。</p> <ol start="2"><li>使用方式</li></ol> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token function">import</span> <span class="token string">&quot;github.com/dobyte/due/v2/etc&quot;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><ol start="3"><li>接口文档</li></ol> <p><a href="https://pkg.go.dev/github.com/dobyte/due/v2/etc" target="_blank" rel="noopener noreferrer">https://pkg.go.dev/github.com/dobyte/due/v2/etc<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <h2 id="_2-9-6-示例代码"><a href="#_2-9-6-示例代码" class="header-anchor">#</a> 2.9.6 示例代码</h2> <ol><li>编写配置文件</li></ol> <div class="language-toml line-numbers-mode"><pre class="language-toml"><code><span class="token punctuation">[</span><span class="token table class-name">mysql</span><span class="token punctuation">]</span>
+    <span class="token comment"># dsn连接信息</span>
+    <span class="token key property">dsn</span> <span class="token punctuation">=</span> <span class="token string">&quot;root:123456@tcp(127.0.0.1:3306)/game?charset=utf8mb4&amp;parseTime=True&amp;loc=Local&quot;</span>
+    <span class="token comment"># 日志级别; silent | error | warn | info</span>
+    <span class="token key property">logLevel</span> <span class="token punctuation">=</span> <span class="token string">&quot;error&quot;</span>
+    <span class="token comment"># 慢日志阈值;ms</span>
+    <span class="token key property">slowThreshold</span> <span class="token punctuation">=</span> <span class="token number">2000</span>
+    <span class="token comment"># 最大空闲连接数</span>
+    <span class="token key property">maxIdleConns</span> <span class="token punctuation">=</span> <span class="token number">50</span>
+    <span class="token comment"># 最大打开连接数</span>
+    <span class="token key property">maxOpenConns</span> <span class="token punctuation">=</span> <span class="token number">50</span>
+    <span class="token comment"># 连接最大存活时间</span>
+    <span class="token key property">connMaxLifetime</span> <span class="token punctuation">=</span> <span class="token number">3600</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br></div></div><ol start="2"><li>编写读取示例</li></ol> <div class="language-go line-numbers-mode"><pre class="language-go"><code><span class="token keyword">package</span> main
+
+<span class="token keyword">import</span> <span class="token punctuation">(</span>
+	<span class="token string">&quot;fmt&quot;</span>
+	<span class="token string">&quot;github.com/dobyte/due/v2/etc&quot;</span>
+	<span class="token string">&quot;github.com/dobyte/due/v2/log&quot;</span>
+<span class="token punctuation">)</span>
+
+<span class="token keyword">type</span> config <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+	DSN             <span class="token builtin">string</span> <span class="token string">`json:&quot;dsn&quot;`</span>
+	LogLevel        <span class="token builtin">string</span> <span class="token string">`json:&quot;logLevel&quot;`</span>
+	SlowThreshold   <span class="token builtin">int</span>    <span class="token string">`json:&quot;slowThreshold&quot;`</span>
+	MaxIdleConns    <span class="token builtin">int</span>    <span class="token string">`json:&quot;maxIdleConns&quot;`</span>
+	MaxOpenConns    <span class="token builtin">int</span>    <span class="token string">`json:&quot;maxOpenConns&quot;`</span>
+	ConnMaxLifetime <span class="token builtin">int</span>    <span class="token string">`json:&quot;connMaxLifetime&quot;`</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token comment">// 读取单个配置参数</span>
+	logLevel <span class="token operator">:=</span> etc<span class="token punctuation">.</span><span class="token function">Get</span><span class="token punctuation">(</span><span class="token string">&quot;db.mysql.logLevel&quot;</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">String</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">&quot;mysql log-level: %s\n&quot;</span><span class="token punctuation">,</span> logLevel<span class="token punctuation">)</span>
+
+	<span class="token comment">// 读取多个配置参数</span>
+	conf <span class="token operator">:=</span> <span class="token operator">&amp;</span>config<span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+	<span class="token keyword">if</span> err <span class="token operator">:=</span> etc<span class="token punctuation">.</span><span class="token function">Get</span><span class="token punctuation">(</span><span class="token string">&quot;db.mysql&quot;</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">Scan</span><span class="token punctuation">(</span>conf<span class="token punctuation">)</span><span class="token punctuation">;</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+		log<span class="token punctuation">.</span><span class="token function">Errorf</span><span class="token punctuation">(</span><span class="token string">&quot;get mysql error: %s&quot;</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+	<span class="token punctuation">}</span>
+
+	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">&quot;mysql config: %+v\n&quot;</span><span class="token punctuation">,</span> conf<span class="token punctuation">)</span>
+
+	<span class="token comment">// 修改配置参数</span>
+	<span class="token keyword">if</span> err <span class="token operator">:=</span> etc<span class="token punctuation">.</span><span class="token function">Set</span><span class="token punctuation">(</span><span class="token string">&quot;db.mysql.logLevel&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;info&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+		log<span class="token punctuation">.</span><span class="token function">Errorf</span><span class="token punctuation">(</span><span class="token string">&quot;set mysql log-level error: %s&quot;</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+	<span class="token punctuation">}</span>
+
+	<span class="token comment">// 读取单个配置参数</span>
+	logLevel <span class="token operator">=</span> etc<span class="token punctuation">.</span><span class="token function">Get</span><span class="token punctuation">(</span><span class="token string">&quot;db.mysql.logLevel&quot;</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">String</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">&quot;mysql log-level: %s\n&quot;</span><span class="token punctuation">,</span> logLevel<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br></div></div><ol start="3"><li>运行示例</li></ol> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>$ go run main.go
+mysql log-level: error
+mysql config: <span class="token operator">&amp;</span><span class="token punctuation">{</span>DSN:root:123456@tcp<span class="token punctuation">(</span><span class="token number">127.0</span>.0.1:3306<span class="token punctuation">)</span>/game?charset<span class="token operator">=</span>utf8mb4<span class="token operator">&amp;</span><span class="token assign-left variable">parseTime</span><span class="token operator">=</span>True<span class="token operator">&amp;</span><span class="token assign-left variable">loc</span><span class="token operator">=</span>Local LogLevel:error SlowThreshold:2000 MaxIdleConns:50 MaxOpenConns:50 ConnMaxLifetime:3600<span class="token punctuation">}</span>
+mysql log-level: info
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br></div></div><h2 id="_2-9-7-全部配置"><a href="#_2-9-7-全部配置" class="header-anchor">#</a> 2.9.7 全部配置</h2> <p>以下配置示例详见：<a href="https://github.com/dobyte/due/blob/main/testdata/etc/etc.toml" target="_blank" rel="noopener noreferrer">etc.toml<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <div class="language-toml line-numbers-mode"><pre class="language-toml"><code><span class="token comment"># 进程号</span>
+<span class="token key property">pid</span> <span class="token punctuation">=</span> <span class="token string">&quot;./run/due.pid&quot;</span>
+<span class="token comment"># 开发模式。支持模式：debug、test、release（设置优先级：配置文件 &lt; 环境变量 &lt; 运行参数 &lt; mode.SetMode()）</span>
+<span class="token key property">mode</span> <span class="token punctuation">=</span> <span class="token string">&quot;debug&quot;</span>
+<span class="token comment"># 统一时区设置。项目中的时间获取请使用xtime.Now()</span>
+<span class="token key property">timezone</span> <span class="token punctuation">=</span> <span class="token string">&quot;Local&quot;</span>
+<span class="token comment"># 容器关闭最大等待时间。支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为0</span>
+<span class="token key property">shutdownMaxWaitTime</span> <span class="token punctuation">=</span> <span class="token string">&quot;0s&quot;</span>
+
+<span class="token comment"># 分布式集群模块</span>
+<span class="token punctuation">[</span><span class="token table class-name">cluster</span><span class="token punctuation">]</span>
+    <span class="token comment"># 集群网关配置</span>
+    <span class="token punctuation">[</span><span class="token table class-name">cluster.gate</span><span class="token punctuation">]</span>
+        <span class="token comment"># 实例ID，集群中唯一。不填写默认自动生成唯一的实例ID</span>
+        <span class="token key property">id</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 实例名称</span>
+        <span class="token key property">name</span> <span class="token punctuation">=</span> <span class="token string">&quot;gate&quot;</span>
+        <span class="token comment"># 内建RPC服务器监听地址。不填写默认随机监听</span>
+        <span class="token key property">addr</span> <span class="token punctuation">=</span> <span class="token string">&quot;:0&quot;</span>
+        <span class="token comment"># 是否将内部通信地址暴露到公网。默认为false</span>
+        <span class="token key property">expose</span> <span class="token punctuation">=</span> <span class="token boolean">false</span>
+        <span class="token comment"># RPC调用超时时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为3s</span>
+        <span class="token key property">timeout</span> <span class="token punctuation">=</span> <span class="token string">&quot;3s&quot;</span>
+        <span class="token comment"># 无状态路由消息分发策略。支持策略：随机（random）、轮询（rr）、加权轮询（wrr）。默认为random</span>
+        <span class="token key property">dispatch</span> <span class="token punctuation">=</span> <span class="token string">&quot;random&quot;</span>
+        <span class="token comment"># 实例元数据</span>
+        <span class="token punctuation">[</span><span class="token table class-name">cluster.gate.metadata</span><span class="token punctuation">]</span>
+            <span class="token comment"># 键值对，且均为字符串类型。由于注册中心的元数据参数限制，建议将键值对的数量控制在20个以内，键的字符长度控制在127个字符内，值得字符长度控制在512个字符内。</span>
+            <span class="token key property">key</span> <span class="token punctuation">=</span> <span class="token string">&quot;value&quot;</span>
+    <span class="token comment"># 集群节点配置</span>
+    <span class="token punctuation">[</span><span class="token table class-name">cluster.node</span><span class="token punctuation">]</span>
+        <span class="token comment"># 实例ID，集群中唯一。不填写默认自动生成唯一的实例ID</span>
+        <span class="token key property">id</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 实例名称</span>
+        <span class="token key property">name</span> <span class="token punctuation">=</span> <span class="token string">&quot;node&quot;</span>
+        <span class="token comment"># 内建RPC服务器监听地址。不填写默认随机监听</span>
+        <span class="token key property">addr</span> <span class="token punctuation">=</span> <span class="token string">&quot;:0&quot;</span>
+        <span class="token comment"># 是否将内部通信地址暴露到公网。默认为false</span>
+        <span class="token key property">expose</span> <span class="token punctuation">=</span> <span class="token boolean">false</span>
+        <span class="token comment"># 编解码器。可选：json | proto。默认为proto</span>
+        <span class="token key property">codec</span> <span class="token punctuation">=</span> <span class="token string">&quot;proto&quot;</span>
+        <span class="token comment"># RPC调用超时时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为3s</span>
+        <span class="token key property">timeout</span> <span class="token punctuation">=</span> <span class="token string">&quot;3s&quot;</span>
+        <span class="token comment"># 节点权重，用于节点无状态路由消息的加权轮询策略，权重值必需大于0才生效。默认为1</span>
+        <span class="token key property">weight</span> <span class="token punctuation">=</span> <span class="token number">1</span>
+        <span class="token comment"># 实例元数据</span>
+        <span class="token punctuation">[</span><span class="token table class-name">cluster.node.metadata</span><span class="token punctuation">]</span>
+            <span class="token comment"># 键值对，且均为字符串类型。由于注册中心的元数据参数限制，建议将键值对的数量控制在20个以内，键的字符长度控制在127个字符内，值得字符长度控制在512个字符内。</span>
+            <span class="token key property">key</span> <span class="token punctuation">=</span> <span class="token string">&quot;value&quot;</span>
+    <span class="token comment"># 集群网格配置</span>
+    <span class="token punctuation">[</span><span class="token table class-name">cluster.mesh</span><span class="token punctuation">]</span>
+        <span class="token comment"># 实例ID，集群中唯一。不填写默认自动生成唯一的实例ID</span>
+        <span class="token key property">id</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 实例名称</span>
+        <span class="token key property">name</span> <span class="token punctuation">=</span> <span class="token string">&quot;mesh&quot;</span>
+        <span class="token comment"># 是否将内部通信地址暴露到公网。默认为false</span>
+        <span class="token key property">expose</span> <span class="token punctuation">=</span> <span class="token boolean">false</span>
+        <span class="token comment"># 编解码器。可选：json | proto。默认为proto</span>
+        <span class="token key property">codec</span> <span class="token punctuation">=</span> <span class="token string">&quot;proto&quot;</span>
+        <span class="token comment"># 实例元数据</span>
+        <span class="token punctuation">[</span><span class="token table class-name">cluster.mesh.metadata</span><span class="token punctuation">]</span>
+            <span class="token comment"># 键值对，且均为字符串类型。由于注册中心的元数据参数限制，建议将键值对的数量控制在20个以内，键的字符长度控制在127个字符内，值得字符长度控制在512个字符内。</span>
+            <span class="token key property">key</span> <span class="token punctuation">=</span> <span class="token string">&quot;value&quot;</span>
+    <span class="token comment"># 集群客户端配置，常用于调试使用</span>
+    <span class="token punctuation">[</span><span class="token table class-name">cluster.client</span><span class="token punctuation">]</span>
+        <span class="token comment"># 实例ID，集群中唯一。不填写默认自动生成唯一的实例ID</span>
+        <span class="token key property">id</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 实例名称</span>
+        <span class="token key property">name</span> <span class="token punctuation">=</span> <span class="token string">&quot;client&quot;</span>
+        <span class="token comment"># 编解码器。可选：json | proto。默认为proto</span>
+        <span class="token key property">codec</span> <span class="token punctuation">=</span> <span class="token string">&quot;proto&quot;</span>
+
+<span class="token comment"># 任务池模块</span>
+<span class="token punctuation">[</span><span class="token table class-name">task</span><span class="token punctuation">]</span>
+    <span class="token comment"># 任务池大小(goroutine)</span>
+    <span class="token key property">size</span> <span class="token punctuation">=</span> <span class="token number">100000</span>
+    <span class="token comment"># 是否非阻塞</span>
+    <span class="token key property">nonblocking</span> <span class="token punctuation">=</span> <span class="token boolean">true</span>
+    <span class="token comment"># 是否禁用清除。</span>
+    <span class="token key property">disablePurge</span> <span class="token punctuation">=</span> <span class="token boolean">true</span>
+
+<span class="token comment"># http服务器模块</span>
+<span class="token punctuation">[</span><span class="token table class-name">http</span><span class="token punctuation">]</span>
+    <span class="token comment"># 服务器名称</span>
+    <span class="token key property">name</span> <span class="token punctuation">=</span> <span class="token string">&quot;http&quot;</span>
+    <span class="token comment"># 服务器监听地址，默认为:8080</span>
+    <span class="token key property">addr</span> <span class="token punctuation">=</span> <span class="token string">&quot;:8080&quot;</span>
+    <span class="token comment"># 是否启用控制台输出，默认为false</span>
+    <span class="token key property">console</span> <span class="token punctuation">=</span> <span class="token boolean">false</span>
+    <span class="token comment"># body大小，支持单位： B | K | KB | M | MB | G | GB | T | TB | P | PB | E | EB | Z | ZB，默认为4 * 1024 * 1024</span>
+    <span class="token key property">bodyLimit</span> <span class="token punctuation">=</span> <span class="token string">&quot;4M&quot;</span>
+    <span class="token comment"># 最大并发连接数，默认为256 * 1024</span>
+    <span class="token key property">concurrency</span> <span class="token punctuation">=</span> <span class="token number">262144</span>
+    <span class="token comment"># 是否启用严格路由模式，默认为false，启用后&quot;/foo&quot;与&quot;/foo/&quot;为两个不同的路由</span>
+    <span class="token key property">strictRouting</span> <span class="token punctuation">=</span> <span class="token boolean">false</span>
+    <span class="token comment"># 是否区分路由大小写，默认为false， 启用后&quot;/FoO&quot;与&quot;/foo&quot;为两个不同的路由</span>
+    <span class="token key property">caseSensitive</span> <span class="token punctuation">=</span> <span class="token boolean">false</span>
+    <span class="token comment"># 秘钥文件</span>
+    <span class="token key property">keyFile</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+    <span class="token comment"># 证书文件</span>
+    <span class="token key property">certFile</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+    <span class="token comment"># 跨域配置</span>
+    <span class="token punctuation">[</span><span class="token table class-name">http.cors</span><span class="token punctuation">]</span>
+        <span class="token comment"># 是否启用跨域</span>
+        <span class="token key property">enable</span> <span class="token punctuation">=</span> <span class="token boolean">false</span>
+        <span class="token comment"># 允许跨域的请求源。默认为[]，即为允许所有请求源</span>
+        <span class="token key property">allowOrigins</span> <span class="token punctuation">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+        <span class="token comment"># 允许跨域的请求方法。默认为[&quot;GET&quot;, &quot;POST&quot;, &quot;HEAD&quot;, &quot;PUT&quot;, &quot;DELETE&quot;, &quot;PATCH&quot;]</span>
+        <span class="token key property">allowMethods</span> <span class="token punctuation">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+        <span class="token comment"># 允许跨域的请求头部。默认为[]，即为允许所有请求头部</span>
+        <span class="token key property">allowHeaders</span> <span class="token punctuation">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+        <span class="token comment"># 当允许所有源时，根据CORS规范不允许携带凭据。默认为false</span>
+        <span class="token key property">allowCredentials</span> <span class="token punctuation">=</span> <span class="token boolean">false</span>
+        <span class="token comment"># 允许暴露给客户端的头部。默认为[]，即为允许暴露所有头部</span>
+        <span class="token key property">exposeHeaders</span> <span class="token punctuation">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+        <span class="token comment"># 浏览器缓存预检请求结果的时间。默认为0</span>
+        <span class="token key property">maxAge</span> <span class="token punctuation">=</span> <span class="token number">0</span>
+        <span class="token comment"># 是否允许来自私有网络的请求。设置为true时，响应头Access-Control-Allow-Private-Network会被设置为true。默认为false</span>
+        <span class="token key property">allowPrivateNetwork</span> <span class="token punctuation">=</span> <span class="token boolean">false</span>
+    <span class="token comment"># swagger文档配置</span>
+    <span class="token punctuation">[</span><span class="token table class-name">http.swagger</span><span class="token punctuation">]</span>
+        <span class="token comment"># 是否启用文档</span>
+        <span class="token key property">enable</span> <span class="token punctuation">=</span> <span class="token boolean">true</span>
+        <span class="token comment"># API文档标题</span>
+        <span class="token key property">title</span> <span class="token punctuation">=</span> <span class="token string">&quot;API文档&quot;</span>
+        <span class="token comment"># URL访问基础路径</span>
+        <span class="token key property">basePath</span> <span class="token punctuation">=</span> <span class="token string">&quot;/swagger&quot;</span>
+        <span class="token comment"># swagger文件路径</span>
+        <span class="token key property">filePath</span> <span class="token punctuation">=</span> <span class="token string">&quot;./docs/swagger.json&quot;</span>
+        <span class="token comment"># swagger-ui-bundle.js地址。当系统默认的cdn失效时可替换为自己的cdn地址，默认为空，使用系统默认https://unpkg.com/swagger-ui@5.28.1/dist/swagger-ui.js</span>
+        <span class="token key property">swaggerBundleUrl</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># swagger-ui-standalone-preset.js地址。当系统默认的cdn失效时可替换为自己的cdn地址，默认为空，使用系统默认https://unpkg.com/swagger-ui@5.28.1/dist/swagger-ui-standalone-preset.js</span>
+        <span class="token key property">swaggerPresetUrl</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># swagger-ui.css地址。当系统默认的cdn失效时可替换为自己的cdn地址，默认为空，使用系统默认https://unpkg.com/swagger-ui@5.28.1/dist/swagger-ui.css</span>
+        <span class="token key property">swaggerStylesUrl</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+
+<span class="token comment"># pprof模块</span>
+<span class="token punctuation">[</span><span class="token table class-name">pprof</span><span class="token punctuation">]</span>
+    <span class="token comment"># pprof服务器监听地址</span>
+    <span class="token key property">addr</span> <span class="token punctuation">=</span> <span class="token string">&quot;:0&quot;</span>
+
+<span class="token comment"># 传输模块</span>
+<span class="token punctuation">[</span><span class="token table class-name">transport</span><span class="token punctuation">]</span>
+    <span class="token comment"># GRPC相关配置</span>
+    <span class="token punctuation">[</span><span class="token table class-name">transport.grpc</span><span class="token punctuation">]</span>
+        <span class="token comment"># GRPC服务器相关配置</span>
+        <span class="token punctuation">[</span><span class="token table class-name">transport.grpc.server</span><span class="token punctuation">]</span>
+            <span class="token comment"># 服务器监听地址。空或:0时系统将会随机端口号</span>
+            <span class="token key property">addr</span> <span class="token punctuation">=</span> <span class="token string">&quot;:0&quot;</span>
+            <span class="token comment"># 是否将内部通信地址暴露到公网。默认为false</span>
+            <span class="token key property">expose</span> <span class="token punctuation">=</span> <span class="token boolean">false</span>
+            <span class="token comment"># 私钥文件</span>
+            <span class="token key property">keyFile</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+            <span class="token comment"># 证书文件</span>
+            <span class="token key property">certFile</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># GRPC客户端相关配置</span>
+        <span class="token punctuation">[</span><span class="token table class-name">transport.grpc.client</span><span class="token punctuation">]</span>
+            <span class="token comment"># CA证书文件</span>
+            <span class="token key property">caFile</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+            <span class="token comment"># 证书域名</span>
+            <span class="token key property">serverName</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+    <span class="token comment"># RPCX相关配置</span>
+    <span class="token punctuation">[</span><span class="token table class-name">transport.rpcx</span><span class="token punctuation">]</span>
+        <span class="token comment"># RPCX服务器相关配置</span>
+        <span class="token punctuation">[</span><span class="token table class-name">transport.rpcx.server</span><span class="token punctuation">]</span>
+            <span class="token comment"># 服务器监听地址。空或:0时系统将会随机端口号</span>
+            <span class="token key property">addr</span> <span class="token punctuation">=</span> <span class="token string">&quot;:0&quot;</span>
+            <span class="token comment"># 是否将内部通信地址暴露到公网。默认为false</span>
+            <span class="token key property">expose</span> <span class="token punctuation">=</span> <span class="token boolean">false</span>
+            <span class="token comment"># 私钥文件</span>
+            <span class="token key property">keyFile</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+            <span class="token comment"># 证书文件</span>
+            <span class="token key property">certFile</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># RPCX客户端相关配置</span>
+        <span class="token punctuation">[</span><span class="token table class-name">transport.rpcx.client</span><span class="token punctuation">]</span>
+            <span class="token comment"># CA证书文件</span>
+            <span class="token key property">caFile</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+            <span class="token comment"># 证书域名</span>
+            <span class="token key property">serverName</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+            <span class="token comment"># 连接池大小，默认为10</span>
+            <span class="token key property">poolSize</span> <span class="token punctuation">=</span> <span class="token number">10</span>
+
+<span class="token comment"># 框架默认打包器统一采用以下的打包格式，自定义打包器可自行定义打包规则</span>
+<span class="token comment"># 心跳包</span>
+<span class="token comment"># ------------------------------------------------------------------------------</span>
+<span class="token comment"># | size(4 byte) = (1 byte + 8 byte) | header(1 byte) | heartbeat time(8 byte) |</span>
+<span class="token comment"># ------------------------------------------------------------------------------</span>
+<span class="token comment">#</span>
+<span class="token comment">#  0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7</span>
+<span class="token comment"># +---------------------------------------------------------------+-+-------------+---------------------------------------------------------------+</span>
+<span class="token comment"># |                              size                             |h|   extcode   |                      heartbeat time (ns)                      |</span>
+<span class="token comment"># +---------------------------------------------------------------+-+-------------+---------------------------------------------------------------+</span>
+
+<span class="token comment"># 数据包</span>
+<span class="token comment"># -----------------------------------------------------------------------------------------------------------------------</span>
+<span class="token comment"># | size(4 byte) = (1 byte + n byte + m byte + x byte) | header(1 byte) | route(n byte) | seq(m byte) | message(x byte) |</span>
+<span class="token comment"># -----------------------------------------------------------------------------------------------------------------------</span>
+<span class="token comment">#</span>
+<span class="token comment">#  0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7</span>
+<span class="token comment"># +---------------------------------------------------------------+-+-------------+-------------------------------+-------------------------------+</span>
+<span class="token comment"># |                              size                             |h|   extcode   |             route             |              seq              |</span>
+<span class="token comment"># +---------------------------------------------------------------+-+-------------+-------------------------------+-------------------------------+</span>
+<span class="token comment"># |                                                                message data ...                                                               |</span>
+<span class="token comment"># +-----------------------------------------------------------------------------------------------------------------------------------------------+</span>
+<span class="token punctuation">[</span><span class="token table class-name">packet</span><span class="token punctuation">]</span>
+    <span class="token comment"># 字节序，默认为big。可选：little | big</span>
+    <span class="token key property">byteOrder</span> <span class="token punctuation">=</span> <span class="token string">&quot;big&quot;</span>
+    <span class="token comment"># 路由字节数，默认为2字节</span>
+    <span class="token key property">routeBytes</span> <span class="token punctuation">=</span> <span class="token number">2</span>
+    <span class="token comment"># 序列号字节数，默认为2字节</span>
+    <span class="token key property">seqBytes</span> <span class="token punctuation">=</span> <span class="token number">2</span>
+    <span class="token comment"># 消息字节数，默认为5000字节</span>
+    <span class="token key property">bufferBytes</span> <span class="token punctuation">=</span> <span class="token number">5000</span>
+
+<span class="token comment"># 日志模块</span>
+<span class="token punctuation">[</span><span class="token table class-name">log</span><span class="token punctuation">]</span>
+    <span class="token comment"># 日志输出级别，可选：debug | info | warn | error | fatal | panic</span>
+    <span class="token key property">level</span> <span class="token punctuation">=</span> <span class="token string">&quot;info&quot;</span>
+    <span class="token comment"># 堆栈的最低输出级别，可选：debug | info | warn | error | fatal | panic</span>
+    <span class="token key property">stackLevel</span> <span class="token punctuation">=</span> <span class="token string">&quot;error&quot;</span>
+    <span class="token comment"># 时间格式，标准库时间格式</span>
+    <span class="token key property">timeFormat</span> <span class="token punctuation">=</span> <span class="token string">&quot;2006/01/02 15:04:05.000000&quot;</span>
+    <span class="token comment"># 输出栈的跳过深度</span>
+    <span class="token key property">callSkip</span> <span class="token punctuation">=</span> <span class="token number">2</span>
+    <span class="token comment"># 是否启用调用文件全路径</span>
+    <span class="token key property">callFullPath</span> <span class="token punctuation">=</span> <span class="token boolean">true</span>
+    <span class="token comment"># 日志输出终端（数组和对象两种配置形式任选其一）</span>
+    <span class="token key property">terminals</span> <span class="token punctuation">=</span> <span class="token punctuation">[</span><span class="token string">&quot;console&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;file&quot;</span><span class="token punctuation">]</span>
+    <span class="token comment"># 日志输出终端（数组和对象两种配置形式任选其一）</span>
+    <span class="token punctuation">[</span><span class="token table class-name">log.terminals</span><span class="token punctuation">]</span>
+        <span class="token comment"># 控制台 -&gt; 日志级别</span>
+        <span class="token key property">console</span> <span class="token punctuation">=</span> <span class="token punctuation">[</span><span class="token string">&quot;debug&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;info&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;warn&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;error&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;fatal&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;panic&quot;</span><span class="token punctuation">]</span>
+        <span class="token comment"># 文件 -&gt; 日志级别</span>
+        <span class="token key property">file</span> <span class="token punctuation">=</span> <span class="token punctuation">[</span><span class="token string">&quot;debug&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;info&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;warn&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;error&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;fatal&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;panic&quot;</span><span class="token punctuation">]</span>
+        <span class="token comment"># 阿里云日志 -&gt; 日志级别</span>
+        <span class="token key property">aliyun</span> <span class="token punctuation">=</span> <span class="token punctuation">[</span><span class="token string">&quot;debug&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;info&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;warn&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;error&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;fatal&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;panic&quot;</span><span class="token punctuation">]</span>
+        <span class="token comment"># 腾讯云日志 -&gt; 日志级别</span>
+        <span class="token key property">tencent</span> <span class="token punctuation">=</span> <span class="token punctuation">[</span><span class="token string">&quot;debug&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;info&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;warn&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;error&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;fatal&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;panic&quot;</span><span class="token punctuation">]</span>
+    <span class="token comment"># 控制台同步器配置</span>
+    <span class="token punctuation">[</span><span class="token table class-name">log.console</span><span class="token punctuation">]</span>
+        <span class="token comment"># 日志输出格式，可选：text | json</span>
+        <span class="token key property">format</span> <span class="token punctuation">=</span> <span class="token string">&quot;text&quot;</span>
+    <span class="token comment"># 文件同步器配置</span>
+    <span class="token punctuation">[</span><span class="token table class-name">log.file</span><span class="token punctuation">]</span>
+        <span class="token comment"># 输出文件路径</span>
+        <span class="token key property">path</span> <span class="token punctuation">=</span> <span class="token string">&quot;./log/due.log&quot;</span>
+        <span class="token comment"># 日志输出格式，可选：text | json</span>
+        <span class="token key property">format</span> <span class="token punctuation">=</span> <span class="token string">&quot;text&quot;</span>
+        <span class="token comment"># 文件最大留存时间，d:天、h:时、m:分、s:秒</span>
+        <span class="token key property">maxAge</span> <span class="token punctuation">=</span> <span class="token string">&quot;7d&quot;</span>
+        <span class="token comment"># 文件最大尺寸限制，支持单位： B | K | KB | M | MB | G | GB | T | TB | P | PB | E | EB | Z | ZB，默认为100M</span>
+        <span class="token key property">maxSize</span> <span class="token punctuation">=</span> <span class="token string">&quot;100M&quot;</span>
+        <span class="token comment"># 文件翻转方式，可选：none | year | month | week | day | hour，默认为none</span>
+        <span class="token key property">rotate</span> <span class="token punctuation">=</span> <span class="token string">&quot;none&quot;</span>
+        <span class="token comment"># 文件翻转时是否对文件进行压缩</span>
+        <span class="token key property">compress</span> <span class="token punctuation">=</span> <span class="token boolean">false</span>
+    <span class="token comment"># 阿里云SLS日志同步器配置</span>
+    <span class="token punctuation">[</span><span class="token table class-name">log.aliyun</span><span class="token punctuation">]</span>
+        <span class="token comment"># 服务域名，公网使用公网域名，内网使用私网域名</span>
+        <span class="token key property">endpoint</span> <span class="token punctuation">=</span> <span class="token string">&quot;cn-chengdu.log.aliyuncs.com&quot;</span>
+        <span class="token comment"># 访问密钥ID</span>
+        <span class="token key property">accessKeyID</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 访问密钥密码</span>
+        <span class="token key property">accessKeySecret</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 项目名称</span>
+        <span class="token key property">project</span> <span class="token punctuation">=</span> <span class="token string">&quot;due-test&quot;</span>
+        <span class="token comment"># 日志存储</span>
+        <span class="token key property">logstore</span> <span class="token punctuation">=</span> <span class="token string">&quot;app&quot;</span>
+        <span class="token comment"># 主题标签，默认为空</span>
+        <span class="token key property">topic</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 来源标签，默认为空</span>
+        <span class="token key property">source</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+    <span class="token comment"># 腾讯云CLS日志服务同步器</span>
+    <span class="token punctuation">[</span><span class="token table class-name">log.tencent</span><span class="token punctuation">]</span>
+        <span class="token comment"># 服务域名，公网使用公网域名，内网使用私网域名</span>
+        <span class="token key property">endpoint</span> <span class="token punctuation">=</span> <span class="token string">&quot;ap-guangzhou.cls.tencentcs.com&quot;</span>
+        <span class="token comment"># 访问密钥ID</span>
+        <span class="token key property">accessKeyID</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 访问密钥密码</span>
+        <span class="token key property">accessKeySecret</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 主题ID</span>
+        <span class="token key property">topicID</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+
+<span class="token comment"># 注册中心模块</span>
+<span class="token punctuation">[</span><span class="token table class-name">registry</span><span class="token punctuation">]</span>
+    <span class="token comment"># etcd注册中心</span>
+    <span class="token punctuation">[</span><span class="token table class-name">registry.etcd</span><span class="token punctuation">]</span>
+        <span class="token comment"># 客户端连接地址，默认为[&quot;127.0.0.1:2379&quot;]</span>
+        <span class="token key property">addrs</span> <span class="token punctuation">=</span> <span class="token punctuation">[</span><span class="token string">&quot;127.0.0.1:2379&quot;</span><span class="token punctuation">]</span>
+        <span class="token comment"># 客户端拨号超时时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为5s</span>
+        <span class="token key property">dialTimeout</span> <span class="token punctuation">=</span> <span class="token string">&quot;5s&quot;</span>
+        <span class="token comment"># 命名空间，默认为services</span>
+        <span class="token key property">namespace</span> <span class="token punctuation">=</span> <span class="token string">&quot;services&quot;</span>
+        <span class="token comment"># 超时时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为3s</span>
+        <span class="token key property">timeout</span> <span class="token punctuation">=</span> <span class="token string">&quot;3s&quot;</span>
+        <span class="token comment"># 心跳重试次数，默认为3</span>
+        <span class="token key property">retryTimes</span> <span class="token punctuation">=</span> <span class="token number">3</span>
+        <span class="token comment"># 心跳重试间隔，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为10s</span>
+        <span class="token key property">retryInterval</span> <span class="token punctuation">=</span> <span class="token string">&quot;10s&quot;</span>
+    <span class="token comment"># consule注册中心</span>
+    <span class="token punctuation">[</span><span class="token table class-name">registry.consul</span><span class="token punctuation">]</span>
+        <span class="token comment"># 客户端连接地址，默认为127.0.0.1:8500</span>
+        <span class="token key property">addr</span> <span class="token punctuation">=</span> <span class="token string">&quot;127.0.0.1:8500&quot;</span>
+        <span class="token comment"># 是否启用健康检查，默认为true</span>
+        <span class="token key property">healthCheck</span> <span class="token punctuation">=</span> <span class="token boolean">true</span>
+        <span class="token comment"># 健康检查时间间隔（秒），仅在启用健康检查后生效，默认为10</span>
+        <span class="token key property">healthCheckInterval</span> <span class="token punctuation">=</span> <span class="token number">10</span>
+        <span class="token comment"># 健康检查超时时间（秒），仅在启用健康检查后生效，默认为5</span>
+        <span class="token key property">healthCheckTimeout</span> <span class="token punctuation">=</span> <span class="token number">5</span>
+        <span class="token comment"># 是否启用心跳检查，默认为true</span>
+        <span class="token key property">heartbeatCheck</span> <span class="token punctuation">=</span> <span class="token boolean">true</span>
+        <span class="token comment"># 心跳检查时间间隔（秒），仅在启用心跳检查后生效，默认为10</span>
+        <span class="token key property">heartbeatCheckInterval</span> <span class="token punctuation">=</span> <span class="token number">10</span>
+        <span class="token comment"># 健康检测失败后自动注销服务时间（秒），默认为30</span>
+        <span class="token key property">deregisterCriticalServiceAfter</span> <span class="token punctuation">=</span> <span class="token number">30</span>
+    <span class="token comment"># nacos注册中心</span>
+    <span class="token punctuation">[</span><span class="token table class-name">registry.nacos</span><span class="token punctuation">]</span>
+        <span class="token comment"># 服务器地址 [scheme://]ip:port[/nacos]。默认为[&quot;http://127.0.0.1:8848/nacos&quot;]</span>
+        <span class="token key property">urls</span> <span class="token punctuation">=</span> <span class="token punctuation">[</span><span class="token string">&quot;http://127.0.0.1:8848/nacos&quot;</span><span class="token punctuation">]</span>
+        <span class="token comment"># 集群名称。默认为DEFAULT</span>
+        <span class="token key property">clusterName</span> <span class="token punctuation">=</span> <span class="token string">&quot;DEFAULT&quot;</span>
+        <span class="token comment"># 群组名称。默认为DEFAULT_GROUP</span>
+        <span class="token key property">groupName</span> <span class="token punctuation">=</span> <span class="token string">&quot;DEFAULT_GROUP&quot;</span>
+        <span class="token comment"># 请求Nacos服务端超时时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为3秒</span>
+        <span class="token key property">timeout</span> <span class="token punctuation">=</span> <span class="token string">&quot;3s&quot;</span>
+        <span class="token comment"># ACM的命名空间Id。默认为空</span>
+        <span class="token key property">namespaceId</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 当使用ACM时，需要该配置，默认为空。详见：https://help.aliyun.com/document_detail/130146.html</span>
+        <span class="token key property">endpoint</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># ACM&amp;KMS的regionId，用于配置中心的鉴权。默认为空</span>
+        <span class="token key property">regionId</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># ACM&amp;KMS的AccessKey，用于配置中心的鉴权。默认为空</span>
+        <span class="token key property">accessKey</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># ACM&amp;KMS的SecretKey，用于配置中心的鉴权。默认为空</span>
+        <span class="token key property">secretKey</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 是否开启kms，同时DataId必须以&quot;cipher-&quot;作为前缀才会启动加解密逻辑。kms可以参考文档：https://help.aliyun.com/product/28933.html</span>
+        <span class="token key property">openKMS</span> <span class="token punctuation">=</span> <span class="token boolean">false</span>
+        <span class="token comment"># 缓存service信息的目录。默认为./run/nacos/naming/cache</span>
+        <span class="token key property">cacheDir</span> <span class="token punctuation">=</span> <span class="token string">&quot;./run/nacos/naming/cache&quot;</span>
+        <span class="token comment"># Nacos服务端的API鉴权Username。默认为空</span>
+        <span class="token key property">username</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># Nacos服务端的API鉴权Password。默认为空</span>
+        <span class="token key property">password</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 日志存储路径。默认为./run/nacos/naming/log</span>
+        <span class="token key property">logDir</span> <span class="token punctuation">=</span> <span class="token string">&quot;./run/nacos/naming/log&quot;</span>
+        <span class="token comment"># 日志输出级别，可选：debug、info、warn、error。默认为info</span>
+        <span class="token key property">logLevel</span> <span class="token punctuation">=</span> <span class="token string">&quot;info&quot;</span>
+
+<span class="token comment"># 配置中心模块</span>
+<span class="token punctuation">[</span><span class="token table class-name">config</span><span class="token punctuation">]</span>
+    <span class="token comment"># 文件配置</span>
+    <span class="token punctuation">[</span><span class="token table class-name">config.file</span><span class="token punctuation">]</span>
+        <span class="token comment"># 配置文件或配置目录路径</span>
+        <span class="token key property">path</span> <span class="token punctuation">=</span> <span class="token string">&quot;./config&quot;</span>
+        <span class="token comment"># 读写模式。可选：read-only | write-only | read-write，默认为read-only</span>
+        <span class="token key property">mode</span> <span class="token punctuation">=</span> <span class="token string">&quot;read-only&quot;</span>
+    <span class="token comment"># etcd配置中心</span>
+    <span class="token punctuation">[</span><span class="token table class-name">config.etcd</span><span class="token punctuation">]</span>
+        <span class="token comment"># 客户端连接地址，默认为[&quot;127.0.0.1:2379&quot;]</span>
+        <span class="token key property">addrs</span> <span class="token punctuation">=</span> <span class="token punctuation">[</span><span class="token string">&quot;127.0.0.1:2379&quot;</span><span class="token punctuation">]</span>
+        <span class="token comment"># 客户端拨号超时时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为5s</span>
+        <span class="token key property">dialTimeout</span> <span class="token punctuation">=</span> <span class="token string">&quot;5s&quot;</span>
+        <span class="token comment"># 路径。默认为/config</span>
+        <span class="token key property">path</span> <span class="token punctuation">=</span> <span class="token string">&quot;/config&quot;</span>
+        <span class="token comment"># 读写模式。可选：read-only | write-only | read-write，默认为read-only</span>
+        <span class="token key property">mode</span> <span class="token punctuation">=</span> <span class="token string">&quot;read-only&quot;</span>
+    <span class="token comment"># consul配置中心</span>
+    <span class="token punctuation">[</span><span class="token table class-name">config.consul</span><span class="token punctuation">]</span>
+        <span class="token comment"># 客户端连接地址</span>
+        <span class="token key property">addr</span> <span class="token punctuation">=</span> <span class="token string">&quot;127.0.0.1:8500&quot;</span>
+        <span class="token comment"># 路径。默认为config</span>
+        <span class="token key property">path</span> <span class="token punctuation">=</span> <span class="token string">&quot;config&quot;</span>
+        <span class="token comment"># 读写模式。可选：read-only | write-only | read-write，默认为read-only</span>
+        <span class="token key property">mode</span> <span class="token punctuation">=</span> <span class="token string">&quot;read-only&quot;</span>
+    <span class="token comment"># nacos配置中心</span>
+    <span class="token punctuation">[</span><span class="token table class-name">config.nacos</span><span class="token punctuation">]</span>
+        <span class="token comment"># 读写模式。可选：read-only | write-only | read-write，默认为read-only</span>
+        <span class="token key property">mode</span> <span class="token punctuation">=</span> <span class="token string">&quot;read-only&quot;</span>
+        <span class="token comment"># 服务器地址 [scheme://]ip:port[/nacos]。默认为[&quot;http://127.0.0.1:8848/nacos&quot;]</span>
+        <span class="token key property">urls</span> <span class="token punctuation">=</span> <span class="token punctuation">[</span><span class="token string">&quot;http://127.0.0.1:8848/nacos&quot;</span><span class="token punctuation">]</span>
+        <span class="token comment"># 集群名称。默认为DEFAULT</span>
+        <span class="token key property">clusterName</span> <span class="token punctuation">=</span> <span class="token string">&quot;DEFAULT&quot;</span>
+        <span class="token comment"># 群组名称。默认为DEFAULT_GROUP</span>
+        <span class="token key property">groupName</span> <span class="token punctuation">=</span> <span class="token string">&quot;DEFAULT_GROUP&quot;</span>
+        <span class="token comment"># 请求Nacos服务端超时时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为3秒</span>
+        <span class="token key property">timeout</span> <span class="token punctuation">=</span> <span class="token string">&quot;3s&quot;</span>
+        <span class="token comment"># ACM的命名空间Id。默认为空</span>
+        <span class="token key property">namespaceId</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 当使用ACM时，需要该配置，默认为空。详见：https://help.aliyun.com/document_detail/130146.html</span>
+        <span class="token key property">endpoint</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># ACM&amp;KMS的regionId，用于配置中心的鉴权。默认为空</span>
+        <span class="token key property">regionId</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># ACM&amp;KMS的AccessKey，用于配置中心的鉴权。默认为空</span>
+        <span class="token key property">accessKey</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># ACM&amp;KMS的SecretKey，用于配置中心的鉴权。默认为空</span>
+        <span class="token key property">secretKey</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 是否开启kms，同时DataId必须以&quot;cipher-&quot;作为前缀才会启动加解密逻辑。kms可以参考文档：https://help.aliyun.com/product/28933.html</span>
+        <span class="token key property">openKMS</span> <span class="token punctuation">=</span> <span class="token boolean">false</span>
+        <span class="token comment"># 缓存service信息的目录。默认为./run/nacos/naming/cache</span>
+        <span class="token key property">cacheDir</span> <span class="token punctuation">=</span> <span class="token string">&quot;./run/nacos/config/cache&quot;</span>
+        <span class="token comment"># Nacos服务端的API鉴权Username。默认为空</span>
+        <span class="token key property">username</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># Nacos服务端的API鉴权Password。默认为空</span>
+        <span class="token key property">password</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 日志存储路径。默认为./run/nacos/naming/log</span>
+        <span class="token key property">logDir</span> <span class="token punctuation">=</span> <span class="token string">&quot;./run/nacos/config/log&quot;</span>
+        <span class="token comment"># 日志输出级别，可选：debug、info、warn、error。默认为info</span>
+        <span class="token key property">logLevel</span> <span class="token punctuation">=</span> <span class="token string">&quot;info&quot;</span>
+
+<span class="token comment"># 网络模块</span>
+<span class="token punctuation">[</span><span class="token table class-name">network</span><span class="token punctuation">]</span>
+    <span class="token comment"># ws网络模块</span>
+    <span class="token punctuation">[</span><span class="token table class-name">network.ws</span><span class="token punctuation">]</span>
+        <span class="token comment"># ws网络服务器</span>
+        <span class="token punctuation">[</span><span class="token table class-name">network.ws.server</span><span class="token punctuation">]</span>
+            <span class="token comment"># 服务器监听地址</span>
+            <span class="token key property">addr</span> <span class="token punctuation">=</span> <span class="token string">&quot;:3553&quot;</span>
+            <span class="token comment"># 客户端连接路径</span>
+            <span class="token key property">path</span> <span class="token punctuation">=</span> <span class="token string">&quot;/&quot;</span>
+            <span class="token comment"># 服务器最大连接数</span>
+            <span class="token key property">maxConnNum</span> <span class="token punctuation">=</span> <span class="token number">5000</span>
+            <span class="token comment"># 秘钥文件</span>
+            <span class="token key property">keyFile</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+            <span class="token comment"># 证书文件</span>
+            <span class="token key property">certFile</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+            <span class="token comment"># 跨域检测，空数组时不允许任何连接升级成websocket，未设置此参数时允许所有的链接升级成websocket</span>
+            <span class="token key property">origins</span> <span class="token punctuation">=</span> <span class="token punctuation">[</span><span class="token string">&quot;*&quot;</span><span class="token punctuation">]</span>
+            <span class="token comment"># 握手超时时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为10s</span>
+            <span class="token key property">handshakeTimeout</span> <span class="token punctuation">=</span> <span class="token string">&quot;10s&quot;</span>
+            <span class="token comment"># 心跳检测间隔时间。设置为0则不启用心跳检测，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为10s</span>
+            <span class="token key property">heartbeatInterval</span> <span class="token punctuation">=</span> <span class="token string">&quot;10s&quot;</span>
+            <span class="token comment"># 心跳机制，默认为resp响应式心跳。可选：resp 响应式心跳 | tick 定时主推心跳</span>
+            <span class="token key property">heartbeatMechanism</span> <span class="token punctuation">=</span> <span class="token string">&quot;resp&quot;</span>
+            <span class="token comment"># 授权超时时间，（在客户端建立连接后，如果在授权超时时间内未进行绑定用户操作，则被认定为未授权连接，服务器会强制断开连接）支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为0s，不进行授权检测</span>
+            <span class="token key property">authorizeTimeout</span> <span class="token punctuation">=</span> <span class="token string">&quot;0s&quot;</span>
+        <span class="token comment"># ws网络客户端</span>
+        <span class="token punctuation">[</span><span class="token table class-name">network.ws.client</span><span class="token punctuation">]</span>
+            <span class="token comment"># 拨号地址</span>
+            <span class="token key property">url</span> <span class="token punctuation">=</span> <span class="token string">&quot;ws://127.0.0.1:3553&quot;</span>
+            <span class="token comment"># 握手超时时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为10s</span>
+            <span class="token key property">handshakeTimeout</span> <span class="token punctuation">=</span> <span class="token string">&quot;10s&quot;</span>
+            <span class="token comment"># 心跳间隔时间；设置为0则不启用心跳检测，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为10s</span>
+            <span class="token key property">heartbeatInterval</span> <span class="token punctuation">=</span> <span class="token string">&quot;10s&quot;</span>
+    <span class="token comment"># tcp网络模块</span>
+    <span class="token punctuation">[</span><span class="token table class-name">network.tcp</span><span class="token punctuation">]</span>
+        <span class="token comment"># tcp网络服务器</span>
+        <span class="token punctuation">[</span><span class="token table class-name">network.tcp.server</span><span class="token punctuation">]</span>
+            <span class="token comment"># 服务器监听地址</span>
+            <span class="token key property">addr</span> <span class="token punctuation">=</span> <span class="token string">&quot;:3553&quot;</span>
+            <span class="token comment"># 私钥文件</span>
+            <span class="token key property">keyFile</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+            <span class="token comment"># 证书文件</span>
+            <span class="token key property">certFile</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+            <span class="token comment"># 服务器最大连接数</span>
+            <span class="token key property">maxConnNum</span> <span class="token punctuation">=</span> <span class="token number">5000</span>
+            <span class="token comment"># 心跳间隔时间；设置为0则不启用心跳检测，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为10s</span>
+            <span class="token key property">heartbeatInterval</span> <span class="token punctuation">=</span> <span class="token string">&quot;10s&quot;</span>
+            <span class="token comment"># 心跳机制，默认resp</span>
+            <span class="token key property">heartbeatMechanism</span> <span class="token punctuation">=</span> <span class="token string">&quot;resp&quot;</span>
+            <span class="token comment"># 授权超时时间，（在客户端建立连接后，如果在授权超时时间内未进行绑定用户操作，则被认定为未授权连接，服务器会强制断开连接）支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为0s，不进行授权检测</span>
+            <span class="token key property">authorizeTimeout</span> <span class="token punctuation">=</span> <span class="token string">&quot;0s&quot;</span>
+        <span class="token comment"># tcp网络客户端</span>
+        <span class="token punctuation">[</span><span class="token table class-name">network.tcp.client</span><span class="token punctuation">]</span>
+            <span class="token comment"># 拨号地址</span>
+            <span class="token key property">addr</span> <span class="token punctuation">=</span> <span class="token string">&quot;127.0.0.1:3553&quot;</span>
+            <span class="token comment"># 拨号超时时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为5s</span>
+            <span class="token key property">timeout</span> <span class="token punctuation">=</span> <span class="token string">&quot;5s&quot;</span>
+            <span class="token comment"># CA证书文件</span>
+            <span class="token key property">caFile</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+            <span class="token comment"># 证书域名</span>
+            <span class="token key property">serverName</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+            <span class="token comment"># 心跳间隔时间；设置为0则不启用心跳检测，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为10s</span>
+            <span class="token key property">heartbeatInterval</span> <span class="token punctuation">=</span> <span class="token string">&quot;10s&quot;</span>
+
+<span class="token comment"># 用户定位器模块</span>
+<span class="token punctuation">[</span><span class="token table class-name">locate</span><span class="token punctuation">]</span>
+    <span class="token comment"># redis定位模块</span>
+    <span class="token punctuation">[</span><span class="token table class-name">locate.redis</span><span class="token punctuation">]</span>
+        <span class="token comment"># 客户端连接地址</span>
+        <span class="token key property">addrs</span> <span class="token punctuation">=</span> <span class="token punctuation">[</span><span class="token string">&quot;127.0.0.1:6379&quot;</span><span class="token punctuation">]</span>
+        <span class="token comment"># 数据库号</span>
+        <span class="token key property">db</span> <span class="token punctuation">=</span> <span class="token number">0</span>
+        <span class="token comment"># 用户名</span>
+        <span class="token key property">username</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 密码</span>
+        <span class="token key property">password</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 私钥文件</span>
+        <span class="token key property">keyFile</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 证书文件</span>
+        <span class="token key property">certFile</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># CA证书文件</span>
+        <span class="token key property">caFile</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 最大重试次数</span>
+        <span class="token key property">maxRetries</span> <span class="token punctuation">=</span> <span class="token number">3</span>
+        <span class="token comment"># key前缀</span>
+        <span class="token key property">prefix</span> <span class="token punctuation">=</span> <span class="token string">&quot;due:locate&quot;</span>
+
+<span class="token comment"># 缓存模块</span>
+<span class="token punctuation">[</span><span class="token table class-name">cache</span><span class="token punctuation">]</span>
+    <span class="token comment"># redis缓存模块</span>
+    <span class="token punctuation">[</span><span class="token table class-name">cache.redis</span><span class="token punctuation">]</span>
+        <span class="token comment"># 客户端连接地址</span>
+        <span class="token key property">addrs</span> <span class="token punctuation">=</span> <span class="token punctuation">[</span><span class="token string">&quot;127.0.0.1:6379&quot;</span><span class="token punctuation">]</span>
+        <span class="token comment"># 数据库号</span>
+        <span class="token key property">db</span> <span class="token punctuation">=</span> <span class="token number">0</span>
+        <span class="token comment"># 用户名</span>
+        <span class="token key property">username</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 密码</span>
+        <span class="token key property">password</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 私钥文件</span>
+        <span class="token key property">keyFile</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 证书文件</span>
+        <span class="token key property">certFile</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># CA证书文件</span>
+        <span class="token key property">caFile</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 最大重试次数</span>
+        <span class="token key property">maxRetries</span> <span class="token punctuation">=</span> <span class="token number">3</span>
+        <span class="token comment"># key前缀，默认为cache</span>
+        <span class="token key property">prefix</span> <span class="token punctuation">=</span> <span class="token string">&quot;due:cache&quot;</span>
+        <span class="token comment"># 空值，默认为cache@nil</span>
+        <span class="token key property">nilValue</span> <span class="token punctuation">=</span> <span class="token string">&quot;cache@nil&quot;</span>
+        <span class="token comment"># 空值过期时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为10s</span>
+        <span class="token key property">nilExpiration</span> <span class="token punctuation">=</span> <span class="token string">&quot;10s&quot;</span>
+        <span class="token comment"># 最小过期时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为1h</span>
+        <span class="token key property">minExpiration</span> <span class="token punctuation">=</span> <span class="token string">&quot;1h&quot;</span>
+        <span class="token comment"># 最大过期时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为24h</span>
+        <span class="token key property">maxExpiration</span> <span class="token punctuation">=</span> <span class="token string">&quot;24h&quot;</span>
+    <span class="token comment"># memcache缓存模块</span>
+    <span class="token punctuation">[</span><span class="token table class-name">cache.memcache</span><span class="token punctuation">]</span>
+        <span class="token comment"># 客户端连接地址</span>
+        <span class="token key property">addrs</span> <span class="token punctuation">=</span> <span class="token punctuation">[</span><span class="token string">&quot;127.0.0.1:11211&quot;</span><span class="token punctuation">]</span>
+        <span class="token comment"># key前缀，默认为cache</span>
+        <span class="token key property">prefix</span> <span class="token punctuation">=</span> <span class="token string">&quot;due:cache&quot;</span>
+        <span class="token comment"># 空值，默认为cache@nil</span>
+        <span class="token key property">nilValue</span> <span class="token punctuation">=</span> <span class="token string">&quot;cache@nil&quot;</span>
+        <span class="token comment"># 空值过期时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为10s</span>
+        <span class="token key property">nilExpiration</span> <span class="token punctuation">=</span> <span class="token string">&quot;10s&quot;</span>
+        <span class="token comment"># 最小过期时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为1h</span>
+        <span class="token key property">minExpiration</span> <span class="token punctuation">=</span> <span class="token string">&quot;1h&quot;</span>
+        <span class="token comment"># 最大过期时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为24h</span>
+        <span class="token key property">maxExpiration</span> <span class="token punctuation">=</span> <span class="token string">&quot;24h&quot;</span>
+
+<span class="token comment"># 分布式锁模块</span>
+<span class="token punctuation">[</span><span class="token table class-name">lock</span><span class="token punctuation">]</span>
+    <span class="token comment"># redis分布式锁模块</span>
+    <span class="token punctuation">[</span><span class="token table class-name">lock.redis</span><span class="token punctuation">]</span>
+        <span class="token comment"># 客户端连接地址</span>
+        <span class="token key property">addrs</span> <span class="token punctuation">=</span> <span class="token punctuation">[</span><span class="token string">&quot;127.0.0.1:6379&quot;</span><span class="token punctuation">]</span>
+        <span class="token comment"># 数据库号</span>
+        <span class="token key property">db</span> <span class="token punctuation">=</span> <span class="token number">0</span>
+        <span class="token comment"># 用户名</span>
+        <span class="token key property">username</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 密码</span>
+        <span class="token key property">password</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 私钥文件</span>
+        <span class="token key property">keyFile</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 证书文件</span>
+        <span class="token key property">certFile</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># CA证书文件</span>
+        <span class="token key property">caFile</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 最大重试次数</span>
+        <span class="token key property">maxRetries</span> <span class="token punctuation">=</span> <span class="token number">3</span>
+        <span class="token comment"># key前缀</span>
+        <span class="token key property">prefix</span> <span class="token punctuation">=</span> <span class="token string">&quot;due:lock&quot;</span>
+        <span class="token comment"># 锁过期时间（自动续约），支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为3s</span>
+        <span class="token key property">expiration</span> <span class="token punctuation">=</span> <span class="token string">&quot;3s&quot;</span>
+        <span class="token comment"># 循环获取锁的频率间隔时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为20ms</span>
+        <span class="token key property">acquireInterval</span> <span class="token punctuation">=</span> <span class="token string">&quot;20ms&quot;</span>
+        <span class="token comment"># 循环获取锁的最大重试次数，默认为0，&lt;=0则为无限次</span>
+        <span class="token key property">acquireMaxRetries</span> <span class="token punctuation">=</span> <span class="token number">0</span>
+    <span class="token comment"># memcache分布式锁模块</span>
+    <span class="token punctuation">[</span><span class="token table class-name">lock.memcache</span><span class="token punctuation">]</span>
+        <span class="token comment"># 客户端连接地址</span>
+        <span class="token key property">addrs</span> <span class="token punctuation">=</span> <span class="token punctuation">[</span><span class="token string">&quot;127.0.0.1:11211&quot;</span><span class="token punctuation">]</span>
+        <span class="token comment"># key前缀</span>
+        <span class="token key property">prefix</span> <span class="token punctuation">=</span> <span class="token string">&quot;due:lock&quot;</span>
+        <span class="token comment"># 锁过期时间（自动续约），支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为3s</span>
+        <span class="token key property">expiration</span> <span class="token punctuation">=</span> <span class="token string">&quot;3s&quot;</span>
+        <span class="token comment"># 循环获取锁的频率间隔时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为20ms</span>
+        <span class="token key property">acquireInterval</span> <span class="token punctuation">=</span> <span class="token string">&quot;20ms&quot;</span>
+        <span class="token comment"># 循环获取锁的最大重试次数，默认为0，&lt;=0则为无限次</span>
+        <span class="token key property">acquireMaxRetries</span> <span class="token punctuation">=</span> <span class="token number">0</span>
+
+<span class="token comment"># 加密模块</span>
+<span class="token punctuation">[</span><span class="token table class-name">crypto</span><span class="token punctuation">]</span>
+    <span class="token comment"># RSA加密模块</span>
+    <span class="token punctuation">[</span><span class="token table class-name">crypto.rsa</span><span class="token punctuation">]</span>
+        <span class="token punctuation">[</span><span class="token table class-name">crypto.rsa.encryptor</span><span class="token punctuation">]</span>
+            <span class="token comment"># hash算法，不区分大小写。可选：SHA1 | SHA224 | SHA256 | SHA384 | SHA512</span>
+            <span class="token key property">hash</span> <span class="token punctuation">=</span> <span class="token string">&quot;SHA256&quot;</span>
+            <span class="token comment"># 填充规则，不区分大小写。可选：NORMAL | OAEP</span>
+            <span class="token key property">padding</span> <span class="token punctuation">=</span> <span class="token string">&quot;NORMAL&quot;</span>
+            <span class="token comment"># 标签，加解密时必需一致</span>
+            <span class="token key property">label</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+            <span class="token comment"># 加密数据块大小，单位字节。由于加密数据长度限制，需要对加密数据进行分块儿加密</span>
+            <span class="token key property">blockSize</span> <span class="token punctuation">=</span> <span class="token number">0</span>
+            <span class="token comment"># 公钥，可设置文件路径或公钥串</span>
+            <span class="token key property">publicKey</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token punctuation">[</span><span class="token table class-name">crypto.rsa.decryptor</span><span class="token punctuation">]</span>
+            <span class="token comment"># hash算法，不区分大小写。可选：SHA1 | SHA224 | SHA256 | SHA384 | SHA512</span>
+            <span class="token key property">hash</span> <span class="token punctuation">=</span> <span class="token string">&quot;SHA256&quot;</span>
+            <span class="token comment"># 填充规则，不区分大小写。可选：NORMAL | OAEP</span>
+            <span class="token key property">padding</span> <span class="token punctuation">=</span> <span class="token string">&quot;NORMAL&quot;</span>
+            <span class="token comment"># 标签。加解密时必需一致</span>
+            <span class="token key property">label</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+            <span class="token comment"># 私钥。可设置文件路径或私钥串</span>
+            <span class="token key property">privateKey</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token punctuation">[</span><span class="token table class-name">crypto.rsa.signer</span><span class="token punctuation">]</span>
+            <span class="token comment"># hash算法，不区分大小写。可选：SHA1 | SHA224 | SHA256 | SHA384 | SHA512</span>
+            <span class="token key property">hash</span> <span class="token punctuation">=</span> <span class="token string">&quot;SHA256&quot;</span>
+            <span class="token comment"># 填充规则，不区分大小写。可选：PKCS | PSS</span>
+            <span class="token key property">padding</span> <span class="token punctuation">=</span> <span class="token string">&quot;PSS&quot;</span>
+            <span class="token comment"># 私钥。可设置文件路径或私钥串</span>
+            <span class="token key property">privateKey</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token punctuation">[</span><span class="token table class-name">crypto.rsa.verifier</span><span class="token punctuation">]</span>
+            <span class="token comment"># hash算法，不区分大小写。可选：SHA1 | SHA224 | SHA256 | SHA384 | SHA512</span>
+            <span class="token key property">hash</span> <span class="token punctuation">=</span> <span class="token string">&quot;SHA256&quot;</span>
+            <span class="token comment"># 填充规则，不区分大小写。可选：PKCS | PSS</span>
+            <span class="token key property">padding</span> <span class="token punctuation">=</span> <span class="token string">&quot;PSS&quot;</span>
+            <span class="token comment"># 公钥，可设置文件路径或公钥串</span>
+            <span class="token key property">publicKey</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+    <span class="token comment"># ECC加密模块</span>
+    <span class="token punctuation">[</span><span class="token table class-name">crypto.ecc</span><span class="token punctuation">]</span>
+        <span class="token punctuation">[</span><span class="token table class-name">crypto.ecc.encryptor</span><span class="token punctuation">]</span>
+            <span class="token comment"># 共享信息。加解密时必需一致</span>
+            <span class="token key property">s1</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+            <span class="token comment"># 共享信息。加解密时必需一致</span>
+            <span class="token key property">s2</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+            <span class="token comment"># 公钥，可设置文件路径或公钥串</span>
+            <span class="token key property">publicKey</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token punctuation">[</span><span class="token table class-name">crypto.ecc.decryptor</span><span class="token punctuation">]</span>
+            <span class="token comment"># 共享信息。加解密时必需一致</span>
+            <span class="token key property">s1</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+            <span class="token comment"># 共享信息。加解密时必需一致</span>
+            <span class="token key property">s2</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+            <span class="token comment"># 私钥。可设置文件路径或私钥串</span>
+            <span class="token key property">privateKey</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token punctuation">[</span><span class="token table class-name">crypto.ecc.signer</span><span class="token punctuation">]</span>
+            <span class="token comment"># hash算法，不区分大小写。可选：SHA1 | SHA224 | SHA256 | SHA384 | SHA512</span>
+            <span class="token key property">hash</span> <span class="token punctuation">=</span> <span class="token string">&quot;SHA256&quot;</span>
+            <span class="token comment"># 签名分隔符。由于ECDSA签名算法会产生两段签名串，因此需要通过分隔符将其拼接为一个签名</span>
+            <span class="token key property">delimiter</span> <span class="token punctuation">=</span> <span class="token string">&quot; &quot;</span>
+            <span class="token comment"># 私钥。可设置文件路径或私钥串</span>
+            <span class="token key property">privateKey</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token punctuation">[</span><span class="token table class-name">crypto.ecc.verifier</span><span class="token punctuation">]</span>
+            <span class="token comment"># hash算法，不区分大小写。可选：SHA1 | SHA224 | SHA256 | SHA384 | SHA512</span>
+            <span class="token key property">hash</span> <span class="token punctuation">=</span> <span class="token string">&quot;SHA256&quot;</span>
+            <span class="token comment"># 签名分隔符。由于ECDSA签名算法会产生两段签名串，因此需要通过分隔符将其拼接为一个签名</span>
+            <span class="token key property">delimiter</span> <span class="token punctuation">=</span> <span class="token string">&quot; &quot;</span>
+            <span class="token comment"># 公钥，可设置文件路径或公钥串</span>
+            <span class="token key property">publicKey</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+
+<span class="token comment"># 事件总线模块</span>
+<span class="token punctuation">[</span><span class="token table class-name">eventbus</span><span class="token punctuation">]</span>
+    <span class="token comment"># nats事件总线模块</span>
+    <span class="token punctuation">[</span><span class="token table class-name">eventbus.nats</span><span class="token punctuation">]</span>
+        <span class="token comment"># 客户端连接地址，默认为nats://127.0.0.1:4222</span>
+        <span class="token key property">url</span> <span class="token punctuation">=</span> <span class="token string">&quot;nats://127.0.0.1:4222&quot;</span>
+        <span class="token comment"># 客户端连接超时时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为2s</span>
+        <span class="token key property">timeout</span> <span class="token punctuation">=</span> <span class="token string">&quot;2s&quot;</span>
+        <span class="token comment"># key前缀</span>
+        <span class="token key property">prefix</span> <span class="token punctuation">=</span> <span class="token string">&quot;due:eventbus&quot;</span>
+    <span class="token comment"># redis事件总线模块</span>
+    <span class="token punctuation">[</span><span class="token table class-name">eventbus.redis</span><span class="token punctuation">]</span>
+        <span class="token comment"># 客户端连接地址</span>
+        <span class="token key property">addrs</span> <span class="token punctuation">=</span> <span class="token punctuation">[</span><span class="token string">&quot;127.0.0.1:6379&quot;</span><span class="token punctuation">]</span>
+        <span class="token comment"># 数据库号</span>
+        <span class="token key property">db</span> <span class="token punctuation">=</span> <span class="token number">0</span>
+        <span class="token comment"># 用户名</span>
+        <span class="token key property">username</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 密码</span>
+        <span class="token key property">password</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 私钥文件</span>
+        <span class="token key property">keyFile</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 证书文件</span>
+        <span class="token key property">certFile</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># CA证书文件</span>
+        <span class="token key property">caFile</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># 最大重试次数</span>
+        <span class="token key property">maxRetries</span> <span class="token punctuation">=</span> <span class="token number">3</span>
+        <span class="token comment"># key前缀</span>
+        <span class="token key property">prefix</span> <span class="token punctuation">=</span> <span class="token string">&quot;due:eventbus&quot;</span>
+    <span class="token comment"># kafka事件总线模块</span>
+    <span class="token punctuation">[</span><span class="token table class-name">eventbus.kafka</span><span class="token punctuation">]</span>
+        <span class="token comment"># 客户端连接地址</span>
+        <span class="token key property">addrs</span> <span class="token punctuation">=</span> <span class="token punctuation">[</span><span class="token string">&quot;127.0.0.1:9092&quot;</span><span class="token punctuation">]</span>
+        <span class="token comment"># Kafka版本，默认为无版本</span>
+        <span class="token key property">version</span> <span class="token punctuation">=</span> <span class="token string">&quot;&quot;</span>
+        <span class="token comment"># key前缀</span>
+        <span class="token key property">prefix</span> <span class="token punctuation">=</span> <span class="token string">&quot;due:eventbus&quot;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br><span class="line-number">76</span><br><span class="line-number">77</span><br><span class="line-number">78</span><br><span class="line-number">79</span><br><span class="line-number">80</span><br><span class="line-number">81</span><br><span class="line-number">82</span><br><span class="line-number">83</span><br><span class="line-number">84</span><br><span class="line-number">85</span><br><span class="line-number">86</span><br><span class="line-number">87</span><br><span class="line-number">88</span><br><span class="line-number">89</span><br><span class="line-number">90</span><br><span class="line-number">91</span><br><span class="line-number">92</span><br><span class="line-number">93</span><br><span class="line-number">94</span><br><span class="line-number">95</span><br><span class="line-number">96</span><br><span class="line-number">97</span><br><span class="line-number">98</span><br><span class="line-number">99</span><br><span class="line-number">100</span><br><span class="line-number">101</span><br><span class="line-number">102</span><br><span class="line-number">103</span><br><span class="line-number">104</span><br><span class="line-number">105</span><br><span class="line-number">106</span><br><span class="line-number">107</span><br><span class="line-number">108</span><br><span class="line-number">109</span><br><span class="line-number">110</span><br><span class="line-number">111</span><br><span class="line-number">112</span><br><span class="line-number">113</span><br><span class="line-number">114</span><br><span class="line-number">115</span><br><span class="line-number">116</span><br><span class="line-number">117</span><br><span class="line-number">118</span><br><span class="line-number">119</span><br><span class="line-number">120</span><br><span class="line-number">121</span><br><span class="line-number">122</span><br><span class="line-number">123</span><br><span class="line-number">124</span><br><span class="line-number">125</span><br><span class="line-number">126</span><br><span class="line-number">127</span><br><span class="line-number">128</span><br><span class="line-number">129</span><br><span class="line-number">130</span><br><span class="line-number">131</span><br><span class="line-number">132</span><br><span class="line-number">133</span><br><span class="line-number">134</span><br><span class="line-number">135</span><br><span class="line-number">136</span><br><span class="line-number">137</span><br><span class="line-number">138</span><br><span class="line-number">139</span><br><span class="line-number">140</span><br><span class="line-number">141</span><br><span class="line-number">142</span><br><span class="line-number">143</span><br><span class="line-number">144</span><br><span class="line-number">145</span><br><span class="line-number">146</span><br><span class="line-number">147</span><br><span class="line-number">148</span><br><span class="line-number">149</span><br><span class="line-number">150</span><br><span class="line-number">151</span><br><span class="line-number">152</span><br><span class="line-number">153</span><br><span class="line-number">154</span><br><span class="line-number">155</span><br><span class="line-number">156</span><br><span class="line-number">157</span><br><span class="line-number">158</span><br><span class="line-number">159</span><br><span class="line-number">160</span><br><span class="line-number">161</span><br><span class="line-number">162</span><br><span class="line-number">163</span><br><span class="line-number">164</span><br><span class="line-number">165</span><br><span class="line-number">166</span><br><span class="line-number">167</span><br><span class="line-number">168</span><br><span class="line-number">169</span><br><span class="line-number">170</span><br><span class="line-number">171</span><br><span class="line-number">172</span><br><span class="line-number">173</span><br><span class="line-number">174</span><br><span class="line-number">175</span><br><span class="line-number">176</span><br><span class="line-number">177</span><br><span class="line-number">178</span><br><span class="line-number">179</span><br><span class="line-number">180</span><br><span class="line-number">181</span><br><span class="line-number">182</span><br><span class="line-number">183</span><br><span class="line-number">184</span><br><span class="line-number">185</span><br><span class="line-number">186</span><br><span class="line-number">187</span><br><span class="line-number">188</span><br><span class="line-number">189</span><br><span class="line-number">190</span><br><span class="line-number">191</span><br><span class="line-number">192</span><br><span class="line-number">193</span><br><span class="line-number">194</span><br><span class="line-number">195</span><br><span class="line-number">196</span><br><span class="line-number">197</span><br><span class="line-number">198</span><br><span class="line-number">199</span><br><span class="line-number">200</span><br><span class="line-number">201</span><br><span class="line-number">202</span><br><span class="line-number">203</span><br><span class="line-number">204</span><br><span class="line-number">205</span><br><span class="line-number">206</span><br><span class="line-number">207</span><br><span class="line-number">208</span><br><span class="line-number">209</span><br><span class="line-number">210</span><br><span class="line-number">211</span><br><span class="line-number">212</span><br><span class="line-number">213</span><br><span class="line-number">214</span><br><span class="line-number">215</span><br><span class="line-number">216</span><br><span class="line-number">217</span><br><span class="line-number">218</span><br><span class="line-number">219</span><br><span class="line-number">220</span><br><span class="line-number">221</span><br><span class="line-number">222</span><br><span class="line-number">223</span><br><span class="line-number">224</span><br><span class="line-number">225</span><br><span class="line-number">226</span><br><span class="line-number">227</span><br><span class="line-number">228</span><br><span class="line-number">229</span><br><span class="line-number">230</span><br><span class="line-number">231</span><br><span class="line-number">232</span><br><span class="line-number">233</span><br><span class="line-number">234</span><br><span class="line-number">235</span><br><span class="line-number">236</span><br><span class="line-number">237</span><br><span class="line-number">238</span><br><span class="line-number">239</span><br><span class="line-number">240</span><br><span class="line-number">241</span><br><span class="line-number">242</span><br><span class="line-number">243</span><br><span class="line-number">244</span><br><span class="line-number">245</span><br><span class="line-number">246</span><br><span class="line-number">247</span><br><span class="line-number">248</span><br><span class="line-number">249</span><br><span class="line-number">250</span><br><span class="line-number">251</span><br><span class="line-number">252</span><br><span class="line-number">253</span><br><span class="line-number">254</span><br><span class="line-number">255</span><br><span class="line-number">256</span><br><span class="line-number">257</span><br><span class="line-number">258</span><br><span class="line-number">259</span><br><span class="line-number">260</span><br><span class="line-number">261</span><br><span class="line-number">262</span><br><span class="line-number">263</span><br><span class="line-number">264</span><br><span class="line-number">265</span><br><span class="line-number">266</span><br><span class="line-number">267</span><br><span class="line-number">268</span><br><span class="line-number">269</span><br><span class="line-number">270</span><br><span class="line-number">271</span><br><span class="line-number">272</span><br><span class="line-number">273</span><br><span class="line-number">274</span><br><span class="line-number">275</span><br><span class="line-number">276</span><br><span class="line-number">277</span><br><span class="line-number">278</span><br><span class="line-number">279</span><br><span class="line-number">280</span><br><span class="line-number">281</span><br><span class="line-number">282</span><br><span class="line-number">283</span><br><span class="line-number">284</span><br><span class="line-number">285</span><br><span class="line-number">286</span><br><span class="line-number">287</span><br><span class="line-number">288</span><br><span class="line-number">289</span><br><span class="line-number">290</span><br><span class="line-number">291</span><br><span class="line-number">292</span><br><span class="line-number">293</span><br><span class="line-number">294</span><br><span class="line-number">295</span><br><span class="line-number">296</span><br><span class="line-number">297</span><br><span class="line-number">298</span><br><span class="line-number">299</span><br><span class="line-number">300</span><br><span class="line-number">301</span><br><span class="line-number">302</span><br><span class="line-number">303</span><br><span class="line-number">304</span><br><span class="line-number">305</span><br><span class="line-number">306</span><br><span class="line-number">307</span><br><span class="line-number">308</span><br><span class="line-number">309</span><br><span class="line-number">310</span><br><span class="line-number">311</span><br><span class="line-number">312</span><br><span class="line-number">313</span><br><span class="line-number">314</span><br><span class="line-number">315</span><br><span class="line-number">316</span><br><span class="line-number">317</span><br><span class="line-number">318</span><br><span class="line-number">319</span><br><span class="line-number">320</span><br><span class="line-number">321</span><br><span class="line-number">322</span><br><span class="line-number">323</span><br><span class="line-number">324</span><br><span class="line-number">325</span><br><span class="line-number">326</span><br><span class="line-number">327</span><br><span class="line-number">328</span><br><span class="line-number">329</span><br><span class="line-number">330</span><br><span class="line-number">331</span><br><span class="line-number">332</span><br><span class="line-number">333</span><br><span class="line-number">334</span><br><span class="line-number">335</span><br><span class="line-number">336</span><br><span class="line-number">337</span><br><span class="line-number">338</span><br><span class="line-number">339</span><br><span class="line-number">340</span><br><span class="line-number">341</span><br><span class="line-number">342</span><br><span class="line-number">343</span><br><span class="line-number">344</span><br><span class="line-number">345</span><br><span class="line-number">346</span><br><span class="line-number">347</span><br><span class="line-number">348</span><br><span class="line-number">349</span><br><span class="line-number">350</span><br><span class="line-number">351</span><br><span class="line-number">352</span><br><span class="line-number">353</span><br><span class="line-number">354</span><br><span class="line-number">355</span><br><span class="line-number">356</span><br><span class="line-number">357</span><br><span class="line-number">358</span><br><span class="line-number">359</span><br><span class="line-number">360</span><br><span class="line-number">361</span><br><span class="line-number">362</span><br><span class="line-number">363</span><br><span class="line-number">364</span><br><span class="line-number">365</span><br><span class="line-number">366</span><br><span class="line-number">367</span><br><span class="line-number">368</span><br><span class="line-number">369</span><br><span class="line-number">370</span><br><span class="line-number">371</span><br><span class="line-number">372</span><br><span class="line-number">373</span><br><span class="line-number">374</span><br><span class="line-number">375</span><br><span class="line-number">376</span><br><span class="line-number">377</span><br><span class="line-number">378</span><br><span class="line-number">379</span><br><span class="line-number">380</span><br><span class="line-number">381</span><br><span class="line-number">382</span><br><span class="line-number">383</span><br><span class="line-number">384</span><br><span class="line-number">385</span><br><span class="line-number">386</span><br><span class="line-number">387</span><br><span class="line-number">388</span><br><span class="line-number">389</span><br><span class="line-number">390</span><br><span class="line-number">391</span><br><span class="line-number">392</span><br><span class="line-number">393</span><br><span class="line-number">394</span><br><span class="line-number">395</span><br><span class="line-number">396</span><br><span class="line-number">397</span><br><span class="line-number">398</span><br><span class="line-number">399</span><br><span class="line-number">400</span><br><span class="line-number">401</span><br><span class="line-number">402</span><br><span class="line-number">403</span><br><span class="line-number">404</span><br><span class="line-number">405</span><br><span class="line-number">406</span><br><span class="line-number">407</span><br><span class="line-number">408</span><br><span class="line-number">409</span><br><span class="line-number">410</span><br><span class="line-number">411</span><br><span class="line-number">412</span><br><span class="line-number">413</span><br><span class="line-number">414</span><br><span class="line-number">415</span><br><span class="line-number">416</span><br><span class="line-number">417</span><br><span class="line-number">418</span><br><span class="line-number">419</span><br><span class="line-number">420</span><br><span class="line-number">421</span><br><span class="line-number">422</span><br><span class="line-number">423</span><br><span class="line-number">424</span><br><span class="line-number">425</span><br><span class="line-number">426</span><br><span class="line-number">427</span><br><span class="line-number">428</span><br><span class="line-number">429</span><br><span class="line-number">430</span><br><span class="line-number">431</span><br><span class="line-number">432</span><br><span class="line-number">433</span><br><span class="line-number">434</span><br><span class="line-number">435</span><br><span class="line-number">436</span><br><span class="line-number">437</span><br><span class="line-number">438</span><br><span class="line-number">439</span><br><span class="line-number">440</span><br><span class="line-number">441</span><br><span class="line-number">442</span><br><span class="line-number">443</span><br><span class="line-number">444</span><br><span class="line-number">445</span><br><span class="line-number">446</span><br><span class="line-number">447</span><br><span class="line-number">448</span><br><span class="line-number">449</span><br><span class="line-number">450</span><br><span class="line-number">451</span><br><span class="line-number">452</span><br><span class="line-number">453</span><br><span class="line-number">454</span><br><span class="line-number">455</span><br><span class="line-number">456</span><br><span class="line-number">457</span><br><span class="line-number">458</span><br><span class="line-number">459</span><br><span class="line-number">460</span><br><span class="line-number">461</span><br><span class="line-number">462</span><br><span class="line-number">463</span><br><span class="line-number">464</span><br><span class="line-number">465</span><br><span class="line-number">466</span><br><span class="line-number">467</span><br><span class="line-number">468</span><br><span class="line-number">469</span><br><span class="line-number">470</span><br><span class="line-number">471</span><br><span class="line-number">472</span><br><span class="line-number">473</span><br><span class="line-number">474</span><br><span class="line-number">475</span><br><span class="line-number">476</span><br><span class="line-number">477</span><br><span class="line-number">478</span><br><span class="line-number">479</span><br><span class="line-number">480</span><br><span class="line-number">481</span><br><span class="line-number">482</span><br><span class="line-number">483</span><br><span class="line-number">484</span><br><span class="line-number">485</span><br><span class="line-number">486</span><br><span class="line-number">487</span><br><span class="line-number">488</span><br><span class="line-number">489</span><br><span class="line-number">490</span><br><span class="line-number">491</span><br><span class="line-number">492</span><br><span class="line-number">493</span><br><span class="line-number">494</span><br><span class="line-number">495</span><br><span class="line-number">496</span><br><span class="line-number">497</span><br><span class="line-number">498</span><br><span class="line-number">499</span><br><span class="line-number">500</span><br><span class="line-number">501</span><br><span class="line-number">502</span><br><span class="line-number">503</span><br><span class="line-number">504</span><br><span class="line-number">505</span><br><span class="line-number">506</span><br><span class="line-number">507</span><br><span class="line-number">508</span><br><span class="line-number">509</span><br><span class="line-number">510</span><br><span class="line-number">511</span><br><span class="line-number">512</span><br><span class="line-number">513</span><br><span class="line-number">514</span><br><span class="line-number">515</span><br><span class="line-number">516</span><br><span class="line-number">517</span><br><span class="line-number">518</span><br><span class="line-number">519</span><br><span class="line-number">520</span><br><span class="line-number">521</span><br><span class="line-number">522</span><br><span class="line-number">523</span><br><span class="line-number">524</span><br><span class="line-number">525</span><br><span class="line-number">526</span><br><span class="line-number">527</span><br><span class="line-number">528</span><br><span class="line-number">529</span><br><span class="line-number">530</span><br><span class="line-number">531</span><br><span class="line-number">532</span><br><span class="line-number">533</span><br><span class="line-number">534</span><br><span class="line-number">535</span><br><span class="line-number">536</span><br><span class="line-number">537</span><br><span class="line-number">538</span><br><span class="line-number">539</span><br><span class="line-number">540</span><br><span class="line-number">541</span><br><span class="line-number">542</span><br><span class="line-number">543</span><br><span class="line-number">544</span><br><span class="line-number">545</span><br><span class="line-number">546</span><br><span class="line-number">547</span><br><span class="line-number">548</span><br><span class="line-number">549</span><br><span class="line-number">550</span><br><span class="line-number">551</span><br><span class="line-number">552</span><br><span class="line-number">553</span><br><span class="line-number">554</span><br><span class="line-number">555</span><br><span class="line-number">556</span><br><span class="line-number">557</span><br><span class="line-number">558</span><br><span class="line-number">559</span><br><span class="line-number">560</span><br><span class="line-number">561</span><br><span class="line-number">562</span><br><span class="line-number">563</span><br><span class="line-number">564</span><br><span class="line-number">565</span><br><span class="line-number">566</span><br><span class="line-number">567</span><br><span class="line-number">568</span><br><span class="line-number">569</span><br><span class="line-number">570</span><br><span class="line-number">571</span><br><span class="line-number">572</span><br><span class="line-number">573</span><br><span class="line-number">574</span><br><span class="line-number">575</span><br><span class="line-number">576</span><br><span class="line-number">577</span><br><span class="line-number">578</span><br><span class="line-number">579</span><br><span class="line-number">580</span><br><span class="line-number">581</span><br><span class="line-number">582</span><br><span class="line-number">583</span><br><span class="line-number">584</span><br><span class="line-number">585</span><br><span class="line-number">586</span><br><span class="line-number">587</span><br><span class="line-number">588</span><br><span class="line-number">589</span><br><span class="line-number">590</span><br><span class="line-number">591</span><br><span class="line-number">592</span><br><span class="line-number">593</span><br><span class="line-number">594</span><br><span class="line-number">595</span><br><span class="line-number">596</span><br><span class="line-number">597</span><br><span class="line-number">598</span><br><span class="line-number">599</span><br><span class="line-number">600</span><br><span class="line-number">601</span><br><span class="line-number">602</span><br><span class="line-number">603</span><br><span class="line-number">604</span><br><span class="line-number">605</span><br><span class="line-number">606</span><br><span class="line-number">607</span><br><span class="line-number">608</span><br><span class="line-number">609</span><br><span class="line-number">610</span><br><span class="line-number">611</span><br><span class="line-number">612</span><br><span class="line-number">613</span><br><span class="line-number">614</span><br><span class="line-number">615</span><br><span class="line-number">616</span><br><span class="line-number">617</span><br><span class="line-number">618</span><br><span class="line-number">619</span><br><span class="line-number">620</span><br><span class="line-number">621</span><br><span class="line-number">622</span><br><span class="line-number">623</span><br><span class="line-number">624</span><br><span class="line-number">625</span><br><span class="line-number">626</span><br><span class="line-number">627</span><br><span class="line-number">628</span><br><span class="line-number">629</span><br><span class="line-number">630</span><br><span class="line-number">631</span><br><span class="line-number">632</span><br><span class="line-number">633</span><br><span class="line-number">634</span><br><span class="line-number">635</span><br><span class="line-number">636</span><br><span class="line-number">637</span><br><span class="line-number">638</span><br><span class="line-number">639</span><br><span class="line-number">640</span><br><span class="line-number">641</span><br><span class="line-number">642</span><br><span class="line-number">643</span><br><span class="line-number">644</span><br><span class="line-number">645</span><br><span class="line-number">646</span><br><span class="line-number">647</span><br><span class="line-number">648</span><br><span class="line-number">649</span><br><span class="line-number">650</span><br><span class="line-number">651</span><br><span class="line-number">652</span><br><span class="line-number">653</span><br><span class="line-number">654</span><br><span class="line-number">655</span><br><span class="line-number">656</span><br><span class="line-number">657</span><br><span class="line-number">658</span><br><span class="line-number">659</span><br><span class="line-number">660</span><br><span class="line-number">661</span><br><span class="line-number">662</span><br><span class="line-number">663</span><br><span class="line-number">664</span><br><span class="line-number">665</span><br><span class="line-number">666</span><br><span class="line-number">667</span><br><span class="line-number">668</span><br><span class="line-number">669</span><br><span class="line-number">670</span><br><span class="line-number">671</span><br><span class="line-number">672</span><br><span class="line-number">673</span><br><span class="line-number">674</span><br><span class="line-number">675</span><br><span class="line-number">676</span><br><span class="line-number">677</span><br><span class="line-number">678</span><br><span class="line-number">679</span><br><span class="line-number">680</span><br><span class="line-number">681</span><br><span class="line-number">682</span><br><span class="line-number">683</span><br><span class="line-number">684</span><br><span class="line-number">685</span><br><span class="line-number">686</span><br><span class="line-number">687</span><br><span class="line-number">688</span><br><span class="line-number">689</span><br><span class="line-number">690</span><br></div></div></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/dobyte/due-docs/edit/master/docs/guide/v2/2.9.etc.md" target="_blank" rel="noopener noreferrer">在github.com上编辑此页</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <div class="last-updated"><span class="prefix">上次更新:</span> <span class="time">2025-10-22 10:45:09</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/guide/v2/2.8.actor.html" class="prev">
+        2.8 Actor模型
+      </a></span> <span class="next"><a href="/guide/v2/2.10.mode.html">
+        2.10 运行模式
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"><!----></div></div>
+    <script src="/assets/js/app.7b71a228.js" defer></script><script src="/assets/js/2.1e091c12.js" defer></script><script src="/assets/js/1.c3aad045.js" defer></script><script src="/assets/js/39.d19d0156.js" defer></script>
+  </body>
+</html>
