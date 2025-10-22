@@ -1,23 +1,19 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/dobyte/due/locate/redis/v2"
 	"github.com/dobyte/due/registry/consul/v2"
 	"github.com/dobyte/due/v2"
 	"github.com/dobyte/due/v2/cluster/node"
 	"github.com/dobyte/due/v2/codes"
-	"github.com/dobyte/due/v2/errors"
 	"github.com/dobyte/due/v2/log"
-)
-
-const (
-	defaultUID      = 1
-	defaultAccount  = "fuxiao"
-	defaultPassword = "123456"
+	"github.com/dobyte/due/v2/utils/xtime"
 )
 
 // 路由号
-const login = 1
+const greet = 1
 
 func main() {
 	// 创建容器
@@ -41,25 +37,26 @@ func main() {
 
 // 初始化应用
 func initApp(proxy *node.Proxy) {
-	proxy.Router().AddRouteHandler(login, loginHandler)
+	proxy.Router().AddRouteHandler(greet, greetHandler)
 }
 
 // 请求
-type loginReq struct {
-	Account  string `json:"account"`
-	Password string `json:"password"`
+type greetReq struct {
+	Message string `json:"message"`
 }
 
 // 响应
-type loginRes struct {
-	Code int `json:"code"`
+type greetRes struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
 }
 
 // 路由处理器
-func loginHandler(ctx node.Context) {
+// 将原本在单线程中的任务通过ctx.Task投递到协程池中进行处理，任务处理顺序也由原本的有序变为无序，并发处理需要使用同步原语。
+func greetHandler(ctx node.Context) {
 	ctx.Task(func(ctx node.Context) {
-		req := &loginReq{}
-		res := &loginRes{}
+		req := &greetReq{}
+		res := &greetRes{}
 		ctx.Defer(func() {
 			if err := ctx.Response(res); err != nil {
 				log.Errorf("response message failed: %v", err)
@@ -72,29 +69,9 @@ func loginHandler(ctx node.Context) {
 			return
 		}
 
-		// 执行登录操作
-		uid, err := doLogin(req)
-		if err != nil {
-			res.Code = codes.Convert(err).Code()
-			return
-		}
-
-		// 绑定网关
-		if err = ctx.BindGate(uid); err != nil {
-			log.Errorf("bind gate failed: %v", err)
-			res.Code = codes.InternalError.Code()
-			return
-		}
+		log.Info(req.Message)
 
 		res.Code = codes.OK.Code()
+		res.Message = fmt.Sprintf("I'm tcp server, and the current time is: %s", xtime.Now().Format(xtime.DateTime))
 	})
-}
-
-// 执行登录操作
-func doLogin(req *loginReq) (int64, error) {
-	if req.Account != defaultAccount || req.Password != defaultPassword {
-		return 0, errors.NewError(codes.InvalidArgument)
-	}
-
-	return defaultUID, nil
 }

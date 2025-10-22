@@ -52,6 +52,7 @@ type greetRes struct {
 }
 
 // 路由处理器
+// 所有路由处理器都会在同一个线程中顺序执行，不存在并发问题。
 func greetHandler(ctx node.Context) {
 	req := &greetReq{}
 	res := &greetRes{}

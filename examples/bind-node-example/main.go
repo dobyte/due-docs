@@ -1,29 +1,3 @@
-# 2.5 绑定节点
-
-## 2.5.1 基础介绍
-
-在分布式游戏服务器中开发中，我们需要处理更多复杂的游戏业务场景，为了保证游戏性能、承载更多的玩家，我们往往会将与游戏业务相关的数据存放于服务器内存中。这样做的好处显而易见，但同时也会对于框架设计带来一定的挑战，一旦某位玩家的游戏数据落到了某一台逻辑服务器上，后续该玩家的所有游戏操作都必须在这台服务器上进行处理，否则就会导致游戏数据不一致的问题。
-
-## 2.5.2 为何绑定节点
-
-在网关服路由客户端消息时，需要根据用户（UID）来确定将消息路由到哪台节点服上进行处理。因此，绑定节点主要是为了将节点服（NID）、用户（UID）二者建立一定的绑定关系，从而使得网关服能够明确如何将客户端消息路由到正确的节点服上进行处理。
-
-同时，在进行节点服间投递消息时，也需要通过用户（UID）来确定将消息路由到哪台节点服上进行处理。
-
-通过以上分析，我们可以总结出绑定节点的两个核心作用：
-
-1. **在网关服转发消息时，根据用户（UID）来确定将消息路由到哪台节点服进行处理。**
-2. **在节点服投递消息时，根据用户（UID）来确定将消息路由到哪台节点服进行处理。**
-
-## 2.5.3 如何绑定节点
-
-在明确了为何要绑定节点之后，我们就可以回答如何绑定节点这个问题了，其实绑定节点用一句通俗的话表示就是：**谁（UID）跟哪台节点服（NID）建立了绑定关系**。
-
-## 2.5.4 示例代码
-
-以下完整示例详见：[bind-node-example](https://github.com/dobyte/due-docs/tree/master/examples/bind-node-example)
-
-```go
 package main
 
 import (
@@ -105,10 +79,10 @@ func loginHandler(ctx node.Context) {
 		req := &loginReq{}
 		res := &loginRes{}
 		ctx.Defer(func() {
-            if err := ctx.Response(res); err != nil {
-                log.Errorf("response message failed: %v", err)
-            }
-        })
+			if err := ctx.Response(res); err != nil {
+				log.Errorf("response message failed: %v", err)
+			}
+		})
 
 		if err := ctx.Parse(req); err != nil {
 			log.Errorf("parse request message failed: %v", err)
@@ -252,4 +226,3 @@ func doPlay(uid int64, req *playReq) error {
 
 	return nil
 }
-```
