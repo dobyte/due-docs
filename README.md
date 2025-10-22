@@ -1,8 +1,5 @@
-# Jupiter
-due的官方文档，介绍了Jupiter框架、Juno微服务管理系统，帮助用户更好的使用Jupiter。
-
-# Notice
-Docs moved to https://github.com/douyu/jupiter/tree/master/website
+# 基础介绍
+due官方中文文档，帮助用户更好的使用due框架。
 
 # 构建方式
 * 1.安装vuepress，``npm install vuepress``

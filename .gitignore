@@ -14,3 +14,5 @@ yarn.lock
 
 # project run dir
 *run/
+
+.DS_Store
