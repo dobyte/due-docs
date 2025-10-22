@@ -42,7 +42,7 @@ jobs:
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.ACTION_TOKEN }}
           repository-name: dobyte/dobyte.github.io
           branch: pages 
           folder: ./docs/.vuepress/dist
