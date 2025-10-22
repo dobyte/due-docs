@@ -1,5 +1,5 @@
 # Jupiter
-Jupiter的官方文档，介绍了Jupiter框架、Juno微服务管理系统，帮助用户更好的使用Jupiter。
+due的官方文档，介绍了Jupiter框架、Juno微服务管理系统，帮助用户更好的使用Jupiter。
 
 # Notice
 Docs moved to https://github.com/douyu/jupiter/tree/master/website
