@@ -9,12 +9,12 @@ module.exports = {
       "script",
       { type: "text/javascript" },
       `var _hmt = _hmt || [];
-        (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://hm.baidu.com/hm.js?c77f15742ac7b6883fb18421ee33a702";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
+      (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?ac0d3a80c34be15a74ef7976779ffb70";
+        var s = document.getElementsByTagName("script")[0]; 
+        s.parentNode.insertBefore(hm, s);
+      })();
       `,
     ],
     ['meta', { name: 'theme-color', content: '#3c8772' }],
