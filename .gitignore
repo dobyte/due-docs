@@ -4,7 +4,6 @@ package-lock.json
 yarn.lock
 .vuepress/dist
 docs/.vuepress/dist/*
-jupiter-website.tar.gz
 yarn.lock
 
 # log file
@@ -16,3 +15,5 @@ yarn.lock
 *run/
 
 .DS_Store
+
+.temp/

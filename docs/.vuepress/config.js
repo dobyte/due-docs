@@ -178,15 +178,6 @@ module.exports = {
     "@vuepress/medium-zoom",
     "@vuepress/nprogress",
   ],
-  configureWebpack: config => {
-    if (process.env.NODE_ENV === 'development') {
-      config.devServer = {
-        hot: true, // 启用热模块替换
-        open: true, // 自动打开浏览器
-        host: 'localhost',
-        port: 8082,
-        before: app => { }
-      };
-    }
-  }
+  port: 8082,
+  open: true,
 };
