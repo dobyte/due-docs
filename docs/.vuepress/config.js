@@ -39,8 +39,27 @@ module.exports = {
       {
         text: "相关项目",
         items: [
-          { text: "聊天室", link: "https://github.com/dobyte/due-chat" },
-          { text: "斗地主", link: "https://github.com/dobyte/due-doudizhu-desc" },
+          { text: "官方示例", link: "https://github.com/dobyte/due-examples" },
+          { text: "压测示例", link: "https://github.com/dobyte/due-benchmark" },
+          { text: "聊天室示例", link: "https://github.com/dobyte/due-chat" },
+          { text: "斗地主示例", link: "https://github.com/dobyte/due-doudizhu-desc" },
+        ],
+      },
+      {
+        text: "相关工具库",
+        items: [
+          { text: "JWT", link: "https://github.com/dobyte/jwt" },
+          { text: "Casbin", link: "https://github.com/dobyte/gorm-casbin" },
+          { text: "Http Client", link: "https://github.com/dobyte/http" },
+          { text: "Gorm Dao Generator", link: "https://github.com/dobyte/gorm-dao-generator" },
+          { text: "Mongo Dao Generator", link: "https://github.com/dobyte/mongo-dao-generator" },
+        ],
+      },
+      {
+        text: "相关客户端",
+        items: [
+          { text: "TS客户端", link: "https://github.com/dobyte/due-client-ts" },
+          { text: "C#客户端", link: "https://github.com/dobyte/due-client-shape" },
         ],
       },
       {
