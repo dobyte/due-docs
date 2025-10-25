@@ -92,6 +92,7 @@ module.exports = {
             "/guide/v2/1.1.quick-start",
             "/guide/v2/1.2.examples",
             "/guide/v2/1.3.contribute",
+            "/guide/v2/1.4.questions",
           ],
         },
         {
