@@ -1,0 +1,7 @@
+[casbin.default]
+    # dsn连接信息
+	dsn = "root:123456@tcp(127.0.0.1:3306)/due_admin?charset=utf8mb4&parseTime=True&loc=Local"
+    # casbin策略表
+	table = "casbin_policy"
+	# casbin权限模型
+	model = "./resource/model.conf"

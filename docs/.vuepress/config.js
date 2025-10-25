@@ -147,6 +147,7 @@ module.exports = {
             "/guide/v2/5.2.redis",
             "/guide/v2/5.3.mongo",
             "/guide/v2/5.4.jwt",
+            "/guide/v2/5.5.casbin",
           ],
         },
       ], //这样自动生成对应文章
