@@ -14,7 +14,7 @@ func main() {
 	cache.SetCache(redis.NewCache())
 
 	// 从缓存中获取数据，如若缓存中不存在，则构建新的缓存
-	unix, err := cache.GetSet(context.Background(), "unix", func() (any, error) {
+	unix, err := cache.GetSet(context.Background(), "key", func() (any, error) {
 		return xtime.Now().Unix(), nil
 	}).Int64()
 	if err != nil {
