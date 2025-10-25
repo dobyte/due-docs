@@ -120,6 +120,7 @@ module.exports = {
             "/guide/v2/3.2.node",
             "/guide/v2/3.3.mesh",
             "/guide/v2/3.4.web",
+            "/guide/v2/3.5.client",
           ],
         },
         {
