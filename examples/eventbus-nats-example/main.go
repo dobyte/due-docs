@@ -23,7 +23,7 @@ func main() {
 	)
 
 	// 订阅事件
-	eventbus.Subscribe(ctx, topic, func(evt *eventbus.Event) {
+	if err := eventbus.Subscribe(ctx, topic, func(evt *eventbus.Event) {
 		payload := &Payload{}
 
 		if err := evt.Payload.Scan(payload); err != nil {
@@ -32,7 +32,10 @@ func main() {
 		}
 
 		log.Infof("evt id: %s, topic: %s, payload message: %s", evt.ID, evt.Topic, payload.Message)
-	})
+	}); err != nil {
+		log.Errorf("subscribe event failed: %v", err)
+		return
+	}
 
 	ticker := time.NewTicker(1 * time.Second)
 	defer ticker.Stop()
@@ -41,8 +44,10 @@ func main() {
 		<-ticker.C
 
 		// 发布事件
-		eventbus.Publish(ctx, topic, &Payload{
+		if err := eventbus.Publish(ctx, topic, &Payload{
 			Message: "hello world",
-		})
+		}); err != nil {
+			log.Errorf("publish event failed: %v", err)
+		}
 	}
 }

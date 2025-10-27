@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/dobyte/due/eventbus/redis/v2"
+	"github.com/dobyte/due/eventbus/kafka/v2"
 	"github.com/dobyte/due/v2/eventbus"
 	"github.com/dobyte/due/v2/log"
 )
@@ -15,7 +15,7 @@ type Payload struct {
 
 func main() {
 	// 设置事件总线
-	eventbus.SetEventbus(redis.NewEventbus())
+	eventbus.SetEventbus(kafka.NewEventbus())
 
 	var (
 		ctx   = context.Background()

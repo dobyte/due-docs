@@ -1,0 +1,9 @@
+[eventbus.kafka]
+    # 客户端连接地址
+    addrs = ["127.0.0.1:9092"]
+    # Kafka版本，默认为无版本
+    version = ""
+    # key前缀
+    prefix = "due:eventbus"
+    # 是否自动创建topic，默认为false
+    autoCreateTopic = true
