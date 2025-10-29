@@ -4,19 +4,19 @@ import (
 	"context"
 	"time"
 
+	"github.com/dobyte/due/config/etcd/v2"
 	"github.com/dobyte/due/v2/config"
-	"github.com/dobyte/due/v2/config/file"
 	"github.com/dobyte/due/v2/log"
 )
 
 const filename = "config.toml"
 
 func main() {
-	// 设置file配置中心
-	config.SetConfigurator(config.NewConfigurator(config.WithSources(file.NewSource())))
+	// 设置etcd配置中心
+	config.SetConfigurator(config.NewConfigurator(config.WithSources(etcd.NewSource())))
 
 	// 更新配置
-	if err := config.Store(context.Background(), file.Name, filename, map[string]any{
+	if err := config.Store(context.Background(), etcd.Name, filename, map[string]any{
 		"timezone": "Local",
 	}); err != nil {
 		log.Errorf("store config failed: %v", err)
@@ -31,7 +31,7 @@ func main() {
 	log.Infof("timezone: %s", timezone)
 
 	// 更新配置
-	if err := config.Store(context.Background(), file.Name, filename, map[string]any{
+	if err := config.Store(context.Background(), etcd.Name, filename, map[string]any{
 		"timezone": "UTC",
 	}); err != nil {
 		log.Errorf("store config failed: %v", err)

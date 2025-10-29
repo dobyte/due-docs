@@ -3,8 +3,8 @@ module lock-redis-example
 go 1.25.0
 
 require (
-	github.com/dobyte/due/lock/redis/v2 v2.0.0-20251016122418-5c942a2996f0
-	github.com/dobyte/due/v2 v2.4.1
+	github.com/dobyte/due/lock/redis/v2 v2.0.0-20251029013848-e5cd0097bf4d
+	github.com/dobyte/due/v2 v2.4.2
 )
 
 require (
@@ -21,6 +21,7 @@ require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/jinzhu/copier v0.4.0 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.9 // indirect
+	github.com/panjf2000/ants/v2 v2.11.3 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	golang.org/x/arch v0.11.0 // indirect
 	golang.org/x/sync v0.13.0 // indirect

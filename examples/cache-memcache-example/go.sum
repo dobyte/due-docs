@@ -16,8 +16,12 @@ github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSs
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/dobyte/due/cache/memcache/v2 v2.0.0-20251016122418-5c942a2996f0 h1:wsow+zf30n3Io2gprTjAm4WIW2ZEFDFMnbUb/ZMCb8s=
 github.com/dobyte/due/cache/memcache/v2 v2.0.0-20251016122418-5c942a2996f0/go.mod h1:jL06AcZTlpxX/x5YHQ4ZAxnEQc0ln4RIGTmAtpiUfhs=
+github.com/dobyte/due/cache/memcache/v2 v2.0.0-20251029013848-e5cd0097bf4d h1:BXnewHZEtw4oM4RO6yKRLd7hOyewKxxDG7GX1HL7rGM=
+github.com/dobyte/due/cache/memcache/v2 v2.0.0-20251029013848-e5cd0097bf4d/go.mod h1:vnsUTHFnbgYJ9rpGi3OIHD1ZJhYfTKx/j8hQuz1/+DI=
 github.com/dobyte/due/v2 v2.4.1 h1:/7l+ao6vDAi2oszV3schA/Zw6htlilr4Nyeq60tSrvA=
 github.com/dobyte/due/v2 v2.4.1/go.mod h1:QmPVDId8EEhgwRLY+KVGRvCYs7ejsxXUrl2I3K8KlSA=
+github.com/dobyte/due/v2 v2.4.2 h1:Is7gqYo787rzzZP0jBMgUhPegw3X1pPtVRjoSoHv1aU=
+github.com/dobyte/due/v2 v2.4.2/go.mod h1:QmPVDId8EEhgwRLY+KVGRvCYs7ejsxXUrl2I3K8KlSA=
 github.com/fsnotify/fsnotify v1.9.0 h1:2Ml+OJNzbYCTzsxtv8vKSFD9PbJjmhYF14k/jKC7S9k=
 github.com/fsnotify/fsnotify v1.9.0/go.mod h1:8jBTzvmWwFyi3Pb8djgCCO5IBqzKJ/Jwo8TRcHyHii0=
 github.com/jinzhu/copier v0.4.0 h1:w3ciUoD19shMCRargcpm0cm91ytaBhDvuRpz1ODO/U8=

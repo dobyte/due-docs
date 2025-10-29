@@ -11,8 +11,8 @@ require (
 	github.com/bytedance/sonic/loader v0.3.0 // indirect
 	github.com/cloudwego/base64x v0.1.6 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/dobyte/due/eventbus/kafka/v2 v2.0.0-20251016122418-5c942a2996f0 // indirect
-	github.com/dobyte/due/v2 v2.4.1 // indirect
+	github.com/dobyte/due/eventbus/kafka/v2 v2.0.0-20251029013848-e5cd0097bf4d // indirect
+	github.com/dobyte/due/v2 v2.4.2 // indirect
 	github.com/eapache/go-resiliency v1.7.0 // indirect
 	github.com/eapache/go-xerial-snappy v0.0.0-20230731223053-c322873962e3 // indirect
 	github.com/eapache/queue v1.1.0 // indirect

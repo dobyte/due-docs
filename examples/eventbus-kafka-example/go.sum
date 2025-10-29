@@ -17,8 +17,12 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/dobyte/due/eventbus/kafka/v2 v2.0.0-20251016122418-5c942a2996f0 h1:57ptBSZVQZOlH7FgBiOFecoxw5dHYECySR3Movo3bmE=
 github.com/dobyte/due/eventbus/kafka/v2 v2.0.0-20251016122418-5c942a2996f0/go.mod h1:mhEfe/HRzNxdJOfLIn7tW3GYnPpXRCkEPHCG9d2INbU=
+github.com/dobyte/due/eventbus/kafka/v2 v2.0.0-20251029013848-e5cd0097bf4d h1:IgRvJ34Mwd56tz3/ZYxeOnN83hDlkDn8+iglEBeiH+c=
+github.com/dobyte/due/eventbus/kafka/v2 v2.0.0-20251029013848-e5cd0097bf4d/go.mod h1:Z/3cTcO7G2ACBhkLqxCiieI8XEJDBASZrbWc6BsCuks=
 github.com/dobyte/due/v2 v2.4.1 h1:/7l+ao6vDAi2oszV3schA/Zw6htlilr4Nyeq60tSrvA=
 github.com/dobyte/due/v2 v2.4.1/go.mod h1:QmPVDId8EEhgwRLY+KVGRvCYs7ejsxXUrl2I3K8KlSA=
+github.com/dobyte/due/v2 v2.4.2 h1:Is7gqYo787rzzZP0jBMgUhPegw3X1pPtVRjoSoHv1aU=
+github.com/dobyte/due/v2 v2.4.2/go.mod h1:QmPVDId8EEhgwRLY+KVGRvCYs7ejsxXUrl2I3K8KlSA=
 github.com/eapache/go-resiliency v1.7.0 h1:n3NRTnBn5N0Cbi/IeOHuQn9s2UwVUH7Ga0ZWcP+9JTA=
 github.com/eapache/go-resiliency v1.7.0/go.mod h1:5yPzW0MIvSe0JDsv0v+DvcjEv2FyD6iZYSs1ZI+iQho=
 github.com/eapache/go-xerial-snappy v0.0.0-20230731223053-c322873962e3 h1:Oy0F4ALJ04o5Qqpdz8XLIpNA3WM/iSIXqxtqo7UGVws=
