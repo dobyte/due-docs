@@ -3,8 +3,8 @@ module client-ws-example
 go 1.25.0
 
 require (
-	github.com/dobyte/due/network/ws/v2 v2.0.0-20251016122418-5c942a2996f0
-	github.com/dobyte/due/v2 v2.4.1
+	github.com/dobyte/due/network/ws/v2 v2.0.0-20251029013848-e5cd0097bf4d
+	github.com/dobyte/due/v2 v2.4.2
 )
 
 require (

@@ -11,8 +11,8 @@ require (
 	github.com/bytedance/sonic v1.14.1 // indirect
 	github.com/bytedance/sonic/loader v0.3.0 // indirect
 	github.com/cloudwego/base64x v0.1.6 // indirect
-	github.com/dobyte/due/component/http/v2 v2.0.0-20251016122418-5c942a2996f0 // indirect
-	github.com/dobyte/due/v2 v2.4.1 // indirect
+	github.com/dobyte/due/component/http/v2 v2.0.0-20251029013848-e5cd0097bf4d // indirect
+	github.com/dobyte/due/v2 v2.4.2 // indirect
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/fxamacker/cbor/v2 v2.7.0 // indirect
 	github.com/go-openapi/analysis v0.23.0 // indirect

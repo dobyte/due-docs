@@ -38,10 +38,16 @@ github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc h1:U9qPSI2PIWSS1
 github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/dobyte/due/registry/consul/v2 v2.0.0-20251016122418-5c942a2996f0 h1:wUMnq6/LD9cn8cYoEVMtmYUIki6n/nQD+LCz5l6Bm60=
 github.com/dobyte/due/registry/consul/v2 v2.0.0-20251016122418-5c942a2996f0/go.mod h1:kTFlq2k6obKFtkOD5A0OlUh47D/2dy3TYYTWeLQGtg8=
+github.com/dobyte/due/registry/consul/v2 v2.0.0-20251029013848-e5cd0097bf4d h1:oYiz5TDG+Yfiugvm75VIHfFvCc3oCa0b+L9H2PlBKpg=
+github.com/dobyte/due/registry/consul/v2 v2.0.0-20251029013848-e5cd0097bf4d/go.mod h1:1qUDG5fwJmuPHY6wtNrUZGx2irLifDPvqpwQSN4uSQo=
 github.com/dobyte/due/transport/grpc/v2 v2.0.0-20251016122418-5c942a2996f0 h1:ydxlPE/gfEGTuRzRIVgYTUCcHrkriSR/1PWdw8M2XEM=
 github.com/dobyte/due/transport/grpc/v2 v2.0.0-20251016122418-5c942a2996f0/go.mod h1:ZWJLRTUWcOwe9+7dar01+FnfBqZVo3WAmKURc/+rR/k=
+github.com/dobyte/due/transport/grpc/v2 v2.0.0-20251029013848-e5cd0097bf4d h1:2/BnDki+1MbELInVNd9M1HPxBTeT5OyHo6ZYzhLnlO8=
+github.com/dobyte/due/transport/grpc/v2 v2.0.0-20251029013848-e5cd0097bf4d/go.mod h1:jI2sqFbYGPWK1kuqeBgRR0KKwdgtLhyBg53cKWaueeE=
 github.com/dobyte/due/v2 v2.4.1 h1:/7l+ao6vDAi2oszV3schA/Zw6htlilr4Nyeq60tSrvA=
 github.com/dobyte/due/v2 v2.4.1/go.mod h1:QmPVDId8EEhgwRLY+KVGRvCYs7ejsxXUrl2I3K8KlSA=
+github.com/dobyte/due/v2 v2.4.2 h1:Is7gqYo787rzzZP0jBMgUhPegw3X1pPtVRjoSoHv1aU=
+github.com/dobyte/due/v2 v2.4.2/go.mod h1:QmPVDId8EEhgwRLY+KVGRvCYs7ejsxXUrl2I3K8KlSA=
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/protoc-gen-validate v0.1.0/go.mod h1:iSmxcyjqTsJpI2R4NaDN7+kN2VEUnK/pcBlmesArF7c=
 github.com/fatih/color v1.7.0/go.mod h1:Zm6kSWBoL9eyXnKyktHP6abPY2pDugNf5KwzbycvMj4=

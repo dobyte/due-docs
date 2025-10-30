@@ -25,35 +25,3 @@
     minExpiration = "1h"
     # 最大过期时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为24h
     maxExpiration = "24h"
-
-[log]
-    # 日志输出级别，可选：debug | info | warn | error | fatal | panic
-    level = "info"
-    # 堆栈的最低输出级别，可选：debug | info | warn | error | fatal | panic
-    stackLevel = "error"
-    # 时间格式，标准库时间格式
-    timeFormat = "2006/01/02 15:04:05.000000"
-    # 输出栈的跳过深度
-    callSkip = 2
-    # 是否启用调用文件全路径
-    callFullPath = false
-    # 日志输出终端
-    terminals = ["console", "file"]
-    # 控制台同步器配置
-    [log.console]
-        # 日志输出格式，可选：text | json
-        format = "text"
-    # 文件同步器配置
-    [log.file]
-        # 输出文件路径
-        path = "./log/due.log"
-        # 日志输出格式，可选：text | json
-        format = "text"
-        # 文件最大留存时间，d:天、h:时、m:分、s:秒
-        maxAge = "7d"
-        # 文件最大尺寸限制，支持单位： B | K | KB | M | MB | G | GB | T | TB | P | PB | E | EB | Z | ZB，默认为100M
-        maxSize = "100M"
-        # 文件翻转方式，可选：none | year | month | week | day | hour，默认为none
-        rotate = "none"
-        # 文件翻转时是否对文件进行压缩
-        compress = false

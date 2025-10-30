@@ -52,10 +52,16 @@ github.com/dgryski/go-jump v0.0.0-20211018200510-ba001c3ffce0 h1:0wH6nO9QEa02Qx8
 github.com/dgryski/go-jump v0.0.0-20211018200510-ba001c3ffce0/go.mod h1:4hKCXuwrJoYvHZxJ86+bRVTOMyJ0Ej+RqfSm8mHi6KA=
 github.com/dobyte/due/registry/consul/v2 v2.0.0-20251016122418-5c942a2996f0 h1:wUMnq6/LD9cn8cYoEVMtmYUIki6n/nQD+LCz5l6Bm60=
 github.com/dobyte/due/registry/consul/v2 v2.0.0-20251016122418-5c942a2996f0/go.mod h1:kTFlq2k6obKFtkOD5A0OlUh47D/2dy3TYYTWeLQGtg8=
+github.com/dobyte/due/registry/consul/v2 v2.0.0-20251029013848-e5cd0097bf4d h1:oYiz5TDG+Yfiugvm75VIHfFvCc3oCa0b+L9H2PlBKpg=
+github.com/dobyte/due/registry/consul/v2 v2.0.0-20251029013848-e5cd0097bf4d/go.mod h1:1qUDG5fwJmuPHY6wtNrUZGx2irLifDPvqpwQSN4uSQo=
 github.com/dobyte/due/transport/rpcx/v2 v2.0.0-20251016122418-5c942a2996f0 h1:rC/LTnwknDXyZtyRl6PEvLUxYCt9KQGUMn0zMo9Rdrc=
 github.com/dobyte/due/transport/rpcx/v2 v2.0.0-20251016122418-5c942a2996f0/go.mod h1:GsMhrSReERxzwUbEydL6kZYjLSAnCJlyzVd7yteBRxo=
+github.com/dobyte/due/transport/rpcx/v2 v2.0.0-20251029013848-e5cd0097bf4d h1:DaIDSfDUZyxQR3sH6jtt3xqDT4S+i8D0HDlmQeyHKM0=
+github.com/dobyte/due/transport/rpcx/v2 v2.0.0-20251029013848-e5cd0097bf4d/go.mod h1:jzN+gFQPcRLNDwaYLIvyo5WZwVWpKAq4lp/WqIjecqU=
 github.com/dobyte/due/v2 v2.4.1 h1:/7l+ao6vDAi2oszV3schA/Zw6htlilr4Nyeq60tSrvA=
 github.com/dobyte/due/v2 v2.4.1/go.mod h1:QmPVDId8EEhgwRLY+KVGRvCYs7ejsxXUrl2I3K8KlSA=
+github.com/dobyte/due/v2 v2.4.2 h1:Is7gqYo787rzzZP0jBMgUhPegw3X1pPtVRjoSoHv1aU=
+github.com/dobyte/due/v2 v2.4.2/go.mod h1:QmPVDId8EEhgwRLY+KVGRvCYs7ejsxXUrl2I3K8KlSA=
 github.com/edwingeng/doublejump v1.0.1 h1:wJ6QgNyyF23Of9vw+ThbwJ/obe9KdxaWEg/Brpv5S1o=
 github.com/edwingeng/doublejump v1.0.1/go.mod h1:ykMWX8JWePtMtk2OGjNE9kwtgpI+SF2FNIyXV4gS36k=
 github.com/envoyproxy/go-control-plane v0.9.0/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=

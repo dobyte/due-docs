@@ -3,9 +3,9 @@ module mesh-rpcx-example
 go 1.25.0
 
 require (
-	github.com/dobyte/due/registry/consul/v2 v2.0.0-20251016122418-5c942a2996f0
-	github.com/dobyte/due/transport/rpcx/v2 v2.0.0-20251016122418-5c942a2996f0
-	github.com/dobyte/due/v2 v2.4.1
+	github.com/dobyte/due/registry/consul/v2 v2.0.0-20251029013848-e5cd0097bf4d
+	github.com/dobyte/due/transport/rpcx/v2 v2.0.0-20251029013848-e5cd0097bf4d
+	github.com/dobyte/due/v2 v2.4.2
 	github.com/smallnest/rpcx v1.9.1
 	google.golang.org/protobuf v1.36.6
 )
