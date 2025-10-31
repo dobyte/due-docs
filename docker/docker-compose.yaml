@@ -116,6 +116,16 @@ services:
     networks:
       cluster-network:
         ipv4_address: 192.168.10.9
+  memcache:
+    image: devdb/memcache:latest
+    container_name: dev-memcache
+    platform: linux/x86_64
+    restart: always
+    ports:
+      - '11211:11211'
+    networks:
+      cluster-network:
+        ipv4_address: 192.168.10.10
 networks:
   cluster-network:
     driver: bridge
