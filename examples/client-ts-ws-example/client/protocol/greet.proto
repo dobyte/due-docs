@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package protocol;
+
+option go_package = "codec-proto-example/app/protocol;protocol";
+
+enum Route {
+  None = 0;
+  Greet = 1;
+}
+
+message GreetReq {
+  string message = 1; // 消息
+}
+
+message GreetRes {
+  int32 code = 1;     // 状态码
+  string message = 2; // 消息
+}
