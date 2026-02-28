@@ -1,50 +1,52 @@
-# 构建vuepress，并提交到pages分支
-name: deploy
+name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ master ]
+    branches: [refactor/docs-ui]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      # 首先生成拉取node文件
-      - name: Node install
-        uses: actions/setup-node@v1
-        with: 
-          node-version: '16.x'
-      
-      # 缓存 node_modules
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        id: npm-cache
+      - uses: pnpm/action-setup@v4
         with:
-          path: |
-            **/node_modules
-          key: ${{ runner.os }}-npm-cache
-          restore-keys: |
-            ${{ runner.os }}-npm-
-      
-      # 如果缓存没有命中，安装依赖
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
       - name: Install dependencies
-        if: steps.npm-cache.outputs.cache-hit != 'true'
-        run: npm install vuepress
+        run: pnpm install --frozen-lockfile
 
-      # 运行构建脚本
-      - name: Build VuePress site
-        run: npm run docs:build
+      - name: Build
+        run: pnpm build
+        env:
+          BASE_PATH: /due-docs
 
-      # 提交
-      - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@4.1.4
+      - uses: actions/upload-pages-artifact@v3
         with:
-          token: ${{ secrets.ACTION_TOKEN }}
-          repository-name: dobyte/dobyte.github.io
-          branch: pages 
-          folder: ./docs/.vuepress/dist
-          clean: true
-          force: true
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

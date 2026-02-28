@@ -1,0 +1,93 @@
+---
+title: "错误处理"
+---
+
+## 基础介绍
+
+标准库的 error 相对比较简单，无法对错误的状态信息进行传递。为此，框架层专门设计了一套错误处理机制，通过 errors.NewError()和 codes.Convert()可以实现错误在集群服务间随意转换。
+
+为了避免标准库 errors 与框架库 errors 上的名字冲突，方便开发者使用。框架库 errors 也重载了标准库 errors 的所有函数。因此，无论你是想创建普通的 error 还是框架设计的 error，你都可以使用框架库的 errors。
+
+## 错误接口
+
+1. 使用场景
+
+所有需要返回 error 的场景，尤其是在集群间传递错误码的场景，都需要使用框架库的 errors。
+
+2. 使用方式
+
+```bash
+import "github.com/dobyte/due/v2/errors"
+```
+
+3. 接口文档
+
+[https://pkg.go.dev/github.com/dobyte/due/v2/errors](https://pkg.go.dev/github.com/dobyte/due/v2/errors)
+
+## 错误码接口
+
+1. 使用场景
+
+所有需要在集群间传递错误码的场景。
+
+2. 使用方式
+
+```bash
+import "github.com/dobyte/due/v2/codes"
+```
+
+3. 接口文档
+
+[https://pkg.go.dev/github.com/dobyte/due/v2/codes](https://pkg.go.dev/github.com/dobyte/due/v2/codes)
+
+## 示例代码
+
+以下完整示例详见： [errors-example](https://github.com/dobyte/due-docs/tree/master/examples/errors-example)
+
+1. 创建项目
+
+```bash
+$ mkdir errors-example
+```
+
+2. 安装依赖
+
+```bash
+$ cd errors-example
+$ go mod init errors-example
+$ go get github.com/dobyte/due/v2@v2.4.2
+```
+
+3. 编写示例
+
+文件位置： [errors-example/main.go](https://github.com/dobyte/due-docs/blob/master/examples/errors-example/main.go)
+
+```go
+package main
+
+import (
+	"github.com/dobyte/due/v2/codes"
+	"github.com/dobyte/due/v2/errors"
+	"github.com/dobyte/due/v2/log"
+)
+
+func main() {
+	err := errors.NewError(codes.NewCode(404, "not found"))
+
+	code := codes.Convert(err)
+
+	log.Infof("error: %s", err.Error())
+	log.Infof("code: %d", code.Code())
+	log.Infof("message: %s", code.Message())
+}
+```
+
+4. 运行示例
+
+```bash
+$ cd errors-example
+$ go run main.go
+INFO[2025/10/31 14:29:23.609253] main.go:14 error: code error: code = 404 desc = not found
+INFO[2025/10/31 14:29:23.610934] main.go:15 code: 404
+INFO[2025/10/31 14:29:23.610934] main.go:16 message: not found
+```

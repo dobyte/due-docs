@@ -1,0 +1,423 @@
+---
+title: "绑定节点"
+---
+
+## 基础介绍
+
+在分布式游戏服务器中开发中，我们需要处理更多复杂的游戏业务场景，为了保证游戏性能、承载更多的玩家，我们往往会将与游戏业务相关的数据存放于服务器内存中。这样做的好处显而易见，但同时也会对于框架设计带来一定的挑战，一旦某位玩家的游戏数据落到了某一台逻辑服务器上，后续该玩家的所有游戏操作都必须在这台服务器上进行处理，否则就会导致游戏数据不一致的问题。
+
+## 为何绑定节点
+
+在网关服路由客户端消息时，需要根据用户（UID）来确定将消息路由到哪台节点服上进行处理。因此，绑定节点主要是为了将节点服（NID）、用户（UID）二者建立一定的绑定关系，从而使得网关服能够明确如何将客户端消息路由到正确的节点服上进行处理。
+
+同时，在进行节点服间投递消息时，也需要通过用户（UID）来确定将消息路由到哪台节点服上进行处理。
+
+通过以上分析，我们可以总结出绑定节点的两个核心作用：
+
+1. **在网关服转发消息时，根据用户（UID）来确定将消息路由到哪台节点服进行处理。**
+2. **在节点服投递消息时，根据用户（UID）来确定将消息路由到哪台节点服进行处理。**
+
+## 如何绑定节点
+
+在明确了为何要绑定节点之后，我们就可以回答如何绑定节点这个问题了，其实绑定节点用一句通俗的话表示就是：**谁（UID）跟哪台节点服（NID）建立了绑定关系**。
+
+## 示例代码
+
+以下完整示例详见： [bind-node-example](https://github.com/dobyte/due-docs/tree/master/examples/bind-node-example)
+
+1. 创建项目
+
+```bash
+$ mkdir bind-node-example
+```
+
+2. 安装依赖
+
+```bash
+$ cd bind-node-example
+$ go mod init bind-node-example
+$ go get github.com/dobyte/due/v2@v2.4.2
+$ go get github.com/dobyte/due/locate/redis/v2@e5cd009
+$ go get github.com/dobyte/due/registry/consul/v2@e5cd009
+```
+
+3. 启动配置
+
+文件位置： [bind-node-example/etc/etc.toml](https://github.com/dobyte/due-docs/blob/master/examples/bind-node-example/etc/etc.toml)
+
+```toml
+# 进程号
+pid = "./run/due.pid"
+# 开发模式。支持模式：debug、test、release（设置优先级：配置文件 < 环境变量 < 运行参数 < mode.SetMode()）
+mode = "debug"
+# 统一时区设置。项目中的时间获取请使用xtime.Now()
+timezone = "Local"
+# 容器关闭最大等待时间。支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为0
+shutdownMaxWaitTime = "0s"
+
+[cluster.node]
+    # 实例ID，集群中唯一。不填写默认自动生成唯一的实例ID
+    id = ""
+    # 实例名称
+    name = "node"
+    # 内建RPC服务器监听地址。不填写默认随机监听
+    addr = ":0"
+    # 是否将内部通信地址暴露到公网。默认为false
+    expose = false
+    # 编解码器。可选：json | proto。默认为proto
+    codec = "json"
+    # RPC调用超时时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为3s
+    timeout = "3s"
+    # 节点权重，用于节点无状态路由消息的加权轮询策略，权重值必需大于0才生效。默认为1
+    weight = 1
+    # 实例元数据
+    [cluster.node.metadata]
+        # 键值对，且均为字符串类型。由于注册中心的元数据参数限制，建议将键值对的数量控制在20个以内，键的字符长度控制在127个字符内，值的字符长度控制在512个字符内。
+        key = "value"
+
+[locate.redis]
+    # 客户端连接地址
+    addrs = ["127.0.0.1:6379"]
+    # 数据库号
+    db = 0
+    # 用户名
+    username = ""
+    # 密码
+    password = ""
+    # 私钥文件
+    keyFile = ""
+    # 证书文件
+    certFile = ""
+    # CA证书文件
+    caFile = ""
+    # 最大重试次数
+    maxRetries = 3
+    # key前缀
+    prefix = "due:locate"
+
+[registry.consul]
+    # 客户端连接地址，默认为127.0.0.1:8500
+    addr = "127.0.0.1:8500"
+    # 是否启用健康检查，默认为true
+    healthCheck = true
+    # 健康检查时间间隔（秒），仅在启用健康检查后生效，默认为10
+    healthCheckInterval = 10
+    # 健康检查超时时间（秒），仅在启用健康检查后生效，默认为5
+    healthCheckTimeout = 5
+    # 是否启用心跳检查，默认为true
+    heartbeatCheck = true
+    # 心跳检查时间间隔（秒），仅在启用心跳检查后生效，默认为10
+    heartbeatCheckInterval = 10
+    # 健康检测失败后自动注销服务时间（秒），默认为30
+    deregisterCriticalServiceAfter = 30
+
+[packet]
+    # 字节序，默认为big。可选：little | big
+    byteOrder = "big"
+    # 路由字节数，默认为2字节
+    routeBytes = 2
+    # 序列号字节数，默认为2字节
+    seqBytes = 2
+    # 消息字节数，默认为5000字节
+    bufferBytes = 5000
+    # 是否携带服务器心跳时间
+    heartbeatTime = false
+
+[log]
+    # 日志输出级别，可选：debug | info | warn | error | fatal | panic
+    level = "info"
+    # 堆栈的最低输出级别，可选：debug | info | warn | error | fatal | panic
+    stackLevel = "error"
+    # 时间格式，标准库时间格式
+    timeFormat = "2006/01/02 15:04:05.000000"
+    # 输出栈的跳过深度
+    callSkip = 2
+    # 是否启用调用文件全路径
+    callFullPath = true
+    # 日志输出终端
+    terminals = ["console", "file"]
+    # 控制台同步器配置
+    [log.console]
+        # 日志输出格式，可选：text | json
+        format = "text"
+    # 文件同步器配置
+    [log.file]
+        # 输出文件路径
+        path = "./log/due.log"
+        # 日志输出格式，可选：text | json
+        format = "text"
+        # 文件最大留存时间，d:天、h:时、m:分、s:秒
+        maxAge = "7d"
+        # 文件最大尺寸限制，支持单位： B | K | KB | M | MB | G | GB | T | TB | P | PB | E | EB | Z | ZB，默认为100M
+        maxSize = "100M"
+        # 文件翻转方式，可选：none | year | month | week | day | hour，默认为none
+        rotate = "none"
+        # 文件翻转时是否对文件进行压缩
+        compress = false
+```
+
+4. 编写示例
+
+文件位置： [bind-node-example/main.go](https://github.com/dobyte/due-docs/blob/master/examples/bind-node-example/main.go)
+
+```go
+package main
+
+import (
+	"github.com/dobyte/due/locate/redis/v2"
+	"github.com/dobyte/due/registry/consul/v2"
+	"github.com/dobyte/due/v2"
+	"github.com/dobyte/due/v2/cluster/node"
+	"github.com/dobyte/due/v2/codes"
+	"github.com/dobyte/due/v2/errors"
+	"github.com/dobyte/due/v2/log"
+)
+
+const (
+	defaultUID      = 1
+	defaultAccount  = "fuxiao"
+	defaultPassword = "123456"
+)
+
+// 路由号
+const (
+	login = 1 // 登录
+	join  = 2 // 加入
+	play  = 3 // 游戏
+)
+
+func main() {
+	// 创建容器
+	container := due.NewContainer()
+	// 创建用户定位器
+	locator := redis.NewLocator()
+	// 创建服务发现
+	registry := consul.NewRegistry()
+	// 创建节点组件
+	component := node.NewNode(
+		node.WithLocator(locator),
+		node.WithRegistry(registry),
+	)
+	// 初始化应用
+	initApp(component.Proxy())
+	// 添加节点组件
+	container.Add(component)
+	// 启动容器
+	container.Serve()
+}
+
+// 初始化应用
+func initApp(proxy *node.Proxy) {
+	proxy.Router().Group(func(group *node.RouterGroup) {
+		// 登录
+		group.AddRouteHandler(login, loginHandler)
+		// 设置认证中间件
+		group.Middleware(auth)
+		// 加入
+		group.AddRouteHandler(join, joinHandler, node.AuthorizedRoute)
+		// 游戏
+		group.AddRouteHandler(play, playHandler, node.StatefulRoute)
+	})
+}
+
+// 基础响应
+type baseRes struct {
+	Code int `json:"code"`
+}
+
+// 请求
+type loginReq struct {
+	Account  string `json:"account"`
+	Password string `json:"password"`
+}
+
+// 响应
+type loginRes struct {
+	Code int `json:"code"`
+}
+
+// 路由处理器
+func loginHandler(ctx node.Context) {
+	ctx.Task(func(ctx node.Context) {
+		req := &loginReq{}
+		res := &loginRes{}
+		ctx.Defer(func() {
+            if err := ctx.Response(res); err != nil {
+                log.Errorf("response message failed: %v", err)
+            }
+        })
+
+		if err := ctx.Parse(req); err != nil {
+			log.Errorf("parse request message failed: %v", err)
+			res.Code = codes.InternalError.Code()
+			return
+		}
+
+		// 执行登录操作
+		uid, err := doLogin(req)
+		if err != nil {
+			res.Code = codes.Convert(err).Code()
+			return
+		}
+
+		// 绑定网关
+		if err = ctx.BindGate(uid); err != nil {
+			log.Errorf("bind gate failed: %v", err)
+			res.Code = codes.InternalError.Code()
+			return
+		}
+
+		res.Code = codes.OK.Code()
+	})
+}
+
+// 请求
+type joinReq struct {
+	RoomID int64 `json:"roomID"`
+}
+
+// 响应
+type joinRes struct {
+	Code int `json:"code"`
+}
+
+// 加入
+func joinHandler(ctx node.Context) {
+	req := &joinReq{}
+	res := &joinRes{}
+	ctx.Defer(func() {
+		if err := ctx.Response(res); err != nil {
+			log.Errorf("response message failed: %v", err)
+		}
+	})
+
+	if err := ctx.Parse(req); err != nil {
+		log.Errorf("parse request message failed: %v", err)
+		res.Code = codes.InternalError.Code()
+		return
+	}
+
+	// 执行加入游戏操作
+	if err := doJoin(ctx.UID(), req); err != nil {
+		res.Code = codes.Convert(err).Code()
+		return
+	}
+
+	// 绑定节点
+	if err := ctx.BindNode(ctx.UID()); err != nil {
+		log.Errorf("bind node failed: %v", err)
+		res.Code = codes.InternalError.Code()
+		return
+	}
+
+	res.Code = codes.OK.Code()
+}
+
+// 游戏
+func playHandler(ctx node.Context) {
+	req := &playReq{}
+	res := &playRes{}
+	ctx.Defer(func() {
+		if err := ctx.Response(res); err != nil {
+			log.Errorf("response message failed: %v", err)
+		}
+	})
+
+	if err := ctx.Parse(req); err != nil {
+		log.Errorf("parse request message failed: %v", err)
+		res.Code = codes.InternalError.Code()
+		return
+	}
+
+	// 执行游戏操作
+	if err := doPlay(ctx.UID(), req); err != nil {
+		res.Code = codes.Convert(err).Code()
+		return
+	}
+
+	res.Code = codes.OK.Code()
+}
+
+// 请求
+type playReq struct {
+	Action string `json:"action"`
+}
+
+// 响应
+type playRes struct {
+	Code int `json:"code"`
+}
+
+// 认证中间件
+func auth(middleware *node.Middleware, ctx node.Context) {
+	if ctx.UID() == 0 {
+		if err := ctx.Response(&baseRes{Code: codes.Unauthorized.Code()}); err != nil {
+			log.Errorf("response message failed, err: %v", err)
+		}
+	} else {
+		middleware.Next(ctx)
+	}
+}
+
+// 执行登录操作
+func doLogin(req *loginReq) (int64, error) {
+	if req.Account != defaultAccount || req.Password != defaultPassword {
+		return 0, errors.NewError(codes.InvalidArgument)
+	}
+
+	return defaultUID, nil
+}
+
+// 执行加入游戏操作
+func doJoin(uid int64, req *joinReq) error {
+	if req.RoomID != 1 {
+		return errors.NewError(codes.InvalidArgument)
+	}
+
+	log.Infof("join room, uid: %v, roomID: %v", uid, req.RoomID)
+
+	return nil
+}
+
+// 执行游戏操作
+func doPlay(uid int64, req *playReq) error {
+	if req.Action != "move" {
+		return errors.NewError(codes.InvalidArgument)
+	}
+
+	log.Infof("play, uid: %v, action: %v", uid, req.Action)
+
+	return nil
+}
+```
+
+5. 运行示例
+
+```bash
+$ cd bind-node-example
+$ go run main.go
+                    ____  __  ________
+                   / __ \/ / / / ____/
+                  / / / / / / / __/
+                 / /_/ / /_/ / /___
+                /_____/\____/_____/
+┌──────────────────────────────────────────────────────┐
+| [Website] https://github.com/dobyte/due              |
+| [Version] v2.4.2                                     |
+└──────────────────────────────────────────────────────┘
+┌────────────────────────Global────────────────────────┐
+| PID: 29096                                           |
+| Mode: debug                                          |
+| Time: 2025-10-30 09:58:11.6428827 +0800 CST          |
+└──────────────────────────────────────────────────────┘
+┌─────────────────────────Node─────────────────────────┐
+| ID: e3af236b-b533-11f0-bb01-f4f19e1f0070             |
+| Name: node                                           |
+| Link: 192.168.2.202:61986                            |
+| Codec: json                                          |
+| Locator: redis                                       |
+| Registry: consul                                     |
+| Encryptor: -                                         |
+| Transporter: -                                       |
+└──────────────────────────────────────────────────────┘
+```

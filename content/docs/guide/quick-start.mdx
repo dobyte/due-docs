@@ -1,0 +1,241 @@
+---
+title: "快速开始"
+---
+
+## Go 编译器安装
+
+1. 安装 Go 多版本管理器（推荐）
+
+    - Linux/macOS 下自动安装 Go 多版本管理器（适用于 bash、zsh）
+
+    ```bash
+    $ curl -sSL https://raw.githubusercontent.com/voidint/g/master/install.sh | bash
+    $ cat << 'EOF' >> ~/.bashrc
+    # 可选。检查g别名是否被占用
+    if [[ -n $(alias g 2>/dev/null) ]]; then
+        unalias g
+    fi
+    EOF 
+    $ source "$HOME/.g/env"
+    ```
+
+    - Windows 下自动安装 Go 多版本管理器（适用于 pwsh）
+
+    ```bash
+    $ iwr https://raw.githubusercontent.com/voidint/g/master/install.ps1 -useb | iex
+    ```
+
+2. 安装 Go 编译器
+
+    ```bash
+    $ g install 1.25.0
+    ```
+
+## 工具链安装
+
+1. 安装 protobuf 编译器（使用场景：开发 mesh 微服务、使用 protobuf 作为与客户端通信的协议）
+
+    - Linux, using apt or apt-get, for example:
+
+    ```bash
+    $ apt install -y protobuf-compiler
+    $ protoc --version  # Ensure compiler version is 3+
+    ```
+
+    - MacOS, using Homebrew:
+
+    ```bash
+    $ brew install protobuf
+    $ protoc --version  # Ensure compiler version is 3+
+    ```
+
+    - Windows, download from [Github](https://github.com/protocolbuffers/protobuf/releases):
+
+2. 安装 protobuf go 代码生成工具（使用场景：开发 mesh 微服务、使用 protobuf 作为与客户端通信的协议）
+
+    ```bash
+    $ go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+    ```
+
+3. 安装 grpc 代码生成工具（使用场景：使用 [GRPC](https://grpc.io/) 组件开发 mesh 微服务）
+
+    ```bash
+    $ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+    ```
+
+4. 安装 rpcx 代码生成工具（使用场景：使用 [RPCX](https://rpcx.io/) 组件开发 mesh 微服务）
+
+    ```bash
+    $ go install github.com/rpcxio/protoc-gen-rpcx@latest
+    ```
+
+5. 安装 gorm dao 代码生成工具（使用场景：使用 [GORM](https://gorm.io/) 作为数据库 orm）
+
+    ```bash
+    $ go install github.com/dobyte/gorm-dao-generator@latest
+    ```
+
+6. 安装 mongo dao 代码生成工具（使用场景：使用 [MongoDB](https://github.com/mongodb/mongo-go-driver) 作为数据库 orm）
+
+    ```bash
+    $ go install github.com/dobyte/mongo-dao-generator@latest
+    ```
+
+## Docker 环境安装
+
+1. 安装 docker
+
+  进入 [docker](https://www.docker.com/) 官网下载最新版 [docker](https://www.docker.com/) 安装包安装
+
+2. 安装 docker-compose
+
+  - Linux
+
+  ```bash
+  $ sudo curl -L "https://github.com/docker/compose/releases/download/v2.36.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  $ sudo chmod +x /usr/local/bin/docker-compose
+  ```
+
+  - MacOS， [docker desktop](https://docs.docker.com/desktop/setup/install/mac-install/) 中已内置 docker-compose，故无须单独安装
+
+  - Windows, download from [Github](https://github.com/docker/compose/releases):
+
+3. 安装开发组件
+
+  ```bash
+  $ cd ./docker
+  $ docker-compose up -d
+  ```
+
+4. docker-compose.yaml
+
+```yaml
+version: "3"
+
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: dev-mysql
+    platform: linux/x86_64
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./mysql:/var/lib/mysql
+    networks:
+      cluster-network:
+        ipv4_address: 192.168.10.2
+  redis:
+    image: openeuler/redis:6.2.7-oe2203lts
+    container_name: dev-redis
+    platform: linux/x86_64
+    restart: always
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - '6379:6379'
+    networks:
+      cluster-network:
+        ipv4_address: 192.168.10.3
+  etcd:
+    image: openeuler/etcd:3.6.4-oe2403sp1
+    container_name: dev-etcd
+    platform: linux/x86_64
+    restart: always
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd-server:2379
+    ports:
+      - '2379:2379'
+      - '2380:2380'
+    networks:
+      cluster-network:
+        ipv4_address: 192.168.10.4
+  consul:
+    image: openeuler/consul:1.22.0-oe2403sp2
+    container_name: dev-consul
+    platform: linux/x86_64
+    restart: always
+    ports:
+      - '8500:8500'
+    networks:
+      cluster-network:
+        ipv4_address: 192.168.10.5
+  kafka:
+    image: openeuler/kafka:4.1.0-oe2403sp1
+    container_name: dev-kafka
+    platform: linux/x86_64
+    restart: always
+    ports:
+      - '9092:9092'
+    networks:
+      cluster-network:
+        ipv4_address: 192.168.10.6
+  nats:
+    image: nats:2.12.2
+    container_name: dev-nats
+    platform: linux/x86_64
+    restart: always
+    ports:
+      - '4222:4222'
+      - '6222:6222'
+      - '8222:8222'
+    networks:
+      cluster-network:
+        ipv4_address: 192.168.10.7
+  nacos:
+    image: nacos/nacos-server:v2.5.1
+    container_name: dev-nacos
+    platform: linux/x86_64
+    restart: always
+    environment:
+      - PREFER_HOST_MODE=hostname
+      - MODE=standalone
+      - NACOS_AUTH_IDENTITY_KEY=serverIdentity
+      - NACOS_AUTH_IDENTITY_VALUE=security
+      - NACOS_AUTH_TOKEN=SecretKey012345678901234567890123456789012345678901234567890123456789
+    volumes:
+      - ./nacos/logs:/home/nacos/logs
+      - ./nacos/conf/application.properties:/home/nacos/conf/application.properties
+    ports:
+      - '8848:8848'
+      - '9848:9848'
+    networks:
+      cluster-network:
+        ipv4_address: 192.168.10.8
+  mongo:
+    image: mongo:4.4-rc-focal
+    container_name: dev-mongo
+    platform: linux/x86_64
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=12345678
+    ports:
+      - '27017:27017'
+    volumes:
+      - ./mongo/data:/data/db
+    networks:
+      cluster-network:
+        ipv4_address: 192.168.10.9
+  memcached:
+    image: openeuler/memcached:latest
+    container_name: dev-memcached
+    platform: linux/x86_64
+    restart: always
+    ports:
+      - '11211:11211'
+    networks:
+      cluster-network:
+        ipv4_address: 192.168.10.10
+networks:
+  cluster-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.10.0/24
+```

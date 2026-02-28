@@ -1,0 +1,594 @@
+---
+title: "网格服务器"
+---
+
+## 基础介绍
+
+网格服（mesh）其实就是我们日常口中所说的微服务（Micro Service），主要用于构建一些无状态的业务逻辑。开发者可用于游戏服务器集群的中台开发，为集群中的其他服务提供数据业务支撑。
+
+[due](https://github.com/dobyte/due) 框架目前已实现了 [GRPC](https://grpc.io/) 和 [RPCX](https://rpcx.io/) 两款主流 RPC 框架的接入。所有的开发方式和接入方式都保持了原有 RPC 框架的高度一致性，这样在保证用户开发习惯的同时可以极大地保证项目的稳定性。
+
+## GRPC 示例
+
+以下完整示例详见： [mesh-grpc-example](https://github.com/dobyte/due-docs/tree/master/examples/mesh-grpc-example)
+
+1. 创建项目
+
+```bash
+$ mkdir mesh-grpc-example
+```
+
+2. 安装依赖
+
+```bash
+$ cd mesh-grpc-example
+$ go mod init mesh-grpc-example
+$ go get github.com/dobyte/due/v2@v2.4.2
+$ go get github.com/dobyte/due/registry/consul/v2@e5cd009
+$ go get github.com/dobyte/due/transport/grpc/v2@e5cd009
+```
+
+3. 编辑 pb 协议
+
+文件位置： [mesh-grpc-example/service/pb/greeter.proto](https://github.com/dobyte/due-docs/blob/master/examples/mesh-grpc-example/service/pb/greeter.proto)
+
+```proto
+syntax = "proto3";
+
+option go_package = "./pb";
+
+package pb;
+
+service Greeter {
+  rpc Hello (HelloArgs) returns (HelloReply) {}
+}
+
+message HelloArgs {
+  string Name = 1;
+}
+
+message HelloReply {
+  string Message = 1;
+}
+```
+
+4. 生成 go 文件
+
+```bash
+$ cd mesh-grpc-example/service/pb
+$ protoc --go_out=.. --go-grpc_out=.. *.proto
+```
+
+5. 编写服务端逻辑
+
+文件位置： [mesh-grpc-example/service/server/server.go](https://github.com/dobyte/due-docs/blob/master/examples/mesh-grpc-example/service/server/server.go)
+
+```go
+package server
+
+import (
+	"context"
+	"mesh-grpc-example/service/pb"
+
+	"github.com/dobyte/due/v2/cluster/mesh"
+)
+
+type Server struct {
+	pb.UnimplementedGreeterServer
+	proxy *mesh.Proxy
+}
+
+var _ pb.GreeterServer = &Server{}
+
+func NewServer(proxy *mesh.Proxy) *Server {
+	return &Server{
+		proxy: proxy,
+	}
+}
+
+func (s *Server) Init() {
+	s.proxy.AddServiceProvider("greeter", &pb.Greeter_ServiceDesc, s)
+}
+
+func (s *Server) Hello(_ context.Context, args *pb.HelloArgs) (*pb.HelloReply, error) {
+	return &pb.HelloReply{Message: "Hello " + args.Name}, nil
+}
+```
+
+6. 编写客户端逻辑
+
+文件位置： [mesh-grpc-example/service/client/client.go](https://github.com/dobyte/due-docs/blob/master/examples/mesh-grpc-example/service/client/client.go)
+
+```go
+package client
+
+import (
+	"mesh-grpc-example/service/pb"
+
+	"github.com/dobyte/due/v2/transport"
+	"google.golang.org/grpc"
+)
+
+const target = "discovery://greeter"
+
+func NewClient(fn transport.NewMeshClient) (pb.GreeterClient, error) {
+	client, err := fn(target)
+	if err != nil {
+		return nil, err
+	}
+
+	return pb.NewGreeterClient(client.Client().(grpc.ClientConnInterface)), nil
+}
+```
+
+7. 编写服务器启动配置
+
+文件位置： [mesh-grpc-example/server/etc/etc.toml](https://github.com/dobyte/due-docs/blob/master/examples/mesh-grpc-example/server/etc/etc.toml)
+
+```toml
+# 进程号
+pid = "./run/due.pid"
+# 开发模式。支持模式：debug、test、release（设置优先级：配置文件 < 环境变量 < 运行参数 < mode.SetMode()）
+mode = "debug"
+# 统一时区设置。项目中的时间获取请使用xtime.Now()
+timezone = "Local"
+# 容器关闭最大等待时间。支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为0
+shutdownMaxWaitTime = "0s"
+
+[cluster.mesh]
+    # 实例ID，集群中唯一。不填写默认自动生成唯一的实例ID
+    id = ""
+    # 实例名称
+    name = "mesh"
+    # 是否将内部通信地址暴露到公网。默认为false
+    expose = false
+    # 编解码器。可选：json | proto。默认为proto
+    codec = "proto"
+    # 实例元数据
+    [cluster.mesh.metadata]
+        # 键值对，且均为字符串类型。由于注册中心的元数据参数限制，建议将键值对的数量控制在20个以内，键的字符长度控制在127个字符内，值的字符长度控制在512个字符内。
+        key = "value"
+
+[transport.grpc.server]
+    # 服务器监听地址。空或:0时系统将会随机端口号
+    addr = ":0"
+    # 是否将内部通信地址暴露到公网。默认为false
+    expose = false
+    # 私钥文件
+    keyFile = ""
+    # 证书文件
+    certFile = ""
+```
+
+8. 编写服务器
+
+文件位置： [mesh-grpc-example/server/main.go](https://github.com/dobyte/due-docs/blob/master/examples/mesh-grpc-example/server/main.go)
+
+```go
+package main
+
+import (
+	"mesh-grpc-example/service/server"
+
+	"github.com/dobyte/due/registry/consul/v2"
+	"github.com/dobyte/due/transport/grpc/v2"
+	"github.com/dobyte/due/v2"
+	"github.com/dobyte/due/v2/cluster/mesh"
+)
+
+func main() {
+	// 创建容器
+	container := due.NewContainer()
+	// 创建服务发现
+	registry := consul.NewRegistry()
+	// 创建RPC传输器
+	transporter := grpc.NewTransporter()
+	// 创建网格组件
+	component := mesh.NewMesh(
+		mesh.WithRegistry(registry),
+		mesh.WithTransporter(transporter),
+	)
+	// 初始化应用
+	initAPP(component.Proxy())
+	// 添加网格组件
+	container.Add(component)
+	// 启动容器
+	container.Serve()
+}
+
+// 初始化应用
+func initAPP(proxy *mesh.Proxy) {
+	server.NewServer(proxy).Init()
+}
+```
+
+9. 编写客户端启动配置
+
+文件位置： [mesh-grpc-example/client/etc/etc.toml](https://github.com/dobyte/due-docs/blob/master/examples/mesh-grpc-example/client/etc/etc.toml)
+
+```toml
+# 进程号
+pid = "./run/due.pid"
+# 开发模式。支持模式：debug、test、release（设置优先级：配置文件 < 环境变量 < 运行参数 < mode.SetMode()）
+mode = "debug"
+# 统一时区设置。项目中的时间获取请使用xtime.Now()
+timezone = "Local"
+# 容器关闭最大等待时间。支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为0
+shutdownMaxWaitTime = "0s"
+
+[cluster.mesh]
+    # 实例ID，集群中唯一。不填写默认自动生成唯一的实例ID
+    id = ""
+    # 实例名称
+    name = "mesh"
+    # 是否将内部通信地址暴露到公网。默认为false
+    expose = false
+    # 编解码器。可选：json | proto。默认为proto
+    codec = "proto"
+    # 实例元数据
+    [cluster.mesh.metadata]
+        # 键值对，且均为字符串类型。由于注册中心的元数据参数限制，建议将键值对的数量控制在20个以内，键的字符长度控制在127个字符内，值的字符长度控制在512个字符内。
+        key = "value"
+
+[transport.grpc.client]
+    # CA证书文件
+    caFile = ""
+    # 证书域名
+    serverName = ""
+```
+
+10. 编写客户端
+
+文件位置： [mesh-grpc-example/client/main.go](https://github.com/dobyte/due-docs/blob/master/examples/mesh-grpc-example/client/main.go)
+
+```go
+package main
+
+import (
+	"context"
+	"mesh-grpc-example/service/client"
+	"mesh-grpc-example/service/pb"
+
+	"github.com/dobyte/due/registry/consul/v2"
+	"github.com/dobyte/due/transport/grpc/v2"
+	"github.com/dobyte/due/v2/log"
+)
+
+func main() {
+	// 创建服务发现
+	registry := consul.NewRegistry()
+	// 构建传输器
+	transporter := grpc.NewTransporter()
+	// 设置默认的服务发现组件
+	transporter.SetDefaultDiscovery(registry)
+
+	// 构建客户端
+	cli, err := client.NewClient(transporter.NewClient)
+	if err != nil {
+		log.Errorf("create rpc client failed: %v", err)
+		return
+	}
+
+	// 发起RPC调用
+	reply, err := cli.Hello(context.Background(), &pb.HelloArgs{Name: "fuxiao"})
+	if err != nil {
+		log.Errorf("invoke rpc func failed: %v", err)
+		return
+	}
+
+	log.Infof("invoke rpc func replay: %v", reply)
+}
+```
+
+11. 启动服务器
+
+```bash
+$ cd mesh-grpc-example/server
+$ go run main.go
+                    ____  __  ________
+                   / __ \/ / / / ____/
+                  / / / / / / / __/
+                 / /_/ / /_/ / /___
+                /_____/\____/_____/
+┌──────────────────────────────────────────────────────┐
+| [Website] https://github.com/dobyte/due              |
+| [Version] v2.4.2                                     |
+└──────────────────────────────────────────────────────┘
+┌────────────────────────Global────────────────────────┐
+| PID: 34788                                           |
+| Mode: debug                                          |
+| Time: 2025-10-30 18:24:36.4919845 +0800 CST          |
+└──────────────────────────────────────────────────────┘
+┌─────────────────────────Mesh─────────────────────────┐
+| ID: a277388d-b57a-11f0-b6a9-f4f19e1f0070             |
+| Name: mesh                                           |
+| Codec: proto                                         |
+| Locator: -                                           |
+| Registry: consul                                     |
+| Encryptor: -                                         |
+| Transporter: grpc                                    |
+└──────────────────────────────────────────────────────┘
+```
+
+12. 启动客户端
+
+```bash
+$ cd mesh-grpc-example/client
+$ go run main.go
+INFO[2025/10/30 18:26:13.278891] main.go:35 invoke rpc func replay: Message:"Hello fuxiao"
+```
+
+## RPCX 示例
+
+以下完整示例详见： [mesh-rpcx-example](https://github.com/dobyte/due-docs/tree/master/examples/mesh-rpcx-example)
+
+1. 创建项目
+
+```bash
+$ mkdir mesh-rpcx-example
+```
+
+2. 安装依赖
+
+```bash
+$ cd mesh-rpcx-example
+$ go mod init mesh-rpcx-example
+$ go get github.com/dobyte/due/v2@v2.4.2
+$ go get github.com/dobyte/due/registry/consul/v2@e5cd009
+$ go get github.com/dobyte/due/transport/rpcx/v2@e5cd009
+```
+
+3. 编辑 pb 协议
+
+文件位置： [mesh-rpcx-example/service/pb/greeter.proto](https://github.com/dobyte/due-docs/blob/master/examples/mesh-rpcx-example/service/pb/greeter.proto)
+
+```proto
+syntax = "proto3";
+
+option go_package = "./pb";
+
+package pb;
+
+service Greeter {
+  rpc Hello (HelloArgs) returns (HelloReply) {}
+}
+
+message HelloArgs {
+  string Name = 1;
+}
+
+message HelloReply {
+  string Message = 1;
+}
+```
+
+4. 生成 go 文件
+
+```bash
+$ cd mesh-rpcx-example/service/pb
+$ protoc --go_out=.. --rpcx_out=.. *.proto
+```
+
+5. 编写服务端逻辑
+
+文件位置： [mesh-rpcx-example/service/server/server.go](https://github.com/dobyte/due-docs/blob/master/examples/mesh-rpcx-example/service/server/server.go)
+
+```go
+package server
+
+import (
+	"context"
+	"mesh-rpcx-example/service/pb"
+
+	"github.com/dobyte/due/v2/cluster/mesh"
+)
+
+const (
+	service     = "greeter" // 用于客户端定位服务，例如discovery://greeter
+	servicePath = "Greeter" // 服务路径要与pb中的服务路径保持一致
+)
+
+type Server struct {
+	proxy *mesh.Proxy
+}
+
+var _ pb.GreeterAble = &Server{}
+
+func NewServer(proxy *mesh.Proxy) *Server {
+	return &Server{
+		proxy: proxy,
+	}
+}
+
+func (s *Server) Init() {
+	s.proxy.AddServiceProvider(service, servicePath, s)
+}
+
+func (s *Server) Hello(ctx context.Context, args *pb.HelloArgs, reply *pb.HelloReply) (err error) {
+	reply.Message = "Hello " + args.Name
+	return
+}
+```
+
+6. 编写客户端逻辑
+
+文件位置： [mesh-rpcx-example/service/client/client.go](https://github.com/dobyte/due-docs/blob/master/examples/mesh-rpcx-example/service/client/client.go)
+
+```go
+package client
+
+import (
+	"mesh-rpcx-example/service/pb"
+
+	"github.com/dobyte/due/v2/transport"
+	"github.com/smallnest/rpcx/client"
+)
+
+const target = "discovery://greeter"
+
+func NewClient(fn transport.NewMeshClient) (*pb.GreeterOneClient, error) {
+	c, err := fn(target)
+	if err != nil {
+		return nil, err
+	}
+
+	return pb.NewGreeterOneClient(c.Client().(*client.OneClient)), nil
+}
+```
+
+7. 编写服务器启动配置
+
+文件位置： [mesh-rpcx-example/service/server/etc/etc.toml](https://github.com/dobyte/due-docs/blob/master/examples/mesh-rpcx-example/service/server/etc/etc.toml)
+
+```toml
+# 进程号
+pid = "./run/due.pid"
+# 开发模式。支持模式：debug、test、release（设置优先级：配置文件 < 环境变量 < 运行参数 < mode.SetMode()）
+mode = "debug"
+# 统一时区设置。项目中的时间获取请使用xtime.Now()
+timezone = "Local"
+# 容器关闭最大等待时间。支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为0
+shutdownMaxWaitTime = "0s"
+
+[cluster.mesh]
+    # 实例ID，集群中唯一。不填写默认自动生成唯一的实例ID
+    id = ""
+    # 实例名称
+    name = "mesh"
+    # 是否将内部通信地址暴露到公网。默认为false
+    expose = false
+    # 编解码器。可选：json | proto。默认为proto
+    codec = "proto"
+    # 实例元数据
+    [cluster.mesh.metadata]
+        # 键值对，且均为字符串类型。由于注册中心的元数据参数限制，建议将键值对的数量控制在20个以内，键的字符长度控制在127个字符内，值的字符长度控制在512个字符内。
+        key = "value"
+
+[transport.rpcx.server]
+    # 服务器监听地址。空或:0时系统将会随机端口号
+    addr = ":0"
+    # 是否将内部通信地址暴露到公网。默认为false
+    expose = false
+    # 私钥文件
+    keyFile = ""
+    # 证书文件
+    certFile = ""
+```
+
+9. 编写客户端启动配置
+
+文件位置： [mesh-grpc-example/client/etc/etc.toml](https://github.com/dobyte/due-docs/blob/master/examples/mesh-grpc-example/client/etc/etc.toml)
+
+```toml
+# 进程号
+pid = "./run/due.pid"
+# 开发模式。支持模式：debug、test、release（设置优先级：配置文件 < 环境变量 < 运行参数 < mode.SetMode()）
+mode = "debug"
+# 统一时区设置。项目中的时间获取请使用xtime.Now()
+timezone = "Local"
+# 容器关闭最大等待时间。支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为0
+shutdownMaxWaitTime = "0s"
+
+[cluster.mesh]
+    # 实例ID，集群中唯一。不填写默认自动生成唯一的实例ID
+    id = ""
+    # 实例名称
+    name = "mesh"
+    # 是否将内部通信地址暴露到公网。默认为false
+    expose = false
+    # 编解码器。可选：json | proto。默认为proto
+    codec = "proto"
+    # 实例元数据
+    [cluster.mesh.metadata]
+        # 键值对，且均为字符串类型。由于注册中心的元数据参数限制，建议将键值对的数量控制在20个以内，键的字符长度控制在127个字符内，值的字符长度控制在512个字符内。
+        key = "value"
+
+[transport.rpcx.client]
+    # CA证书文件
+    caFile = ""
+    # 证书域名
+    serverName = ""
+    # 连接池大小，默认为10
+    poolSize = 10
+```
+
+10. 编写客户端
+
+文件位置： [mesh-rpcx-example/client/main.go](https://github.com/dobyte/due-docs/blob/master/examples/mesh-rpcx-example/client/main.go)
+
+```go
+package main
+
+import (
+	"context"
+	"mesh-rpcx-example/service/client"
+	"mesh-rpcx-example/service/pb"
+
+	"github.com/dobyte/due/registry/consul/v2"
+	"github.com/dobyte/due/transport/rpcx/v2"
+	"github.com/dobyte/due/v2/log"
+)
+
+func main() {
+	// 创建服务发现
+	registry := consul.NewRegistry()
+	// 构建传输器
+	transporter := rpcx.NewTransporter()
+	// 设置默认的服务发现组件
+	transporter.SetDefaultDiscovery(registry)
+
+	// 构建客户端
+	cli, err := client.NewClient(transporter.NewClient)
+	if err != nil {
+		log.Errorf("create rpc client failed: %v", err)
+		return
+	}
+
+	// 发起RPC调用
+	reply, err := cli.Hello(context.Background(), &pb.HelloArgs{Name: "fuxiao"})
+	if err != nil {
+		log.Errorf("invoke rpc func failed: %v", err)
+		return
+	}
+
+	log.Infof("invoke rpc func replay: %v", reply)
+}
+```
+
+11. 启动服务器
+
+```bash
+$ cd mesh-rpcx-example/server
+$ go run main.go
+                    ____  __  ________
+                   / __ \/ / / / ____/
+                  / / / / / / / __/
+                 / /_/ / /_/ / /___
+                /_____/\____/_____/
+┌──────────────────────────────────────────────────────┐
+| [Website] https://github.com/dobyte/due              |
+| [Version] v2.4.2                                     |
+└──────────────────────────────────────────────────────┘
+┌────────────────────────Global────────────────────────┐
+| PID: 24132                                           |
+| Mode: debug                                          |
+| Time: 2025-10-30 18:28:31.7076029 +0800 CST          |
+└──────────────────────────────────────────────────────┘
+┌─────────────────────────Mesh─────────────────────────┐
+| ID: 2eaa316c-b57b-11f0-830e-f4f19e1f0070             |
+| Name: mesh                                           |
+| Codec: proto                                         |
+| Locator: -                                           |
+| Registry: consul                                     |
+| Encryptor: -                                         |
+| Transporter: rpcx                                    |
+└──────────────────────────────────────────────────────┘
+```
+
+12. 启动客户端
+
+```bash
+$ cd mesh-rpcx-example/client
+$ go run main.go
+INFO[2025/10/30 18:29:20.815968] main.go:35 invoke rpc func replay: Message:"Hello fuxiao"
+```
