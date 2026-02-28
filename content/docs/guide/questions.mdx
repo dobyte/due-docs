@@ -1,0 +1,28 @@
+---
+title: "常见问题"
+---
+
+## 框架主模块与子模块版本不一致的问题
+
+   原因：由于框架采用的是模块化设计，每个模块都有自己的版本号，而主模块的版本号是所有子模块版本号的基础。因此，在使用框架时，需要注意主模块与子模块的版本号是否一致，否则可能会导致一些不可预料的问题。
+
+   例如：due 主模块版本为 v2.3.2，而子模块 lock/redis 版本为 v2.0.0-20250902100831-0402c3a6689f，这就会导致版本不一致的问题。
+
+   ```text
+   github.com/dobyte/due/v2 v2.3.2
+   github.com/dobyte/due/lock/redis/v2 v2.0.0-20250902100831-0402c3a6689f
+   ```
+
+   解决：
+
+   1.进入到 [release](https://github.com/dobyte/due/releases) 页面，找到框架发布的版本号对应的 commit 号：93262b5。
+
+   2.执行 go get github.com/dobyte/due/lock/redis/v2@93262b5 拉取与主模块版本对应的子模块。
+
+   3.至此，问题解决。
+
+## 使用 nacos v2.3.0 及以后版本，node 节点服路由数量较多时，可能导致实例注册失败的问题。
+
+   原因：nacos 2.3.0 及以后版本引入了统一的参数校验逻辑，以确保请求参数的合法性并避免潜在的问题。具体到这个问题，元数据（Metadata）的长度超过了服务端允许的最大值 1024 个字符。 [详见](https://nacos.io/blog/faq/nacos-user-question-history8219/)
+
+   解决：在`${nacos.home}/conf`目录下的 application.properties 文件中，设置`nacos.core.param.check.enabled=false`来关闭服务端的参数校验功能。

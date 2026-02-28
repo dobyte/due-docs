@@ -1,0 +1,849 @@
+---
+title: "启动配置"
+---
+
+## 基础介绍
+
+启动配置（etc）主要用于引导程序启动的配置，默认启动配置文件为./etc/etc.toml。当然你也可以在配置目录添加自己额外的业务配置并进行读取（不推荐）。启动配置支持热更，但服务器组件一旦启动后，即便启动配置发生了变更，服务器组件也不再进行动态更新。
+
+## 指定目录
+
+你可以通过以下方式来指定启动配置读取目录：
+
+1. 通过环境变量指定，例如： DUE_ETC=/run/etc
+2. 通过启动参数指定，例如： --etc=./etc
+
+目录指定优先级：环境变量 < 运行参数
+
+> 注：无论你如何指定启动配置目录，etc.[toml|yaml|yml|json|xml]作为框架集群唯一的启动文件，一定不能修改，修改后会导致配置不生效或不可预期的后果。
+
+## 支持格式
+
+启动配置默认支持 [toml](https://toml.io/) 、 [yaml](https://yaml.org/) 、 [json](https://www.json.org/) 、 [xml](https://developer.mozilla.org/zh-CN/docs/Web/XML/XML_introduction) 等多种文件格式。你可以根据自身喜好自由选择文件格式。
+
+> 注：yaml 格式的配置支持.yaml 和.yml 两种后缀名
+
+## 读写规则
+
+框架中的配置文件均是以 **文件名[.参数名 1[.参数名 2...[.参数名 n]]]** 的方式进行读写的。
+
+> 注：例如 a.b.c.d.toml 这样的配置文件同样也是被支持的。读写时你只需要将 a.b.c.d 看成一个完整的文件名即可。
+
+## 如何使用
+
+1. 安装依赖
+
+```bash
+$ go get github.com/dobyte/due/v2@v2.4.2
+```
+
+2. 导入依赖
+
+```go
+import "github.com/dobyte/due/v2/etc"
+```
+
+3. 读取配置
+
+```go
+timezone := etc.Get("etc.timezone", "UTC").String()
+```
+
+4. 接口文档
+
+[https://pkg.go.dev/github.com/dobyte/due/v2/etc](https://pkg.go.dev/github.com/dobyte/due/v2/etc)
+
+## 示例代码
+
+以下完整示例详见： [etc-example](https://github.com/dobyte/due-docs/tree/master/examples/etc-example)
+
+1. 创建项目
+
+```bash
+$ mkdir etc-example
+```
+
+2. 安装依赖
+
+```bash
+$ cd etc-example
+$ go mod init etc-example
+$ go get github.com/dobyte/due/v2@v2.4.2
+```
+
+3. 启动配置
+
+文件位置： [etc-example/etc/db.toml](https://github.com/dobyte/due-docs/blob/master/examples/etc-example/etc/db.toml)
+
+```toml
+[mysql]
+    # dsn连接信息
+    dsn = "root:123456@tcp(127.0.0.1:3306)/game?charset=utf8mb4&parseTime=True&loc=Local"
+    # 日志级别; silent | error | warn | info
+    logLevel = "error"
+    # 慢日志阈值;ms
+    slowThreshold = 2000
+    # 最大空闲连接数
+    maxIdleConns = 50
+    # 最大打开连接数
+    maxOpenConns = 50
+    # 连接最大存活时间
+    connMaxLifetime = 3600
+```
+
+4. 编写示例
+
+文件位置： [etc-example/main.go](https://github.com/dobyte/due-docs/blob/master/examples/etc-example/main.go)
+
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/dobyte/due/v2/etc"
+	"github.com/dobyte/due/v2/log"
+)
+
+type config struct {
+	DSN             string `json:"dsn"`
+	LogLevel        string `json:"logLevel"`
+	SlowThreshold   int    `json:"slowThreshold"`
+	MaxIdleConns    int    `json:"maxIdleConns"`
+	MaxOpenConns    int    `json:"maxOpenConns"`
+	ConnMaxLifetime int    `json:"connMaxLifetime"`
+}
+
+func main() {
+	// 读取单个配置参数
+	logLevel := etc.Get("db.mysql.logLevel").String()
+
+	fmt.Printf("mysql log-level: %s\n", logLevel)
+
+	// 读取多个配置参数
+	conf := &config{}
+
+	if err := etc.Get("db.mysql").Scan(conf); err != nil {
+		log.Errorf("get mysql error: %s", err)
+	}
+
+	fmt.Printf("mysql config: %+v\n", conf)
+
+	// 修改配置参数
+	if err := etc.Set("db.mysql.logLevel", "info"); err != nil {
+		log.Errorf("set mysql log-level error: %s", err)
+	}
+
+	// 读取单个配置参数
+	logLevel = etc.Get("db.mysql.logLevel").String()
+
+	fmt.Printf("mysql log-level: %s\n", logLevel)
+}
+```
+
+5. 运行示例
+
+```bash
+$ cd etc-example
+$ go run main.go
+mysql log-level: error
+mysql config: &{DSN:root:123456@tcp(127.0.0.1:3306)/game?charset=utf8mb4&parseTime=True&loc=Local LogLevel:error SlowThreshold:2000 MaxIdleConns:50 MaxOpenConns:50 ConnMaxLifetime:3600}
+mysql log-level: info
+```
+
+## 全部配置
+
+以下配置 [etc.toml](https://github.com/dobyte/due/blob/main/testdata/etc/etc.toml) 为框架所有模块的详细配置，你可以根据自己模块使用情况进行选择性配置。
+
+```toml
+# 进程号
+pid = "./run/due.pid"
+# 开发模式。支持模式：debug、test、release（设置优先级：配置文件 < 环境变量 < 运行参数 < mode.SetMode()）
+mode = "debug"
+# 统一时区设置。项目中的时间获取请使用xtime.Now()
+timezone = "Local"
+# 容器关闭最大等待时间。支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为0
+shutdownMaxWaitTime = "0s"
+
+# 分布式集群模块
+[cluster]
+    # 集群网关配置
+    [cluster.gate]
+        # 实例ID，集群中唯一。不填写默认自动生成唯一的实例ID
+        id = ""
+        # 实例名称
+        name = "gate"
+        # 内建RPC服务器监听地址。不填写默认随机监听
+        addr = ":0"
+        # 是否将内部通信地址暴露到公网。默认为false
+        expose = false
+        # RPC调用超时时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为3s
+        timeout = "3s"
+        # 无状态路由消息分发策略。支持策略：随机（random）、轮询（rr）、加权轮询（wrr）。默认为random
+        dispatch = "random"
+        # 实例元数据
+        [cluster.gate.metadata]
+            # 键值对，且均为字符串类型。由于注册中心的元数据参数限制，建议将键值对的数量控制在20个以内，键的字符长度控制在127个字符内，值的字符长度控制在512个字符内。
+            key = "value"
+    # 集群节点配置
+    [cluster.node]
+        # 实例ID，集群中唯一。不填写默认自动生成唯一的实例ID
+        id = ""
+        # 实例名称
+        name = "node"
+        # 内建RPC服务器监听地址。不填写默认随机监听
+        addr = ":0"
+        # 是否将内部通信地址暴露到公网。默认为false
+        expose = false
+        # 编解码器。可选：json | proto。默认为proto
+        codec = "proto"
+        # RPC调用超时时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为3s
+        timeout = "3s"
+        # 节点权重，用于节点无状态路由消息的加权轮询策略，权重值必需大于0才生效。默认为1
+        weight = 1
+        # 实例元数据
+        [cluster.node.metadata]
+            # 键值对，且均为字符串类型。由于注册中心的元数据参数限制，建议将键值对的数量控制在20个以内，键的字符长度控制在127个字符内，值的字符长度控制在512个字符内。
+            key = "value"
+    # 集群网格配置
+    [cluster.mesh]
+        # 实例ID，集群中唯一。不填写默认自动生成唯一的实例ID
+        id = ""
+        # 实例名称
+        name = "mesh"
+        # 是否将内部通信地址暴露到公网。默认为false
+        expose = false
+        # 编解码器。可选：json | proto。默认为proto
+        codec = "proto"
+        # 实例元数据
+        [cluster.mesh.metadata]
+            # 键值对，且均为字符串类型。由于注册中心的元数据参数限制，建议将键值对的数量控制在20个以内，键的字符长度控制在127个字符内，值的字符长度控制在512个字符内。
+            key = "value"
+    # 集群客户端配置，常用于调试使用
+    [cluster.client]
+        # 实例ID，集群中唯一。不填写默认自动生成唯一的实例ID
+        id = ""
+        # 实例名称
+        name = "client"
+        # 编解码器。可选：json | proto。默认为proto
+        codec = "proto"
+
+# 任务池模块
+[task]
+    # 任务池大小(goroutine)
+    size = 100000
+    # 是否非阻塞
+    nonblocking = true
+    # 是否禁用清除。
+    disablePurge = true
+
+# http服务器模块
+[http]
+    # 服务器名称
+    name = "http"
+    # 服务器监听地址，默认为:8080
+    addr = ":8080"
+    # 是否启用控制台输出，默认为false
+    console = false
+    # body大小，支持单位： B | K | KB | M | MB | G | GB | T | TB | P | PB | E | EB | Z | ZB，默认为4 * 1024 * 1024
+    bodyLimit = "4M"
+    # 最大并发连接数，默认为256 * 1024
+    concurrency = 262144
+    # 是否启用严格路由模式，默认为false，启用后"/foo"与"/foo/"为两个不同的路由
+    strictRouting = false
+    # 是否区分路由大小写，默认为false， 启用后"/FoO"与"/foo"为两个不同的路由
+    caseSensitive = false
+    # 秘钥文件
+    keyFile = ""
+    # 证书文件
+    certFile = ""
+    # 跨域配置
+    [http.cors]
+        # 是否启用跨域
+        enable = false
+        # 允许跨域的请求源。默认为[]，即为允许所有请求源
+        allowOrigins = []
+        # 允许跨域的请求方法。默认为["GET", "POST", "HEAD", "PUT", "DELETE", "PATCH"]
+        allowMethods = []
+        # 允许跨域的请求头部。默认为[]，即为允许所有请求头部
+        allowHeaders = []
+        # 当允许所有源时，根据CORS规范不允许携带凭据。默认为false
+        allowCredentials = false
+        # 允许暴露给客户端的头部。默认为[]，即为允许暴露所有头部
+        exposeHeaders = []
+        # 浏览器缓存预检请求结果的时间。默认为0
+        maxAge = 0
+        # 是否允许来自私有网络的请求。设置为true时，响应头Access-Control-Allow-Private-Network会被设置为true。默认为false
+        allowPrivateNetwork = false
+    # swagger文档配置
+    [http.swagger]
+        # 是否启用文档
+        enable = true
+        # API文档标题
+        title = "API文档"
+        # URL访问基础路径
+        basePath = "/swagger"
+        # swagger文件路径
+        filePath = "./docs/swagger.json"
+        # swagger-ui-bundle.js地址。当系统默认的cdn失效时可替换为自己的cdn地址，默认为空，使用系统默认https://unpkg.com/swagger-ui@5.28.1/dist/swagger-ui.js
+        swaggerBundleUrl = ""
+        # swagger-ui-standalone-preset.js地址。当系统默认的cdn失效时可替换为自己的cdn地址，默认为空，使用系统默认https://unpkg.com/swagger-ui@5.28.1/dist/swagger-ui-standalone-preset.js
+        swaggerPresetUrl = ""
+        # swagger-ui.css地址。当系统默认的cdn失效时可替换为自己的cdn地址，默认为空，使用系统默认https://unpkg.com/swagger-ui@5.28.1/dist/swagger-ui.css
+        swaggerStylesUrl = ""
+
+# pprof模块
+[pprof]
+    # pprof服务器监听地址
+    addr = ":0"
+
+# 传输模块
+[transport]
+    # GRPC相关配置
+    [transport.grpc]
+        # GRPC服务器相关配置
+        [transport.grpc.server]
+            # 服务器监听地址。空或:0时系统将会随机端口号
+            addr = ":0"
+            # 是否将内部通信地址暴露到公网。默认为false
+            expose = false
+            # 私钥文件
+            keyFile = ""
+            # 证书文件
+            certFile = ""
+        # GRPC客户端相关配置
+        [transport.grpc.client]
+            # CA证书文件
+            caFile = ""
+            # 证书域名
+            serverName = ""
+    # RPCX相关配置
+    [transport.rpcx]
+        # RPCX服务器相关配置
+        [transport.rpcx.server]
+            # 服务器监听地址。空或:0时系统将会随机端口号
+            addr = ":0"
+            # 是否将内部通信地址暴露到公网。默认为false
+            expose = false
+            # 私钥文件
+            keyFile = ""
+            # 证书文件
+            certFile = ""
+        # RPCX客户端相关配置
+        [transport.rpcx.client]
+            # CA证书文件
+            caFile = ""
+            # 证书域名
+            serverName = ""
+            # 连接池大小，默认为10
+            poolSize = 10
+
+# 框架默认打包器统一采用以下的打包格式，自定义打包器可自行定义打包规则
+# 心跳包
+# ------------------------------------------------------------------------------
+# | size(4 byte) = (1 byte + 8 byte) | header(1 byte) | heartbeat time(8 byte) |
+# ------------------------------------------------------------------------------
+#
+#  0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7
+# +---------------------------------------------------------------+-+-------------+---------------------------------------------------------------+
+# |                              size                             |h|   extcode   |                      heartbeat time (ns)                      |
+# +---------------------------------------------------------------+-+-------------+---------------------------------------------------------------+
+
+# 数据包
+# -----------------------------------------------------------------------------------------------------------------------
+# | size(4 byte) = (1 byte + n byte + m byte + x byte) | header(1 byte) | route(n byte) | seq(m byte) | message(x byte) |
+# -----------------------------------------------------------------------------------------------------------------------
+#
+#  0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7
+# +---------------------------------------------------------------+-+-------------+-------------------------------+-------------------------------+
+# |                              size                             |h|   extcode   |             route             |              seq              |
+# +---------------------------------------------------------------+-+-------------+-------------------------------+-------------------------------+
+# |                                                                message data ...                                                               |
+# +-----------------------------------------------------------------------------------------------------------------------------------------------+
+[packet]
+    # 字节序，默认为big。可选：little | big
+    byteOrder = "big"
+    # 路由字节数，默认为2字节
+    routeBytes = 2
+    # 序列号字节数，默认为2字节
+    seqBytes = 2
+    # 消息字节数，默认为5000字节
+    bufferBytes = 5000
+
+# 日志模块
+[log]
+    # 日志输出级别，可选：debug | info | warn | error | fatal | panic
+    level = "info"
+    # 堆栈的最低输出级别，可选：debug | info | warn | error | fatal | panic
+    stackLevel = "error"
+    # 时间格式，标准库时间格式
+    timeFormat = "2006/01/02 15:04:05.000000"
+    # 输出栈的跳过深度
+    callSkip = 2
+    # 是否启用调用文件全路径
+    callFullPath = true
+    # 日志输出终端（数组和对象两种配置形式任选其一）
+    terminals = ["console", "file"]
+    # 日志输出终端（数组和对象两种配置形式任选其一）
+    [log.terminals]
+        # 控制台 -> 日志级别
+        console = ["debug", "info", "warn", "error", "fatal", "panic"]
+        # 文件 -> 日志级别
+        file = ["debug", "info", "warn", "error", "fatal", "panic"]
+        # 阿里云日志 -> 日志级别
+        aliyun = ["debug", "info", "warn", "error", "fatal", "panic"]
+        # 腾讯云日志 -> 日志级别
+        tencent = ["debug", "info", "warn", "error", "fatal", "panic"]
+    # 控制台同步器配置
+    [log.console]
+        # 日志输出格式，可选：text | json
+        format = "text"
+    # 文件同步器配置
+    [log.file]
+        # 输出文件路径
+        path = "./log/due.log"
+        # 日志输出格式，可选：text | json
+        format = "text"
+        # 文件最大留存时间，d:天、h:时、m:分、s:秒
+        maxAge = "7d"
+        # 文件最大尺寸限制，支持单位： B | K | KB | M | MB | G | GB | T | TB | P | PB | E | EB | Z | ZB，默认为100M
+        maxSize = "100M"
+        # 文件翻转方式，可选：none | year | month | week | day | hour，默认为none
+        rotate = "none"
+        # 文件翻转时是否对文件进行压缩
+        compress = false
+    # 阿里云SLS日志同步器配置
+    [log.aliyun]
+        # 服务域名，公网使用公网域名，内网使用私网域名
+        endpoint = "cn-chengdu.log.aliyuncs.com"
+        # 访问密钥ID
+        accessKeyID = ""
+        # 访问密钥密码
+        accessKeySecret = ""
+        # 项目名称
+        project = "due-test"
+        # 日志存储
+        logstore = "app"
+        # 主题标签，默认为空
+        topic = ""
+        # 来源标签，默认为空
+        source = ""
+    # 腾讯云CLS日志服务同步器
+    [log.tencent]
+        # 服务域名，公网使用公网域名，内网使用私网域名
+        endpoint = "ap-guangzhou.cls.tencentcs.com"
+        # 访问密钥ID
+        accessKeyID = ""
+        # 访问密钥密码
+        accessKeySecret = ""
+        # 主题ID
+        topicID = ""
+
+# 注册中心模块
+[registry]
+    # etcd注册中心
+    [registry.etcd]
+        # 客户端连接地址，默认为["127.0.0.1:2379"]
+        addrs = ["127.0.0.1:2379"]
+        # 客户端拨号超时时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为5s
+        dialTimeout = "5s"
+        # 命名空间，默认为services
+        namespace = "services"
+        # 超时时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为3s
+        timeout = "3s"
+        # 心跳重试次数，默认为3
+        retryTimes = 3
+        # 心跳重试间隔，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为10s
+        retryInterval = "10s"
+    # consule注册中心
+    [registry.consul]
+        # 客户端连接地址，默认为127.0.0.1:8500
+        addr = "127.0.0.1:8500"
+        # 是否启用健康检查，默认为true
+        healthCheck = true
+        # 健康检查时间间隔（秒），仅在启用健康检查后生效，默认为10
+        healthCheckInterval = 10
+        # 健康检查超时时间（秒），仅在启用健康检查后生效，默认为5
+        healthCheckTimeout = 5
+        # 是否启用心跳检查，默认为true
+        heartbeatCheck = true
+        # 心跳检查时间间隔（秒），仅在启用心跳检查后生效，默认为10
+        heartbeatCheckInterval = 10
+        # 健康检测失败后自动注销服务时间（秒），默认为30
+        deregisterCriticalServiceAfter = 30
+    # nacos注册中心
+    [registry.nacos]
+        # 服务器地址 [scheme://]ip:port[/nacos]。默认为["http://127.0.0.1:8848/nacos"]
+        urls = ["http://127.0.0.1:8848/nacos"]
+        # 集群名称。默认为DEFAULT
+        clusterName = "DEFAULT"
+        # 群组名称。默认为DEFAULT_GROUP
+        groupName = "DEFAULT_GROUP"
+        # 请求Nacos服务端超时时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为3秒
+        timeout = "3s"
+        # ACM的命名空间Id。默认为空
+        namespaceId = ""
+        # 当使用ACM时，需要该配置，默认为空。详见：https://help.aliyun.com/document_detail/130146.html
+        endpoint = ""
+        # ACM&KMS的regionId，用于配置中心的鉴权。默认为空
+        regionId = ""
+        # ACM&KMS的AccessKey，用于配置中心的鉴权。默认为空
+        accessKey = ""
+        # ACM&KMS的SecretKey，用于配置中心的鉴权。默认为空
+        secretKey = ""
+        # 是否开启kms，同时DataId必须以"cipher-"作为前缀才会启动加解密逻辑。kms可以参考文档：https://help.aliyun.com/product/28933.html
+        openKMS = false
+        # 缓存service信息的目录。默认为./run/nacos/naming/cache
+        cacheDir = "./run/nacos/naming/cache"
+        # Nacos服务端的API鉴权Username。默认为空
+        username = ""
+        # Nacos服务端的API鉴权Password。默认为空
+        password = ""
+        # 日志存储路径。默认为./run/nacos/naming/log
+        logDir = "./run/nacos/naming/log"
+        # 日志输出级别，可选：debug、info、warn、error。默认为info
+        logLevel = "info"
+
+# 配置中心模块
+[config]
+    # 文件配置
+    [config.file]
+        # 配置文件或配置目录路径
+        path = "./config"
+        # 读写模式。可选：read-only | write-only | read-write，默认为read-only
+        mode = "read-only"
+    # etcd配置中心
+    [config.etcd]
+        # 客户端连接地址，默认为["127.0.0.1:2379"]
+        addrs = ["127.0.0.1:2379"]
+        # 客户端拨号超时时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为5s
+        dialTimeout = "5s"
+        # 路径。默认为/config
+        path = "/config"
+        # 读写模式。可选：read-only | write-only | read-write，默认为read-only
+        mode = "read-only"
+    # consul配置中心
+    [config.consul]
+        # 客户端连接地址
+        addr = "127.0.0.1:8500"
+        # 路径。默认为config
+        path = "config"
+        # 读写模式。可选：read-only | write-only | read-write，默认为read-only
+        mode = "read-only"
+    # nacos配置中心
+    [config.nacos]
+        # 读写模式。可选：read-only | write-only | read-write，默认为read-only
+        mode = "read-only"
+        # 服务器地址 [scheme://]ip:port[/nacos]。默认为["http://127.0.0.1:8848/nacos"]
+        urls = ["http://127.0.0.1:8848/nacos"]
+        # 集群名称。默认为DEFAULT
+        clusterName = "DEFAULT"
+        # 群组名称。默认为DEFAULT_GROUP
+        groupName = "DEFAULT_GROUP"
+        # 请求Nacos服务端超时时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为3秒
+        timeout = "3s"
+        # ACM的命名空间Id。默认为空
+        namespaceId = ""
+        # 当使用ACM时，需要该配置，默认为空。详见：https://help.aliyun.com/document_detail/130146.html
+        endpoint = ""
+        # ACM&KMS的regionId，用于配置中心的鉴权。默认为空
+        regionId = ""
+        # ACM&KMS的AccessKey，用于配置中心的鉴权。默认为空
+        accessKey = ""
+        # ACM&KMS的SecretKey，用于配置中心的鉴权。默认为空
+        secretKey = ""
+        # 是否开启kms，同时DataId必须以"cipher-"作为前缀才会启动加解密逻辑。kms可以参考文档：https://help.aliyun.com/product/28933.html
+        openKMS = false
+        # 缓存service信息的目录。默认为./run/nacos/naming/cache
+        cacheDir = "./run/nacos/config/cache"
+        # Nacos服务端的API鉴权Username。默认为空
+        username = ""
+        # Nacos服务端的API鉴权Password。默认为空
+        password = ""
+        # 日志存储路径。默认为./run/nacos/naming/log
+        logDir = "./run/nacos/config/log"
+        # 日志输出级别，可选：debug、info、warn、error。默认为info
+        logLevel = "info"
+
+# 网络模块
+[network]
+    # ws网络模块
+    [network.ws]
+        # ws网络服务器
+        [network.ws.server]
+            # 服务器监听地址
+            addr = ":3553"
+            # 客户端连接路径
+            path = "/"
+            # 服务器最大连接数
+            maxConnNum = 5000
+            # 秘钥文件
+            keyFile = ""
+            # 证书文件
+            certFile = ""
+            # 跨域检测，空数组时不允许任何连接升级成websocket，未设置此参数时允许所有的链接升级成websocket
+            origins = ["*"]
+            # 握手超时时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为10s
+            handshakeTimeout = "10s"
+            # 心跳检测间隔时间。设置为0则不启用心跳检测，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为10s
+            heartbeatInterval = "10s"
+            # 心跳机制，默认为resp响应式心跳。可选：resp 响应式心跳 | tick 定时主推心跳
+            heartbeatMechanism = "resp"
+            # 授权超时时间，（在客户端建立连接后，如果在授权超时时间内未进行绑定用户操作，则被认定为未授权连接，服务器会强制断开连接）支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为0s，不进行授权检测
+            authorizeTimeout = "0s"
+        # ws网络客户端
+        [network.ws.client]
+            # 拨号地址
+            url = "ws://127.0.0.1:3553"
+            # 握手超时时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为10s
+            handshakeTimeout = "10s"
+            # 心跳间隔时间；设置为0则不启用心跳检测，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为10s
+            heartbeatInterval = "10s"
+    # tcp网络模块
+    [network.tcp]
+        # tcp网络服务器
+        [network.tcp.server]
+            # 服务器监听地址
+            addr = ":3553"
+            # 私钥文件
+            keyFile = ""
+            # 证书文件
+            certFile = ""
+            # 服务器最大连接数
+            maxConnNum = 5000
+            # 心跳间隔时间；设置为0则不启用心跳检测，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为10s
+            heartbeatInterval = "10s"
+            # 心跳机制，默认resp
+            heartbeatMechanism = "resp"
+            # 授权超时时间，（在客户端建立连接后，如果在授权超时时间内未进行绑定用户操作，则被认定为未授权连接，服务器会强制断开连接）支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为0s，不进行授权检测
+            authorizeTimeout = "0s"
+        # tcp网络客户端
+        [network.tcp.client]
+            # 拨号地址
+            addr = "127.0.0.1:3553"
+            # 拨号超时时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为5s
+            timeout = "5s"
+            # CA证书文件
+            caFile = ""
+            # 证书域名
+            serverName = ""
+            # 心跳间隔时间；设置为0则不启用心跳检测，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为10s
+            heartbeatInterval = "10s"
+
+# 用户定位器模块
+[locate]
+    # redis定位模块
+    [locate.redis]
+        # 客户端连接地址
+        addrs = ["127.0.0.1:6379"]
+        # 数据库号
+        db = 0
+        # 用户名
+        username = ""
+        # 密码
+        password = ""
+        # 私钥文件
+        keyFile = ""
+        # 证书文件
+        certFile = ""
+        # CA证书文件
+        caFile = ""
+        # 最大重试次数
+        maxRetries = 3
+        # key前缀
+        prefix = "due:locate"
+
+# 缓存模块
+[cache]
+    # redis缓存模块
+    [cache.redis]
+        # 客户端连接地址
+        addrs = ["127.0.0.1:6379"]
+        # 数据库号
+        db = 0
+        # 用户名
+        username = ""
+        # 密码
+        password = ""
+        # 私钥文件
+        keyFile = ""
+        # 证书文件
+        certFile = ""
+        # CA证书文件
+        caFile = ""
+        # 最大重试次数
+        maxRetries = 3
+        # key前缀，默认为cache
+        prefix = "due:cache"
+        # 空值，默认为cache@nil
+        nilValue = "cache@nil"
+        # 空值过期时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为10s
+        nilExpiration = "10s"
+        # 最小过期时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为1h
+        minExpiration = "1h"
+        # 最大过期时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为24h
+        maxExpiration = "24h"
+    # memcache缓存模块
+    [cache.memcache]
+        # 客户端连接地址
+        addrs = ["127.0.0.1:11211"]
+        # key前缀，默认为cache
+        prefix = "due:cache"
+        # 空值，默认为cache@nil
+        nilValue = "cache@nil"
+        # 空值过期时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为10s
+        nilExpiration = "10s"
+        # 最小过期时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为1h
+        minExpiration = "1h"
+        # 最大过期时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为24h
+        maxExpiration = "24h"
+
+# 分布式锁模块
+[lock]
+    # redis分布式锁模块
+    [lock.redis]
+        # 客户端连接地址
+        addrs = ["127.0.0.1:6379"]
+        # 数据库号
+        db = 0
+        # 用户名
+        username = ""
+        # 密码
+        password = ""
+        # 私钥文件
+        keyFile = ""
+        # 证书文件
+        certFile = ""
+        # CA证书文件
+        caFile = ""
+        # 最大重试次数
+        maxRetries = 3
+        # key前缀
+        prefix = "due:lock"
+        # 锁过期时间（自动续约），支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为3s
+        expiration = "3s"
+        # 循环获取锁的频率间隔时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为20ms
+        acquireInterval = "20ms"
+        # 循环获取锁的最大重试次数，默认为0，<=0则为无限次
+        acquireMaxRetries = 0
+    # memcache分布式锁模块
+    [lock.memcache]
+        # 客户端连接地址
+        addrs = ["127.0.0.1:11211"]
+        # key前缀
+        prefix = "due:lock"
+        # 锁过期时间（自动续约），支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为3s
+        expiration = "3s"
+        # 循环获取锁的频率间隔时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为20ms
+        acquireInterval = "20ms"
+        # 循环获取锁的最大重试次数，默认为0，<=0则为无限次
+        acquireMaxRetries = 0
+
+# 加密模块
+[crypto]
+    # RSA加密模块
+    [crypto.rsa]
+        [crypto.rsa.encryptor]
+            # hash算法，不区分大小写。可选：SHA1 | SHA224 | SHA256 | SHA384 | SHA512
+            hash = "SHA256"
+            # 填充规则，不区分大小写。可选：NORMAL | OAEP
+            padding = "NORMAL"
+            # 标签，加解密时必需一致
+            label = ""
+            # 加密数据块大小，单位字节。由于加密数据长度限制，需要对加密数据进行分块儿加密
+            blockSize = 0
+            # 公钥，可设置文件路径或公钥串
+            publicKey = ""
+        [crypto.rsa.decryptor]
+            # hash算法，不区分大小写。可选：SHA1 | SHA224 | SHA256 | SHA384 | SHA512
+            hash = "SHA256"
+            # 填充规则，不区分大小写。可选：NORMAL | OAEP
+            padding = "NORMAL"
+            # 标签。加解密时必需一致
+            label = ""
+            # 私钥。可设置文件路径或私钥串
+            privateKey = ""
+        [crypto.rsa.signer]
+            # hash算法，不区分大小写。可选：SHA1 | SHA224 | SHA256 | SHA384 | SHA512
+            hash = "SHA256"
+            # 填充规则，不区分大小写。可选：PKCS | PSS
+            padding = "PSS"
+            # 私钥。可设置文件路径或私钥串
+            privateKey = ""
+        [crypto.rsa.verifier]
+            # hash算法，不区分大小写。可选：SHA1 | SHA224 | SHA256 | SHA384 | SHA512
+            hash = "SHA256"
+            # 填充规则，不区分大小写。可选：PKCS | PSS
+            padding = "PSS"
+            # 公钥，可设置文件路径或公钥串
+            publicKey = ""
+    # ECC加密模块
+    [crypto.ecc]
+        [crypto.ecc.encryptor]
+            # 共享信息。加解密时必需一致
+            s1 = ""
+            # 共享信息。加解密时必需一致
+            s2 = ""
+            # 公钥，可设置文件路径或公钥串
+            publicKey = ""
+        [crypto.ecc.decryptor]
+            # 共享信息。加解密时必需一致
+            s1 = ""
+            # 共享信息。加解密时必需一致
+            s2 = ""
+            # 私钥。可设置文件路径或私钥串
+            privateKey = ""
+        [crypto.ecc.signer]
+            # hash算法，不区分大小写。可选：SHA1 | SHA224 | SHA256 | SHA384 | SHA512
+            hash = "SHA256"
+            # 签名分隔符。由于ECDSA签名算法会产生两段签名串，因此需要通过分隔符将其拼接为一个签名
+            delimiter = " "
+            # 私钥。可设置文件路径或私钥串
+            privateKey = ""
+        [crypto.ecc.verifier]
+            # hash算法，不区分大小写。可选：SHA1 | SHA224 | SHA256 | SHA384 | SHA512
+            hash = "SHA256"
+            # 签名分隔符。由于ECDSA签名算法会产生两段签名串，因此需要通过分隔符将其拼接为一个签名
+            delimiter = " "
+            # 公钥，可设置文件路径或公钥串
+            publicKey = ""
+
+# 事件总线模块
+[eventbus]
+    # nats事件总线模块
+    [eventbus.nats]
+        # 客户端连接地址，默认为nats://127.0.0.1:4222
+        url = "nats://127.0.0.1:4222"
+        # 客户端连接超时时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为2s
+        timeout = "2s"
+        # key前缀
+        prefix = "due:eventbus"
+    # redis事件总线模块
+    [eventbus.redis]
+        # 客户端连接地址
+        addrs = ["127.0.0.1:6379"]
+        # 数据库号
+        db = 0
+        # 用户名
+        username = ""
+        # 密码
+        password = ""
+        # 私钥文件
+        keyFile = ""
+        # 证书文件
+        certFile = ""
+        # CA证书文件
+        caFile = ""
+        # 最大重试次数
+        maxRetries = 3
+        # key前缀
+        prefix = "due:eventbus"
+    # kafka事件总线模块
+    [eventbus.kafka]
+        # 客户端连接地址
+        addrs = ["127.0.0.1:9092"]
+        # Kafka版本，默认为无版本
+        version = ""
+        # key前缀
+        prefix = "due:eventbus"
+```

@@ -1,0 +1,212 @@
+---
+title: "Redis"
+---
+
+## 第三方库
+
+- [github.com/go-redis/redis/v8@v8.11.5](https://github.com/go-redis/redis/v8)
+
+## 配置参数
+
+|  名称 | 类型 | 描述 |
+| :------:| :------: | :------: |
+| `addrs` | string | 连接地址 |
+| `db` | int | 数据库号，默认为 0 |
+| `username` | string | 用户名，默认空 |
+| `password` | string | 密码，默认空 |
+| `keyFile` | string | 私钥文件，默认空 |
+| `certFile` | string | 证书文件，默认空 |
+| `caFile` | string | CA 证书文件，默认空 |
+| `maxRetries` | int | 网络相关的错误最大重试次数，默认 3 次 |
+| `poolSize` | int | 最大连接池限制，默认为 200 个连接 |
+| `minIdleConns` | int | 最小空闲连接数，默认 10 个连接 |
+| `dialTimeout` | string | 拨号超时时间，支持单位：纳秒（ns）、微秒（us 或 µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为 5s |
+| `idleTimeout` | string | 连接最大空闲时间，支持单位：纳秒（ns）、微秒（us 或 µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认 0s  |
+| `readTimeout` | string | 读超时，支持单位：纳秒（ns）、微秒（us 或 µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认 1s |
+| `writeTimeout` | string | 写超时，支持单位：纳秒（ns）、微秒（us 或 µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认 1s  |
+
+## 示例代码
+
+以下完整示例详见： [third-redis-example](https://github.com/dobyte/due-docs/tree/master/examples/third-redis-example)
+
+1. 组件封装
+
+文件位置： [third-redis-example/redis/redis.go](https://github.com/dobyte/due-docs/blob/master/examples/third-redis-example/redis/redis.go)
+
+```go
+package redis
+
+import (
+	"fmt"
+	"time"
+
+	"github.com/dobyte/due/v2/core/pool"
+	"github.com/dobyte/due/v2/core/tls"
+	"github.com/dobyte/due/v2/etc"
+	"github.com/dobyte/due/v2/log"
+	"github.com/go-redis/redis/v8"
+)
+
+var factory = pool.NewFactory(func(name string) (Redis, error) {
+	return NewInstance(fmt.Sprintf("etc.redis.%s", name))
+})
+
+type (
+	Redis  = redis.UniversalClient
+	Script = redis.Script
+)
+
+type Config struct {
+	Addrs        []string      `json:"addrs"`
+	DB           int           `json:"db"`
+	Username     string        `json:"username"`
+	Password     string        `json:"password"`
+	CertFile     string        `json:"certFile"`
+	KeyFile      string        `json:"keyFile"`
+	CaFile       string        `json:"caFile"`
+	MaxRetries   int           `json:"maxRetries"`
+	PoolSize     int           `json:"poolSize"`
+	MinIdleConns int           `json:"minIdleConns"`
+	IdleTimeout  time.Duration `json:"idleTimeout"`
+	DialTimeout  time.Duration `json:"dialTimeout"`
+	ReadTimeout  time.Duration `json:"readTimeout"`
+	WriteTimeout time.Duration `json:"writeTimeout"`
+}
+
+// Instance 获取实例
+func Instance(name ...string) Redis {
+	var (
+		err error
+		ins Redis
+	)
+
+	if len(name) == 0 {
+		ins, err = factory.Get("default")
+	} else {
+		ins, err = factory.Get(name[0])
+	}
+
+	if err != nil {
+		log.Fatalf("create redis instance failed: %v", err)
+	}
+
+	return ins
+}
+
+// NewInstance 新建实例
+func NewInstance[T string | Config | *Config](config T) (Redis, error) {
+	var (
+		conf *Config
+		v    any = config
+	)
+
+	switch c := v.(type) {
+	case string:
+		conf = &Config{
+			Addrs:        etc.Get(fmt.Sprintf("%s.addrs", c)).Strings(),
+			DB:           etc.Get(fmt.Sprintf("%s.db", c)).Int(),
+			CertFile:     etc.Get(fmt.Sprintf("%s.certFile", c)).String(),
+			KeyFile:      etc.Get(fmt.Sprintf("%s.keyFile", c)).String(),
+			CaFile:       etc.Get(fmt.Sprintf("%s.caFile", c)).String(),
+			Username:     etc.Get(fmt.Sprintf("%s.username", c)).String(),
+			Password:     etc.Get(fmt.Sprintf("%s.password", c)).String(),
+			MaxRetries:   etc.Get(fmt.Sprintf("%s.maxRetries", c), 3).Int(),
+			PoolSize:     etc.Get(fmt.Sprintf("%s.poolSize", c), 200).Int(),
+			MinIdleConns: etc.Get(fmt.Sprintf("%s.minIdleConns", c), 20).Int(),
+			DialTimeout:  etc.Get(fmt.Sprintf("%s.dialTimeout", c), "3s").Duration(),
+			IdleTimeout:  etc.Get(fmt.Sprintf("%s.idleTimeout", c)).Duration(),
+			ReadTimeout:  etc.Get(fmt.Sprintf("%s.readTimeout", c), "1s").Duration(),
+			WriteTimeout: etc.Get(fmt.Sprintf("%s.writeTimeout", c), "1s").Duration(),
+		}
+	case Config:
+		conf = &c
+	case *Config:
+		conf = c
+	}
+
+	options := &redis.UniversalOptions{
+		Addrs:        conf.Addrs,
+		DB:           conf.DB,
+		Username:     conf.Username,
+		Password:     conf.Password,
+		MaxRetries:   conf.MaxRetries,
+		PoolSize:     conf.PoolSize,
+		MinIdleConns: conf.MinIdleConns,
+		IdleTimeout:  conf.IdleTimeout,
+		DialTimeout:  conf.DialTimeout,
+		ReadTimeout:  conf.ReadTimeout,
+		WriteTimeout: conf.WriteTimeout,
+	}
+
+	if conf.CertFile != "" && conf.KeyFile != "" && conf.CaFile != "" {
+		if tlsConfig, err := tls.MakeRedisTLSConfig(conf.CertFile, conf.KeyFile, conf.CaFile); err != nil {
+			return nil, err
+		} else {
+			options.TLSConfig = tlsConfig
+		}
+	}
+
+	return redis.NewUniversalClient(options), nil
+}
+```
+
+2. 配置示例
+
+文件位置： [third-redis-example/etc/etc.toml](https://github.com/dobyte/due-docs/blob/master/examples/third-redis-example/etc/etc.toml)
+
+```toml
+[redis.default]
+    # 连接地址
+    addrs = ["127.0.0.1:6379"]
+    # 数据库号，默认为0
+    db = 0
+    # 用户名，默认空
+    username = ""
+    # 密码，默认空
+    password = ""
+    # 私钥文件
+    keyFile = ""
+    # 证书文件
+    certFile = ""
+    # CA证书文件
+    caFile = ""
+    # 网络相关的错误最大重试次数，默认3次
+    maxRetries = 3
+    # 最大连接池限制，默认为200个连接
+    poolSize = 200
+    # 最小空闲连接数，默认10个连接
+    minIdleConns = 10
+	# 拨号超时时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认5s
+    dialTimeout = "5s"
+    # 连接最大空闲时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认0s
+    idleTimeout = "0s"
+	# 读超时，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认1s
+    readTimeout = "1s"
+	# 写超时，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认1s
+    writeTimeout = "1s"
+```
+
+3. 组件调用
+
+文件位置： [third-redis-example/main.go](https://github.com/dobyte/due-docs/blob/master/examples/third-redis-example/main.go)
+
+```go
+package main
+
+import (
+	"context"
+	"third-redis-example/redis"
+
+	"github.com/dobyte/due/v2/log"
+)
+
+func main() {
+	rds := redis.Instance("default")
+
+	if result, err := rds.Ping(context.Background()).Result(); err != nil {
+		log.Errorf("redis connection error: %v", err)
+	} else {
+		log.Infof("redis ping result: %v", result)
+	}
+}
+```

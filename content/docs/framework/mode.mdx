@@ -1,0 +1,82 @@
+---
+title: "运行模式"
+---
+
+## 基础介绍
+
+运行模式在现有绝大多数成熟框架中都会有设计，主要作用是为了通过程序外部参数来改变程序内部预先定义好的行为。在 [due](https://github.com/dobyte/due) 框架中也设计了 debug、test、release 三种运行模式。开发者可以根据自身需要来进行合理使用。
+
+## 指定模式
+
+你可以通过以下方式来设置运行模式：
+1. 通过配置文件指定 etc.mode=debug
+2. 通过环境变量指定 DUE_MODE=debug
+3. 通过启动参数指定 --mode=debug
+4. 通过调用 mode.SetMode()函数指定
+
+模式优先级：配置文件 < 环境变量 < 运行参数 < mode.SetMode()
+
+## 相关接口
+
+1. 使用场景
+
+任何需要根据运行模式来改变行为的地方，都可以通过调用相关接口来获取当前的运行模式。
+
+2. 使用方式
+
+```bash
+import "github.com/dobyte/due/v2/mode"
+```
+
+3. 接口文档
+
+[https://pkg.go.dev/github.com/dobyte/due/v2/mode](https://pkg.go.dev/github.com/dobyte/due/v2/mode)
+
+## 示例代码
+
+以下完整示例详见： [mode-example](https://github.com/dobyte/due-docs/tree/master/examples/mode-example)
+
+1. 创建项目
+
+```bash
+$ mkdir mode-example
+```
+
+2. 安装依赖
+
+```bash
+$ cd mode-example
+$ go mod init mode-example
+$ go get github.com/dobyte/due/v2@v2.4.2
+```
+
+3. 编写示例
+
+文件位置： [mode-example/main.go](https://github.com/dobyte/due-docs/blob/master/examples/mode-example/main.go)
+
+```go
+package main
+
+import (
+	"github.com/dobyte/due/v2/log"
+	"github.com/dobyte/due/v2/mode"
+)
+
+func main() {
+	log.Infof("mode: %s", mode.GetMode())
+	log.Infof("debug mode: %v", mode.IsDebugMode())
+	log.Infof("test mode: %v", mode.IsTestMode())
+	log.Infof("release mode: %v", mode.IsReleaseMode())
+}
+```
+
+4. 运行示例
+
+```bash
+$ cd errors-example
+$ go run main.go
+INFO[2025/10/31 14:26:18.361636] main.go:9 mode: debug
+INFO[2025/10/31 14:26:18.362173] main.go:10 debug mode: true
+INFO[2025/10/31 14:26:18.362173] main.go:11 test mode: false
+INFO[2025/10/31 14:26:18.362173] main.go:12 release mode: false
+```

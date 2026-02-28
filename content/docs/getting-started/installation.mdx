@@ -1,0 +1,48 @@
+---
+title: Installation
+description: How to install and set up Efferd UI in your project.
+---
+
+## Prerequisites
+
+Before you begin, make sure you have the following installed:
+
+- **Node.js** 18.17 or later
+- **pnpm**, **npm**, or **yarn**
+
+## Create a New Project
+
+Start by creating a new Next.js project:
+
+```bash
+npx create-next-app@latest my-app --typescript --tailwind --eslint
+```
+
+## Install shadcn/ui
+
+Initialize shadcn/ui in your project:
+
+```bash
+npx shadcn@latest init
+```
+
+When prompted, select the following options:
+
+- **Style**: New York
+- **Base color**: Zinc
+- **CSS variables**: Yes
+
+## Add Components
+
+You can now start adding Efferd UI blocks to your project. Browse the available blocks on the [homepage](/) and copy the code into your project.
+
+## Manual Installation
+
+If you prefer to set things up manually:
+
+1. Install Tailwind CSS and its dependencies
+2. Configure your `globals.css` with the theme variables
+3. Add the `cn` utility function
+4. Start copying components
+
+Check out the [Configuration](/docs/getting-started/configuration) guide for details on customizing the theme.

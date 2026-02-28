@@ -1,0 +1,234 @@
+---
+title: "缓存模块"
+---
+
+## 基础介绍
+
+缓存模块是用于缓存数据的模块，缓存模块的主要功能是将数据缓存到内存中，以提高数据的访问速度。
+
+## 何时使用
+
+缓存模块适用于需要频繁访问数据，但是数据变化不频繁的场景。例如：数据库查询结果、API 接口返回结果等。
+
+## 如何使用
+
+以下以 redis 缓存为例展示如何使用，其他缓存的使用方法类似。
+
+1. 安装依赖
+
+```bash
+$ go get github.com/dobyte/due/v2@v2.4.2
+$ go get github.com/dobyte/due/cache/redis/v2@e5cd009
+```
+
+2. 导入依赖
+
+```go
+import (
+	"github.com/dobyte/due/v2/cache"
+	"github.com/dobyte/due/cache/redis/v2"
+)
+```
+
+3. 设置缓存器
+
+```go
+// 在全局设置缓存器
+cache.SetCache(redis.NewCache())
+```
+
+4. 使用缓存
+
+```go
+// 从缓存中获取数据，如若缓存中不存在，则构建新的缓存
+unix, err := cache.GetSet(context.Background(), "key", func() (any, error) {
+    return xtime.Now().Unix(), nil
+}).Int64()
+if err != nil {
+    log.Errorf("get set cache failed: %v", err)
+    return
+}
+```
+
+5. 接口文档
+
+[https://pkg.go.dev/github.com/dobyte/due/v2/cache](https://pkg.go.dev/github.com/dobyte/due/v2/cache)
+
+6. 全部实现
+
+- [redis](https://pkg.go.dev/github.com/dobyte/due/cache/redis/v2)
+- [memcache](https://pkg.go.dev/github.com/dobyte/due/cache/memcache/v2)
+
+## redis 缓存示例
+
+以下完整示例详见： [cache-redis-example](https://github.com/dobyte/due-docs/tree/master/examples/cache-redis-example)
+
+1. 创建项目
+
+```bash
+$ mkdir cache-redis-example
+```
+
+2. 安装依赖
+
+```bash
+$ cd cache-redis-example
+$ go mod init cache-redis-example
+$ go get github.com/dobyte/due/v2@v2.4.2
+$ go get github.com/dobyte/due/cache/redis/v2@e5cd009
+```
+
+3. 启动配置
+
+文件位置： [cache-redis-example/etc/etc.toml](https://github.com/dobyte/due-docs/blob/master/examples/cache-redis-example/etc/etc.toml)
+
+```toml
+[cache.redis]
+    # 客户端连接地址
+    addrs = ["127.0.0.1:6379"]
+    # 数据库号
+    db = 0
+    # 用户名
+    username = ""
+    # 密码
+    password = ""
+    # 私钥文件
+    keyFile = ""
+    # 证书文件
+    certFile = ""
+    # CA证书文件
+    caFile = ""
+    # 最大重试次数
+    maxRetries = 3
+    # key前缀，默认为cache
+    prefix = "due:cache"
+    # 空值，默认为cache@nil
+    nilValue = "cache@nil"
+    # 空值过期时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为10s
+    nilExpiration = "10s"
+    # 最小过期时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为1h
+    minExpiration = "1h"
+    # 最大过期时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为24h
+    maxExpiration = "24h"
+```
+
+4. 编写示例
+
+文件位置： [cache-redis-example/main.go](https://github.com/dobyte/due-docs/blob/master/examples/cache-redis-example/main.go)
+
+```go
+package main
+
+import (
+	"context"
+
+	"github.com/dobyte/due/cache/redis/v2"
+	"github.com/dobyte/due/v2/cache"
+	"github.com/dobyte/due/v2/log"
+	"github.com/dobyte/due/v2/utils/xtime"
+)
+
+func main() {
+	// 设置缓存器
+	cache.SetCache(redis.NewCache())
+
+	// 从缓存中获取数据，如若缓存中不存在，则构建新的缓存
+	unix, err := cache.GetSet(context.Background(), "unix", func() (any, error) {
+		return xtime.Now().Unix(), nil
+	}).Int64()
+	if err != nil {
+		log.Errorf("get set cache failed: %v", err)
+		return
+	}
+
+	log.Infof("unix: %d", unix)
+}
+```
+
+5. 运行示例
+
+```bash
+$ cd cache-redis-example
+$ go run main.go
+INFO[2025/10/25 15:05:44.024250] main.go:25 unix: 1761375944
+```
+
+## memcache 缓存示例
+
+以下完整示例详见： [cache-memcache-example](https://github.com/dobyte/due-docs/tree/master/examples/cache-memcache-example)
+
+1. 创建项目
+
+```bash
+$ mkdir cache-memcache-example
+```
+
+2. 安装依赖
+
+```bash
+$ cd cache-memcache-example
+$ go mod init cache-memcache-example
+$ go get github.com/dobyte/due/v2@v2.4.2
+$ go get github.com/dobyte/due/cache/memcache/v2@e5cd009
+```
+
+3. 启动配置
+
+文件位置： [cache-memcache-example/etc/etc.toml](https://github.com/dobyte/due-docs/blob/master/examples/cache-memcache-example/etc/etc.toml)
+
+```toml
+[cache.memcache]
+    # 客户端连接地址
+    addrs = ["127.0.0.1:11211"]
+    # key前缀，默认为cache
+    prefix = "due:cache"
+    # 空值，默认为cache@nil
+    nilValue = "cache@nil"
+    # 空值过期时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为10s
+    nilExpiration = "10s"
+    # 最小过期时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为1h
+    minExpiration = "1h"
+    # 最大过期时间，支持单位：纳秒（ns）、微秒（us | µs）、毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）。默认为24h
+    maxExpiration = "24h"
+```
+
+4. 编写示例
+
+文件位置： [cache-memcache-example/main.go](https://github.com/dobyte/due-docs/blob/master/examples/cache-memcache-example/main.go)
+
+```go
+package main
+
+import (
+	"context"
+
+	"github.com/dobyte/due/cache/memcache/v2"
+	"github.com/dobyte/due/v2/cache"
+	"github.com/dobyte/due/v2/log"
+	"github.com/dobyte/due/v2/utils/xtime"
+)
+
+func main() {
+	// 设置缓存器
+	cache.SetCache(memcache.NewCache())
+
+	// 从缓存中获取数据，如若缓存中不存在，则构建新的缓存
+	unix, err := cache.GetSet(context.Background(), "key", func() (any, error) {
+		return xtime.Now().Unix(), nil
+	}).Int64()
+	if err != nil {
+		log.Errorf("get set cache failed: %v", err)
+		return
+	}
+
+	log.Infof("unix: %d", unix)
+}
+```
+
+5. 运行示例
+
+```bash
+$ cd cache-memcache-example
+$ go run main.go
+INFO[2025/10/25 15:05:44.024250] main.go:25 unix: 1761375944
+```
