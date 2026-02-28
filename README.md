@@ -4,13 +4,15 @@
 
 ## 技术栈
 
-- [Next.js 16](https://nextjs.org/) (Turbopack)
-- [React 19](https://react.dev/)
-- [Tailwind CSS 4](https://tailwindcss.com/)
-- [MDX](https://mdxjs.com/) 文档渲染 (next-mdx-remote-client)
-- [Shiki](https://shiki.matsu.io/) 代码高亮
-- [Radix UI](https://www.radix-ui.com/) 无障碍组件
-- [Motion](https://motion.dev/) 动画
+| 分类 | 技术 |
+| --- | --- |
+| 框架 | [Next.js 16](https://nextjs.org/) (Turbopack)、[React 19](https://react.dev/)、[TypeScript](https://www.typescriptlang.org/) |
+| 样式 | [Tailwind CSS 4](https://tailwindcss.com/)、[tw-animate-css](https://github.com/Wombosvideo/tw-animate-css) |
+| UI 组件 | [shadcn/ui](https://ui.shadcn.com/)、[Radix UI](https://www.radix-ui.com/)、[Lucide Icons](https://lucide.dev/)、[cmdk](https://cmdk.paco.me/) |
+| 文档渲染 | [MDX](https://mdxjs.com/) (next-mdx-remote-client)、[Shiki](https://shiki.matsu.io/) 代码高亮、[remark-gfm](https://github.com/remarkjs/remark-gfm)、[rehype-pretty-code](https://github.com/rehype-pretty/rehype-pretty-code) |
+| 动画 / 3D | [Motion](https://motion.dev/)、[Three.js](https://threejs.org/)、[OGL](https://oframe.github.io/ogl/) |
+| 主题 | [next-themes](https://github.com/pacocoursey/next-themes) 明暗模式 |
+| 代码规范 | [Biome](https://biomejs.dev/) |
 
 ## 本地开发
 
