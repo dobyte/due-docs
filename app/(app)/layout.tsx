@@ -1,5 +1,6 @@
 import { SiteFooter } from "@/components/footer";
 import { SiteHeader } from "@/components/header";
+import { PromoBanner1 } from "@/components/promo-banner1";
 import { cn } from "@/lib/utils";
 
 export default function AppLayout({ children }: LayoutProps<"/">) {
@@ -12,6 +13,7 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
           "after:absolute after:inset-y-0 after:-right-px after:z-40 after:border-border after:border-dashed xl:after:border-r"
         )}
       >
+        <PromoBanner1 />
         <SiteHeader />
         <main className="relative grow">
           {children}
