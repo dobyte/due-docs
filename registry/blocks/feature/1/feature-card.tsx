@@ -36,7 +36,7 @@ export function FeatureCard({
         strokeWidth={1}
       />
       <h3 className="mt-10 text-sm md:text-base">{feature.title}</h3>
-      <p className="relative z-20 mt-2 font-light text-muted-foreground text-xs">
+      <p className="relative z-20 mt-2 font-light text-muted-foreground text-sm">
         {feature.description}
       </p>
     </div>

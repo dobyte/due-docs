@@ -19,82 +19,56 @@ type Testimonial = {
 const testimonials: Testimonial[] = [
 	{
 		quote:
-			"Efferd is so polished I might just retire and become a full-time potato farmer. The ecosystem is in safe hands.",
-		image: "https://github.com/shadcn.png",
-		name: "Shadcn",
-		role: "Founder",
-		company: "Shadcn UI",
+			"最好的 Go 游戏开源项目，各模块接口清晰。从学习游戏后端的技术来说，也是不二之选。",
+		image: "https://avatars.githubusercontent.com/u/62499904?v=4",
+		name: "Guowei Gong",
+		role: "游戏服务器",
+		company: "南棠羽星溯",
 	},
 	{
 		quote:
-			"Efferd is why I still have hair. No more pulling it out over centering divs or fighting with CSS grid.",
-		image: "https://github.com/rauchg.png",
-		name: "Guillermo Rauch",
-		role: "CEO",
-		company: "Vercel",
-	},
-
-	{
-		quote:
-			"I tried to buy Efferd but they wouldn't sell. So I just bought Twitter instead to complain about it.",
-		image: "https://unavatar.io/x/elonmusk",
-		name: "Elon Musk",
-		role: "CEO",
-		company: "X.com",
+			"第一次学习游戏服务器就遇到它，少奋斗好几个月。",
+		image: "/avatar/Sparrow.jpg",
+		name: "Sparrow",
+		role: "游戏客户端",
+		company: "网易游戏",
 	},
 	{
 		quote:
-			"We just acquired Efferd for 3 gazillion dollars. We're calling it iEfferd. It's our best product yet.",
-		image: "https://unavatar.io/x/tim_cook",
-		name: "Tim Cook",
-		role: "CEO",
-		company: "Apple",
+			"有一些设计我觉得还存在问题，但瑕不掩瑜，DUE 框架整体设计非常优秀，值得推荐。",
+		image: "",
+		name: "Feiyu Yi",
+		role: "游戏服务器",
 	},
 	{
 		quote:
-			"I'm considering shipping Efferd components with Prime delivery. 2-day shipping on beautiful UIs? Done.",
-		image: "https://unavatar.io/x/JeffBezos",
-		name: "Jeff Bezos",
-		role: "Founder",
-		company: "Amazon",
+			"一个字爽，两个字超爽，三个字超级爽。",
+		image: "",
+		name: "is2-Breakthrough",
+		role: "游戏服务器",
+		company: "远程"
 	},
 	{
 		quote:
-			"We're rewriting OpenAI's entire frontend in Efferd. The AGI told us it's the only logical choice.",
-		image: "https://unavatar.io/x/sama",
-		name: "Sam Altman",
-		role: "CEO",
-		company: "OpenAI",
+			"基础组件丰富，切换简单，能随意搭配，配置简单，快速上手容易，使用后只需要关注业务代码，无疑是 Go 游戏服务器首选",
+		image: "https://avatars.githubusercontent.com/u/44959801?v=4",
+		name: "Ricardo",
+		role: "游戏服务器",
+		company: "高图游戏",
 	},
 	{
 		quote:
-			"We processed 100 petabytes of data to find the perfect UI library. The algorithm returned 'Efferd' with 99.9% confidence.",
-		image: "https://unavatar.io/x/sundarpichai",
-		name: "Sundar Pichai",
-		role: "CEO",
-		company: "Google",
-	},
-	{
-		quote:
-			"Our links might 404 sometimes, but thanks to Efferd, at least the 404 page looks absolutely stunning.",
-		image: "https://github.com/steven-tey.png",
-		name: "Steven Tey",
-		role: "Founder",
-		company: "Dub.co",
-	},
-	{
-		quote:
-			"It's so fast, I finished my UI sprint before my next meeting even started. Open source for the win.",
-		image: "https://unavatar.io/x/peer_rich",
-		name: "Peer Richelsen",
-		role: "Co-Founder",
-		company: "Cal.com",
-	},
+			"内置 Node Gateway Mesh 三个服务，非常方便，让我可以快速搭建一个游戏服务器。",
+		image: "https://avatars.githubusercontent.com/u/52000718?v=4",
+		name: "Zhiming Zhang",
+		role: "游戏服务器",
+		company: "远程"
+	}
 ];
 
-const firstColumn = testimonials.slice(0, 3);
-const secondColumn = testimonials.slice(3, 6);
-const thirdColumn = testimonials.slice(6, 9);
+const firstColumn = testimonials.slice(0, Math.ceil(testimonials.length / 3));
+const secondColumn = testimonials.slice(Math.ceil(testimonials.length / 3), Math.ceil((testimonials.length * 2) / 3));
+const thirdColumn = testimonials.slice(Math.ceil((testimonials.length * 2) / 3));
 
 export function TestimonialsSection() {
 	return (
